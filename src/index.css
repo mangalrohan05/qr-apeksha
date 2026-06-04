@@ -202,6 +202,7 @@
 }
 
 .logo-container {
+  position: relative;
   width: 180px;
   height: 45px;
   display: flex;

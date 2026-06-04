@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 // Define public navigation view states
 type Page = 'home' | 'plans' | 'products' | 'about' | 'contact' | 'billing';
@@ -24,6 +24,48 @@ export default function App() {
 
   // FAQ Dropdown state manager index key tracking
   const [openFaqIndex, setOpenFaqIndex] = useState<number | null>(null);
+
+  const [logoTheme, setLogoTheme] = useState<'light' | 'dark'>('light');
+
+  useEffect(() => {
+    const observerOptions = {
+      root: null,
+      rootMargin: '-96px 0px -80% 0px',
+      threshold: 0,
+    };
+
+    const handleIntersect = () => {
+      const sections = document.querySelectorAll('[data-theme]');
+      let activeTheme: 'light' | 'dark' = 'light';
+      
+      for (let i = 0; i < sections.length; i++) {
+        const rect = sections[i].getBoundingClientRect();
+        if (rect.top <= 96 && rect.bottom > 96) {
+          const theme = sections[i].getAttribute('data-theme');
+          if (theme === 'dark' || theme === 'light') {
+            activeTheme = theme;
+          }
+          break;
+        }
+      }
+      setLogoTheme(activeTheme);
+    };
+
+    const observer = new IntersectionObserver(handleIntersect, observerOptions);
+    const sections = document.querySelectorAll('[data-theme]');
+    sections.forEach(section => observer.observe(section));
+
+    const checkInitialPosition = () => {
+      handleIntersect();
+    };
+    checkInitialPosition();
+    window.addEventListener('scroll', checkInitialPosition);
+
+    return () => {
+      observer.disconnect();
+      window.removeEventListener('scroll', checkInitialPosition);
+    };
+  }, [currentPage]);
 
 
 
@@ -70,7 +112,8 @@ export default function App() {
             
             {/* SECTION 1: Above-the-fold Viewport Frame with Spatially Proportioned Page Rectangle */}
             <div 
-              className="w-full flex flex-col justify-center items-center text-center h-[calc(100vh-96px)] px-4 bg-cover bg-center bg-fixed relative overflow-hidden"
+              data-theme="dark"
+              className="w-full flex flex-col justify-center items-center text-center h-screen pt-24 px-4 bg-cover bg-center bg-fixed relative overflow-hidden"
               style={{ 
                 backgroundImage: `linear-gradient(135deg, rgba(0, 48, 87, 0.88) 0%, rgba(0, 30, 54, 0.95) 100%), url('https://images.unsplash.com/photo-1634017839464-5c339ebe3cb4?auto=format&fit=crop&q=80&w=2500')` 
               }}
@@ -105,7 +148,7 @@ export default function App() {
             </div>
 
             {/* Container for scrolling sections below the fold rendering on clean white background */}
-            <div className="max-w-7xl mx-auto px-6 space-y-36">
+            <div data-theme="light" className="max-w-7xl mx-auto px-6 space-y-36">
               
               {/* SECTION 2: Generous De-congested Spacing Value Pillars Grid (No Bold, Elegant Light/Medium Headers) */}
               <div className="space-y-16">
@@ -251,7 +294,7 @@ export default function App() {
       case 'plans':
         return (
           /* Page scrolling enabled under pricing cards row fold on white background */
-          <div className="animate-fadeIn pb-32 space-y-28 bg-white text-slate-800">
+          <div data-theme="light" className="animate-fadeIn pt-24 pb-32 space-y-28 bg-white text-slate-800">
             
             {/* ABOVE THE FOLD CONTAINER: Fits perfectly on selection load with no internal scrollbars */}
             <div className="min-h-[calc(100vh-120px)] flex flex-col justify-center space-y-10 py-4 max-w-7xl mx-auto">
@@ -426,49 +469,123 @@ export default function App() {
         );
       case 'products':
         return (
-          <div className="w-full min-h-[calc(100vh-96px)] bg-[#f8fafc] text-slate-800 flex flex-col justify-center items-center py-20 px-6 font-sans">
-            <div className="max-w-5xl w-full space-y-14">
+          <div data-theme="light" className="w-full bg-[#f8fafc] text-slate-800 animate-fadeIn font-sans pt-32 pb-24">
+            <div className="max-w-7xl mx-auto px-12 space-y-32">
+              
+              {/* Main Header */}
               <div className="text-center space-y-4">
-                <h1 className="text-4xl font-light tracking-tight text-[#003057] sm:text-5xl">Platform Portals</h1>
+                <h1 className="text-4xl font-light tracking-tight text-[#003057] sm:text-5xl">Platform Walkthrough</h1>
                 <p className="text-slate-500 max-w-xl mx-auto text-sm sm:text-base font-normal leading-relaxed">
-                  Access our secure authentication systems through specialized enterprise portal gateways.
+                  Discover how our end-to-end cryptographic authentication pipeline secures your brand integrity and validates products in real-time.
                 </p>
               </div>
 
-              {/* Dual-card split-screen layout */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-10 items-stretch">
-                {/* Customer Portal Card */}
-                <div className="flex flex-col p-10 bg-white border border-slate-100 rounded-3xl shadow-xl hover:shadow-2xl transition-all duration-300 group">
-                  <div className="space-y-6">
-                    {/* Small white frame for icon */}
-                    <div className="w-14 h-14 bg-white border border-slate-200 rounded-2xl flex items-center justify-center text-3xl shadow-sm">
-                      <span className="text-[#10B981]">🤝</span>
-                    </div>
-                    <h3 className="text-2xl font-light text-[#003057] tracking-tight">Customer Portal</h3>
-                    <p className="text-slate-500 text-sm leading-relaxed font-normal">
-                      Verify product authenticity instantly. Access supply chain metrics, public serialization records, and verify physical packaging attributes to guarantee product trust.
-                    </p>
-                  </div>
+              {/* SECTION 1: VENDOR */}
+              <div className="space-y-16">
+                {/* Section Header */}
+                <div className="border-b border-slate-200 pb-6 text-left">
+                  <h2 className="text-2xl font-medium text-[#003057] tracking-tight sm:text-3xl">Vendor</h2>
+                  <p className="text-slate-500 text-sm mt-2 max-w-3xl font-normal leading-relaxed">
+                    The Vendor portal provides brand owners and manufacturers with a robust control center to manage product catalogs, orchestrate batch serialization, and monitor security telemetry. Standard users access basic registries and QR batches, while Premium tier users unlock advanced features including interactive geocoded threat mapping, CSV/Excel bulk sync, and expanded capacity limits.
+                  </p>
                 </div>
 
-                {/* Vendor Portal Card */}
-                <div className="flex flex-col p-10 bg-white border border-slate-100 rounded-3xl shadow-xl hover:shadow-2xl transition-all duration-300 group">
-                  <div className="space-y-6">
-                    {/* Small white frame for bar chart icon */}
-                    <div className="w-14 h-14 bg-white border border-slate-200 rounded-2xl flex items-center justify-center shadow-sm">
-                      <svg className="w-6 h-6" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <rect x="4" y="10" width="3.5" height="10" rx="1" fill="#10B981" />
-                        <rect x="10" y="5" width="3.5" height="15" rx="1" fill="#3B82F6" />
-                        <rect x="16" y="12" width="3.5" height="8" rx="1" fill="#8B5CF6" />
-                      </svg>
+                <div className="space-y-24">
+                  {/* Card 1: Vendor Control Panel (Text Left, Image Right) */}
+                  <div className="grid grid-cols-1 lg:grid-cols-12 gap-16 items-center">
+                    <div className="lg:col-span-6 space-y-6 text-left">
+                      <span className="text-[#00b074] text-xs font-semibold uppercase tracking-widest bg-[#00b074]/10 px-3 py-1 rounded-md border border-[#00b074]/20">01 / MONITORING</span>
+                      <h2 className="text-3xl font-light text-[#003057] tracking-tight sm:text-4xl">Centralized Vendor Control Panel</h2>
+                      <p className="text-slate-500 text-sm sm:text-base leading-relaxed font-normal">
+                        Track registered batches, total system scans, and suspicious entries in real time via live WebSockets. The dashboard activity stream features a 60-second sliding-window client IP deduplicator to prevent duplicate event logs.
+                      </p>
                     </div>
-                    <h3 className="text-2xl font-light text-[#003057] tracking-tight">Vendor Portal</h3>
-                    <p className="text-slate-500 text-sm leading-relaxed font-normal">
-                      Manage cryptographic serialized tracking, batch generation, and real-time infrastructure logistics audit queries. Track and isolate cloned-code telemetry instantly.
-                    </p>
+                    <div className="lg:col-span-6">
+                      <div className="w-full rounded-2xl overflow-hidden cursor-pointer bg-white p-4 pb-6 pr-6">
+                        <img 
+                          src="/Dashboard.png" 
+                          alt="Vendor Control Panel Dashboard" 
+                          className="w-full h-auto block rounded-xl transition-all duration-500 ease-out hover:scale-105"
+                        />
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Card 2: Product QR (Image Left, Text Right) */}
+                  <div className="grid grid-cols-1 lg:grid-cols-12 gap-16 items-center">
+                    <div className="lg:col-span-6 order-last lg:order-first">
+                      <div className="w-full rounded-2xl overflow-hidden cursor-pointer bg-slate-50 p-4 pb-6 pr-6">
+                        <img 
+                          src="/QR.png" 
+                          alt="Product QR Code Generation" 
+                          className="w-full h-auto block rounded-xl transition-all duration-500 ease-out hover:scale-105"
+                        />
+                      </div>
+                    </div>
+                    <div className="lg:col-span-6 space-y-6 text-left">
+                      <span className="text-[#00b074] text-xs font-semibold uppercase tracking-widest bg-[#00b074]/10 px-3 py-1 rounded-md border border-[#00b074]/20">02 / SERIALIZATION</span>
+                      <h2 className="text-3xl font-light text-[#003057] tracking-tight sm:text-4xl">Dynamic Product QR Code Registry</h2>
+                      <p className="text-slate-500 text-sm sm:text-base leading-relaxed font-normal">
+                        Connect registered templates to manufacturing batches to generate cryptographically secure QR code identifiers. Vendors can copy direct verification links or export high-resolution SVGs for packaging and hangtags.
+                      </p>
+                    </div>
                   </div>
                 </div>
               </div>
+
+              {/* SECTION 2: CONSUMER */}
+              <div className="space-y-16">
+                {/* Section Header */}
+                <div className="border-b border-slate-200 pb-6 text-left">
+                  <h2 className="text-2xl font-medium text-[#003057] tracking-tight sm:text-3xl">Consumer</h2>
+                  <p className="text-slate-500 text-sm mt-2 max-w-3xl font-normal leading-relaxed">
+                    The Consumer portal delivers a lightweight, mobile-first, friction-free verification interface. Upon scanning a physical QR code, the portal validates the active status of the code, shielding customers from revoked or counterfeit batches. Users then proceed through a guided camera-capture flow, launching their native device camera to submit product photos for sub-second visual validation.
+                  </p>
+                </div>
+
+                <div className="space-y-24">
+                  {/* Card 3: Verify Images (Text Left, Image Right) */}
+                  <div className="grid grid-cols-1 lg:grid-cols-12 gap-16 items-center">
+                    <div className="lg:col-span-6 space-y-6 text-left">
+                      <span className="text-[#00b074] text-xs font-semibold uppercase tracking-widest bg-[#00b074]/10 px-3 py-1 rounded-md border border-[#00b074]/20">03 / CAPTURE</span>
+                      <h2 className="text-3xl font-light text-[#003057] tracking-tight sm:text-4xl">Multi-Angle Image Quality Gate</h2>
+                      <p className="text-slate-500 text-sm sm:text-base leading-relaxed font-normal">
+                        Upload three compulsory views—Front, Back, and Label—and an optional Purchase Receipt. The system utilizes mobile-optimized uploads (`capture="environment"`) to immediately run inputs through brightness, focus, and blur quality gates.
+                      </p>
+                    </div>
+                    <div className="lg:col-span-6">
+                      <div className="w-full rounded-2xl overflow-hidden border border-slate-200 cursor-pointer bg-[#060814] p-4 pb-6 pr-6">
+                        <img 
+                          src="/Image.png" 
+                          alt="Capture Product Details" 
+                          className="w-full h-auto block rounded-xl transition-all duration-500 ease-out hover:scale-105"
+                        />
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Card 4: Results (Image Left, Text Right) */}
+                  <div className="grid grid-cols-1 lg:grid-cols-12 gap-16 items-center">
+                    <div className="lg:col-span-6 order-last lg:order-first">
+                      <div className="w-full rounded-2xl overflow-hidden border border-slate-200 cursor-pointer bg-[#060814] p-4 pb-6 pr-6">
+                        <img 
+                          src="/Verify-Success.png" 
+                          alt="AI Authenticity Verdict" 
+                          className="w-full h-auto block rounded-xl transition-all duration-500 ease-out hover:scale-105"
+                        />
+                      </div>
+                    </div>
+                    <div className="lg:col-span-6 space-y-6 text-left">
+                      <span className="text-[#00b074] text-xs font-semibold uppercase tracking-widest bg-[#00b074]/10 px-3 py-1 rounded-md border border-[#00b074]/20">04 / VERDICT</span>
+                      <h2 className="text-3xl font-light text-[#003057] tracking-tight sm:text-4xl">AI-Powered Authenticity Verdict</h2>
+                      <p className="text-slate-500 text-sm sm:text-base leading-relaxed font-normal">
+                        Display ledger-backed authenticity verdicts. The OpenCLIP engine calculates cosine similarity, the pHash duplicate check flags replay attacks, and OCR matches label serials. Verdicts are returned on a themed dial: Green (≥80% Authentic), Yellow (65%-79% Review), or Red (under 65% Counterfeit, triggering pre-filled brand support emails).
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
             </div>
           </div>
         );
@@ -478,7 +595,7 @@ export default function App() {
           <div className="w-full bg-white text-slate-800 animate-fadeIn font-sans pb-24">
             
             {/* Section 1: Hero Banner (The Story) */}
-            <div className="w-full h-[calc(100vh-96px)] flex items-center justify-center relative overflow-hidden bg-[#003057]">
+            <div data-theme="dark" className="w-full h-screen pt-24 flex items-center justify-center relative overflow-hidden bg-[#003057]">
               {/* Dynamic SVG Network Background (Crisp, High-Resolution, Animated) */}
               <div className="absolute inset-0 z-0 opacity-40">
                 <svg className="w-full h-full" xmlns="http://www.w3.org/2000/svg" fill="none">
@@ -583,7 +700,7 @@ export default function App() {
             </div>
 
             {/* Section 2: Our Mission (Left/Right Split) */}
-            <div className="w-full bg-white py-24">
+            <div data-theme="light" className="w-full bg-white py-24">
               <div className="max-w-7xl mx-auto px-12 grid grid-cols-1 lg:grid-cols-12 gap-16 items-center">
                 {/* Left Column */}
                 <div className="lg:col-span-6 space-y-8 text-left">
@@ -620,7 +737,7 @@ export default function App() {
             </div>
 
             {/* Section 3: The Operational Pillars (New Layout) */}
-            <div className="w-full bg-[#f8fafc] py-24 border-t border-[#e2e8f0] border-b border-[#e2e8f0]">
+            <div data-theme="light" className="w-full bg-[#f8fafc] py-24 border-t border-[#e2e8f0] border-b border-[#e2e8f0]">
               <div className="max-w-7xl mx-auto px-12 space-y-16">
                 <div className="text-center space-y-4">
                   <h2 className="text-3xl sm:text-4xl font-light text-[#003057] tracking-tight">
@@ -686,7 +803,7 @@ export default function App() {
       case 'contact':
         return (
           /* Neutral Background page container to make cards pop */
-          <div className="w-full min-h-[calc(100vh-96px)] bg-slate-50 py-16 px-6 sm:px-12 animate-fadeIn">
+          <div data-theme="light" className="w-full min-h-screen bg-slate-50 pt-40 pb-16 px-6 sm:px-12 animate-fadeIn">
             <div className="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-12 items-start text-left">
               
               {/* Left Column: Get in touch & Info details */}
@@ -793,7 +910,7 @@ export default function App() {
 
       case 'billing':
         return (
-          <div className="max-w-5xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-8 items-start py-12 bg-white text-slate-800 animate-fadeIn">
+          <div data-theme="light" className="max-w-5xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-8 items-start pt-36 pb-12 bg-white text-slate-800 animate-fadeIn">
             
             {/* Left Column: Input Forms */}
             <div className="lg:col-span-7 space-y-6">
@@ -959,15 +1076,19 @@ export default function App() {
           
           {/* Logo Frame */}
           <div className="flex items-center cursor-pointer" onClick={() => setCurrentPage('home')}>
-            <div className="logo-container">
-              <picture>
-                {/* Use dark logo when system is in light mode */}
-                <source srcSet="/authentiq_logo_dark.svg" media="(prefers-color-scheme: light)" />
-                {/* Use light logo when system is in dark mode */}
-                <source srcSet="/authentiq_logo_light.svg" media="(prefers-color-scheme: dark)" />
-                {/* Default fallback */}
-                <img src="/authentiq_logo_light.svg" alt="Authentiq Logo" className="logo" />
-              </picture>
+            <div className="logo-container relative">
+              {/* Light Logo (white text, for dark backgrounds) */}
+              <img 
+                src="/authentiq_logo_light.svg" 
+                alt="Authentiq Logo Light" 
+                className={`logo absolute inset-0 transition-opacity duration-200 ${logoTheme === 'dark' ? 'opacity-100' : 'opacity-0'}`} 
+              />
+              {/* Dark Logo (dark text, for light backgrounds) */}
+              <img 
+                src="/authentiq_logo_dark.svg" 
+                alt="Authentiq Logo Dark" 
+                className={`logo absolute inset-0 transition-opacity duration-200 ${logoTheme === 'light' ? 'opacity-100' : 'opacity-0'}`} 
+              />
             </div>
           </div>
 
@@ -991,7 +1112,7 @@ export default function App() {
               onClick={() => setCurrentPage('products')}
               className={`text-base font-medium transition-all duration-200 cursor-pointer ${currentPage === 'products' ? 'active-nav underline decoration-2 underline-offset-8' : ''}`}
             >
-              Product/Services
+              Services
             </button>
 
             <button 
@@ -1015,7 +1136,7 @@ export default function App() {
       </header>
 
       {/* Main content block */}
-      <main className="w-full pt-24">
+      <main className="w-full">
         {renderPage()}
       </main>
     </div>
