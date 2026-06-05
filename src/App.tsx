@@ -43,15 +43,23 @@ export default function App() {
   const [industry, setIndustry] = useState<string>('');
   const [website, setWebsite] = useState<string>('');
 
-  // Step 2: Contact Details
+  // Step 2: Account Details
   const [fullName, setFullName] = useState<string>('');
   const [email, setEmail] = useState<string>('');
   const [phone, setPhone] = useState<string>('');
   const [designation, setDesignation] = useState<string>('');
+  const [password, setPassword] = useState<string>('');
+  const [confirmPassword, setConfirmPassword] = useState<string>('');
   const [isOtpSent, setIsOtpSent] = useState<boolean>(false);
   const [isOtpVerified, setIsOtpVerified] = useState<boolean>(false);
   const [otpInput, setOtpInput] = useState<string>('');
   const [showOtpPopup, setShowOtpPopup] = useState<boolean>(false);
+
+  const [isEmailOtpSent, setIsEmailOtpSent] = useState<boolean>(false);
+  const [isEmailOtpVerified, setIsEmailOtpVerified] = useState<boolean>(false);
+  const [emailOtpInput, setEmailOtpInput] = useState<string>('');
+  const [showEmailOtpPopup, setShowEmailOtpPopup] = useState<boolean>(false);
+
   const [isProcessingPayment, setIsProcessingPayment] = useState<boolean>(false);
 
   // Step 3: Trademark & Compliance Docs
@@ -119,6 +127,8 @@ export default function App() {
     setEmail('');
     setPhone('');
     setDesignation('');
+    setPassword('');
+    setConfirmPassword('');
     setIsOtpSent(false);
     setIsOtpVerified(false);
     setOtpInput('');
@@ -199,6 +209,10 @@ export default function App() {
         }
       }
 
+      if (!isEmailOtpVerified) {
+        newErrors.email = 'Email OTP verification required';
+      }
+
       if (!phone.trim()) {
         newErrors.phone = 'Mobile number is required';
       } else {
@@ -213,6 +227,18 @@ export default function App() {
       }
 
       if (!designation.trim()) newErrors.designation = 'Designation/role is required';
+
+      if (!password.trim()) {
+        newErrors.password = 'Account password is required';
+      } else if (password.trim().length < 6) {
+        newErrors.password = 'Password must be at least 6 characters long';
+      }
+
+      if (!confirmPassword.trim()) {
+        newErrors.confirmPassword = 'Confirm password is required';
+      } else if (password.trim() !== confirmPassword.trim()) {
+        newErrors.confirmPassword = 'Passwords do not match';
+      }
     }
 
     if (stepId === 'addons') {
@@ -824,27 +850,23 @@ export default function App() {
                     </div>
 
                     {/* Interactive Sizing Block */}
-                    <div className="space-y-3.5 pt-2">
-                      <div className="space-y-1">
+                    <div className="space-y-3 pt-2">
+                      <div className="space-y-0.5">
                         <label className="block text-[10px] font-bold text-slate-400 uppercase tracking-wider">
                           Team Members (add-ons)
                         </label>
-                        <div className="flex items-center bg-slate-100 rounded-xl p-3.5 w-full justify-between">
-                          <span className="text-xs font-medium text-slate-800 font-sans">
-                            5 users
-                          </span>
-                        </div>
+                        <span className="text-xs font-bold text-[#003057] font-sans">
+                          5 users
+                        </span>
                       </div>
 
-                      <div className="space-y-1">
+                      <div className="space-y-0.5">
                         <label className="block text-[10px] font-bold text-slate-400 uppercase tracking-wider">
                           SKUs Count Limits (add-ons)
                         </label>
-                        <div className="flex items-center bg-slate-100 rounded-xl p-3.5 w-full justify-between">
-                          <span className="text-xs font-medium text-slate-800 font-sans">
-                            25 SKUs
-                          </span>
-                        </div>
+                        <span className="text-xs font-bold text-[#003057] font-sans">
+                          25 SKUs
+                        </span>
                       </div>
                     </div>
 
@@ -897,38 +919,32 @@ export default function App() {
                     </div>
 
                     {/* Interactive Sizing Blocks */}
-                    <div className="space-y-3.5 pt-2">
-                      <div className="space-y-1">
+                    <div className="space-y-3 pt-2">
+                      <div className="space-y-0.5">
                         <label className="block text-[10px] font-bold text-slate-500 uppercase tracking-wider">
                           Team Members (add-ons)
                         </label>
-                        <div className="flex items-center bg-slate-800 border border-slate-700/50 rounded-xl p-3.5 w-full justify-between">
-                          <span className="text-xs font-medium text-white font-sans">
-                            50 users
-                          </span>
-                        </div>
+                        <span className="text-xs font-bold text-white font-sans">
+                          50 users
+                        </span>
                       </div>
 
-                      <div className="space-y-1">
+                      <div className="space-y-0.5">
                         <label className="block text-[10px] font-bold text-slate-500 uppercase tracking-wider">
                           SKUs Count Limits (add-ons)
                         </label>
-                        <div className="flex items-center bg-slate-800 border border-slate-700/50 rounded-xl p-3.5 w-full justify-between">
-                          <span className="text-xs font-medium text-white font-sans">
-                            500 SKUs
-                          </span>
-                        </div>
+                        <span className="text-xs font-bold text-white font-sans">
+                          500 SKUs
+                        </span>
                       </div>
 
-                      <div className="space-y-1">
+                      <div className="space-y-0.5">
                         <label className="block text-[10px] font-bold text-slate-500 uppercase tracking-wider">
                           Brands Registry (add-ons)
                         </label>
-                        <div className="flex items-center bg-slate-800 border border-slate-700/50 rounded-xl p-3.5 w-full justify-between">
-                          <span className="text-xs font-medium text-white font-sans">
-                            5 brands
-                          </span>
-                        </div>
+                        <span className="text-xs font-bold text-white font-sans">
+                          5 brands
+                        </span>
                       </div>
                     </div>
 
@@ -963,13 +979,13 @@ export default function App() {
 
                     {/* Interactive Input Mock Blocks */}
                     <div className="space-y-3 pt-2">
-                      <div className="bg-slate-50 border border-slate-100 rounded-xl p-3 flex items-center justify-between opacity-75">
-                        <span className="text-xs text-slate-400 font-semibold uppercase">Users limit</span>
-                        <span className="text-sm font-semibold text-blue-600 font-sans">Unlimited</span>
+                      <div className="flex items-center justify-between opacity-75">
+                        <span className="text-xs text-slate-400 font-bold uppercase tracking-wider">Users limit</span>
+                        <span className="text-xs font-bold text-blue-600 font-sans">Unlimited</span>
                       </div>
-                      <div className="bg-slate-50 border border-slate-100 rounded-xl p-3 flex items-center justify-between opacity-75">
-                        <span className="text-xs text-slate-400 font-semibold uppercase">SKUs limit</span>
-                        <span className="text-sm font-semibold text-blue-600 font-sans">Unlimited</span>
+                      <div className="flex items-center justify-between opacity-75">
+                        <span className="text-xs text-slate-400 font-bold uppercase tracking-wider">SKUs limit</span>
+                        <span className="text-xs font-bold text-blue-600 font-sans">Unlimited</span>
                       </div>
                     </div>
 
@@ -1651,13 +1667,13 @@ export default function App() {
         // Dynamic step items
         const stepItems = hasAddOns ? [
           { s: 1, label: 'Company', id: 'company' },
-          { s: 2, label: 'Contact', id: 'contact' },
+          { s: 2, label: 'Account', id: 'contact' },
           { s: 3, label: 'Add-Ons', id: 'addons' },
           { s: 4, label: 'Compliance', id: 'compliance' },
           { s: 5, label: 'Payment', id: 'payment' }
         ] : [
           { s: 1, label: 'Company', id: 'company' },
-          { s: 2, label: 'Contact', id: 'contact' },
+          { s: 2, label: 'Account', id: 'contact' },
           { s: 3, label: 'Compliance', id: 'compliance' },
           { s: 4, label: 'Payment', id: 'payment' }
         ];
@@ -2042,39 +2058,69 @@ export default function App() {
                   </div>
                 )}
 
-                {/* Step 2: Contact Details */}
+                {/* Step 2: Account Details */}
                 {currentStepId === 'contact' && (
                   <div className="space-y-6 animate-fadeIn">
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                      <div className="space-y-1.5">
-                        <label className="block text-xs font-bold uppercase tracking-wider text-slate-500">Full Name *</label>
-                        <input
-                          type="text"
-                          value={fullName}
-                          onChange={(e) => setFullName(e.target.value)}
-                          placeholder="John Doe"
-                          className={`w-full bg-slate-50/50 border rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-blue-600 text-slate-800 font-normal transition-colors placeholder-slate-400 ${errors.fullName ? 'border-red-500 ring-1 ring-red-500' : 'border-slate-200'}`}
-                        />
-                        {errors.fullName && <p className="text-[10px] text-red-500 font-medium">{errors.fullName}</p>}
-                      </div>
-
-                      <div className="space-y-1.5">
-                        <label className="block text-xs font-bold uppercase tracking-wider text-slate-500">Work Email *</label>
-                        <input
-                          type="email"
-                          value={email}
-                          onChange={(e) => setEmail(e.target.value)}
-                          placeholder="john@acmebrands.com"
-                          className={`w-full bg-slate-50/50 border rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-blue-600 text-slate-800 font-normal transition-colors placeholder-slate-400 ${errors.email ? 'border-red-500 ring-1 ring-red-500' : 'border-slate-200'}`}
-                        />
-                        {errors.email && <p className="text-[10px] text-red-500 font-medium">{errors.email}</p>}
-                      </div>
+                    {/* Full Name */}
+                    <div className="space-y-1.5">
+                      <label className="block text-xs font-bold uppercase tracking-wider text-slate-500">Full Name *</label>
+                      <input 
+                        type="text" 
+                        value={fullName}
+                        onChange={(e) => setFullName(e.target.value)}
+                        placeholder="John Doe" 
+                        className={`w-full bg-slate-50/50 border rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-blue-600 text-slate-800 font-normal transition-colors placeholder-slate-400 ${errors.fullName ? 'border-red-500 ring-1 ring-red-500' : 'border-slate-200'}`}
+                      />
+                      {errors.fullName && <p className="text-[10px] text-red-500 font-medium">{errors.fullName}</p>}
                     </div>
 
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-end">
-                      <div className="space-y-1.5">
-                        <label className="block text-xs font-bold uppercase tracking-wider text-slate-500">Mobile Number *</label>
-                        <div className="flex gap-2 relative">
+                    {/* Work Email */}
+                    <div className="space-y-1.5">
+                      <label className="block text-xs font-bold uppercase tracking-wider text-slate-500">Work Email *</label>
+                      <div className="flex gap-2">
+                        <input 
+                          type="email" 
+                          value={email}
+                          onChange={(e) => {
+                            setEmail(e.target.value);
+                            setIsEmailOtpVerified(false);
+                          }}
+                          placeholder="john@acmebrands.com" 
+                          className={`flex-1 bg-slate-50/50 border rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-blue-600 text-slate-800 font-normal transition-colors placeholder-slate-400 ${errors.email ? 'border-red-500 ring-1 ring-red-500' : 'border-slate-200'}`}
+                        />
+                        <div className="w-40 flex-shrink-0">
+                          {isEmailOtpVerified ? (
+                            <div className="w-full h-full flex items-center justify-center gap-2 bg-emerald-50 border border-emerald-200 text-emerald-600 rounded-xl font-bold text-xs uppercase tracking-wider select-none py-3">
+                              <span>Verified ✓</span>
+                            </div>
+                          ) : (
+                            <button 
+                              type="button"
+                              onClick={() => {
+                                const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                                if (!email || !emailRegex.test(email.trim())) {
+                                  setErrors({ ...errors, email: 'Enter a valid work email first' });
+                                  return;
+                                }
+                                setErrors({});
+                                setIsEmailOtpSent(true);
+                                setShowEmailOtpPopup(true);
+                              }}
+                              className="w-full h-full bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-xl text-xs uppercase tracking-wider transition-all duration-200 cursor-pointer shadow-md shadow-blue-500/10 py-3"
+                            >
+                              {isEmailOtpSent ? 'Resend OTP' : 'Verify Email'}
+                            </button>
+                          )}
+                        </div>
+                      </div>
+                      {errors.email && <p className="text-[10px] text-red-500 font-medium">{errors.email}</p>}
+                    </div>
+
+                    {/* Mobile Number */}
+                    <div className="space-y-1.5">
+                      <label className="block text-xs font-bold uppercase tracking-wider text-slate-500">Mobile Number *</label>
+                      <div className="flex gap-2">
+                        <div className="flex gap-2 flex-1">
                           <span className="flex items-center bg-slate-100 border border-slate-200 rounded-xl px-3 text-slate-500 font-sans text-sm font-semibold select-none">
                             +91
                           </span>
@@ -2084,54 +2130,81 @@ export default function App() {
                             onChange={(e) => {
                               const v = e.target.value.replace(/\D/g, '');
                               setPhone(v);
-                              setIsOtpVerified(false); // require re-verification on change
+                              setIsOtpVerified(false);
                             }}
                             placeholder="9876543210"
                             maxLength={10}
                             className={`flex-1 bg-slate-50/50 border rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-blue-600 text-slate-800 font-normal transition-colors placeholder-slate-400 ${errors.phone ? 'border-red-500 ring-1 ring-red-500' : 'border-slate-200'}`}
                           />
                         </div>
-                        {errors.phone && <p className="text-[10px] text-red-500 font-medium">{errors.phone}</p>}
+                        <div className="w-40 flex-shrink-0">
+                          {isOtpVerified ? (
+                            <div className="w-full h-full flex items-center justify-center gap-2 bg-emerald-50 border border-emerald-200 text-emerald-600 rounded-xl font-bold text-xs uppercase tracking-wider select-none py-3">
+                              <span>Verified ✓</span>
+                            </div>
+                          ) : (
+                            <button 
+                              type="button"
+                              onClick={() => {
+                                if (!phone || phone.trim().length !== 10) {
+                                  setErrors({ ...errors, phone: 'Enter a valid 10-digit mobile number first' });
+                                  return;
+                                }
+                                setErrors({});
+                                setIsOtpSent(true);
+                                setShowOtpPopup(true);
+                              }}
+                              className="w-full h-full bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-xl text-xs uppercase tracking-wider transition-all duration-200 cursor-pointer shadow-md shadow-blue-500/10 py-3"
+                            >
+                              {isOtpSent ? 'Resend OTP' : 'Verify Mobile'}
+                            </button>
+                          )}
+                        </div>
                       </div>
-
-                      <div className="h-full">
-                        {isOtpVerified ? (
-                          <div className="w-full flex items-center justify-center gap-2 bg-emerald-50 border border-emerald-200 text-emerald-600 py-3 rounded-xl font-bold text-xs uppercase tracking-wider select-none">
-                            <span>Verified ✓</span>
-                          </div>
-                        ) : (
-                          <button
-                            type="button"
-                            onClick={() => {
-                              if (!phone || phone.trim().length !== 10) {
-                                setErrors({ ...errors, phone: 'Enter a valid 10-digit mobile number first' });
-                                return;
-                              }
-                              setErrors({});
-                              setIsOtpSent(true);
-                              setShowOtpPopup(true);
-                            }}
-                            className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3.5 px-6 rounded-xl text-xs uppercase tracking-wider transition-all duration-200 cursor-pointer shadow-md shadow-blue-500/10"
-                          >
-                            {isOtpSent ? 'Resend OTP' : 'Verify Mobile'}
-                          </button>
-                        )}
-                      </div>
+                      {errors.phone && <p className="text-[10px] text-red-500 font-medium">{errors.phone}</p>}
                     </div>
 
+                    {/* Designation / Role */}
                     <div className="space-y-1.5">
-                      <label className="block text-xs font-bold uppercase tracking-wider text-slate-550">Designation / Role *</label>
-                      <input
-                        type="text"
+                      <label className="block text-xs font-bold uppercase tracking-wider text-slate-500">Designation / Role *</label>
+                      <input 
+                        type="text" 
                         value={designation}
                         onChange={(e) => setDesignation(e.target.value)}
-                        placeholder="Director / Brand Manager / Operations Manager"
+                        placeholder="Director / Brand Manager / Operations Manager" 
                         className={`w-full bg-slate-50/50 border rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-blue-600 text-slate-800 font-normal transition-colors placeholder-slate-400 ${errors.designation ? 'border-red-500 ring-1 ring-red-500' : 'border-slate-200'}`}
                       />
                       {errors.designation && <p className="text-[10px] text-red-500 font-medium">{errors.designation}</p>}
                     </div>
 
-                    {/* Interactive OTP Simulator Dialog Modal */}
+                    {/* Create Account Password */}
+                    <div className="space-y-1.5">
+                      <label className="block text-xs font-bold uppercase tracking-wider text-slate-500">Create Account Password *</label>
+                      <input 
+                        type="password" 
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                        placeholder="••••••••" 
+                        className={`w-full bg-slate-50/50 border rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-blue-600 text-slate-800 font-normal transition-colors placeholder-slate-400 ${errors.password ? 'border-red-500 ring-1 ring-red-500' : 'border-slate-200'}`}
+                      />
+                      <p className="text-[10px] text-slate-400 mt-1 font-normal">This password will be used to log in to the Vendor Portal.</p>
+                      {errors.password && <p className="text-[10px] text-red-500 font-medium">{errors.password}</p>}
+                    </div>
+
+                    {/* Confirm Account Password */}
+                    <div className="space-y-1.5">
+                      <label className="block text-xs font-bold uppercase tracking-wider text-slate-500">Confirm Account Password *</label>
+                      <input 
+                        type="password" 
+                        value={confirmPassword}
+                        onChange={(e) => setConfirmPassword(e.target.value)}
+                        placeholder="••••••••" 
+                        className={`w-full bg-slate-50/50 border rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-blue-600 text-slate-800 font-normal transition-colors placeholder-slate-400 ${errors.confirmPassword ? 'border-red-500 ring-1 ring-red-500' : 'border-slate-200'}`}
+                      />
+                      {errors.confirmPassword && <p className="text-[10px] text-red-500 font-medium">{errors.confirmPassword}</p>}
+                    </div>
+
+                    {/* Interactive Mobile OTP Simulator Dialog Modal */}
                     {showOtpPopup && (
                       <div className="fixed inset-0 z-55 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4">
                         <div className="bg-white rounded-3xl p-8 max-w-sm w-full space-y-6 text-center shadow-2xl border border-slate-100 animate-fadeIn">
@@ -2183,6 +2256,69 @@ export default function App() {
                                   setErrors({});
                                 } else {
                                   setErrors({ otp: 'Invalid OTP code. Please enter 1234.' });
+                                }
+                              }}
+                              className="flex-1 bg-[#00b074] hover:bg-[#009660] text-white font-bold py-3 rounded-xl text-xs uppercase transition-colors cursor-pointer shadow-md shadow-[#00b074]/10"
+                            >
+                              Verify Code
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    )}
+
+                    {/* Interactive Email OTP Simulator Dialog Modal */}
+                    {showEmailOtpPopup && (
+                      <div className="fixed inset-0 z-55 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4">
+                        <div className="bg-white rounded-3xl p-8 max-w-sm w-full space-y-6 text-center shadow-2xl border border-slate-100 animate-fadeIn">
+                          <div>
+                            <span className="text-xl">📧</span>
+                            <h3 className="text-lg font-bold text-[#003057] mt-3">Email Verification Simulator</h3>
+                            <p className="text-xs text-slate-500 mt-1.5 font-normal">
+                              We sent a verification code to <span className="font-semibold text-slate-800">{email}</span>.
+                            </p>
+                          </div>
+                          
+                          <div className="bg-blue-50 border border-blue-200 rounded-xl p-3.5 text-left text-xs text-blue-700 space-y-1">
+                            <span className="font-bold">⚠️ Test Simulator Hint:</span>
+                            <p className="font-normal">Enter code <span className="font-black underline tracking-widest text-blue-900 font-sans">1234</span> to successfully complete email verification.</p>
+                          </div>
+
+                          <div className="space-y-1.5">
+                            <label className="block text-[10px] font-bold text-slate-400 uppercase tracking-wider text-left">4-Digit Security OTP</label>
+                            <input 
+                              type="text" 
+                              maxLength={4}
+                              value={emailOtpInput}
+                              onChange={(e) => setEmailOtpInput(e.target.value.replace(/\D/g, ''))}
+                              placeholder="0 0 0 0" 
+                              className="w-full text-center text-xl font-bold tracking-[0.75em] bg-slate-50 border border-slate-200 rounded-xl py-3.5 focus:outline-none focus:border-blue-600 font-mono text-slate-800 placeholder-slate-300"
+                            />
+                            {errors.emailOtp && <p className="text-[10px] text-red-500 font-semibold">{errors.emailOtp}</p>}
+                          </div>
+
+                          <div className="flex gap-3 pt-2">
+                            <button 
+                              type="button"
+                              onClick={() => {
+                                setShowEmailOtpPopup(false);
+                                setEmailOtpInput('');
+                                setErrors({});
+                              }}
+                              className="flex-1 border border-slate-200 hover:bg-slate-50 text-slate-500 font-semibold py-3 rounded-xl text-xs uppercase transition-colors cursor-pointer"
+                            >
+                              Cancel
+                            </button>
+                            <button 
+                              type="button"
+                              onClick={() => {
+                                if (emailOtpInput === '1234') {
+                                  setIsEmailOtpVerified(true);
+                                  setShowEmailOtpPopup(false);
+                                  setEmailOtpInput('');
+                                  setErrors({});
+                                } else {
+                                  setErrors({ emailOtp: 'Invalid OTP code. Please enter 1234.' });
                                 }
                               }}
                               className="flex-1 bg-[#00b074] hover:bg-[#009660] text-white font-bold py-3 rounded-xl text-xs uppercase transition-colors cursor-pointer shadow-md shadow-[#00b074]/10"
@@ -2786,13 +2922,62 @@ export default function App() {
                   ) : (
                     <button
                       type="button"
-                      onClick={() => {
+                      onClick={async () => {
                         const currentStepId = stepItems[checkoutStep - 1].id as 'company' | 'contact' | 'addons' | 'compliance' | 'payment';
                         if (validateStep(currentStepId)) {
                           setIsProcessingPayment(true);
-                          setTimeout(() => {
-                            window.location.href = "http://localhost:3000/vendor/login";
-                          }, 2500);
+                          
+                          const payload = {
+                            legalName: legalName,
+                            companyType: companyType,
+                            gstin: gstin,
+                            pan: pan,
+                            cin: cin || null,
+                            addressLine1: addressLine1,
+                            addressLine2: addressLine2 || null,
+                            city: city,
+                            stateName: stateName,
+                            pinCode: pinCode,
+                            selectedCountry: selectedCountry,
+                            industry: industry,
+                            website: website || null,
+                            
+                            fullName: fullName,
+                            email: email,
+                            phone: phone,
+                            designation: designation,
+                            password: password,
+                            
+                            planName: selectedPlan.name,
+                            extraUsers: selectedPlan.extraUsers,
+                            extraSKUs: selectedPlan.extraSKUs,
+                            extraBrands: selectedPlan.extraBrands,
+                            totalUsers: selectedPlan.totalUsers,
+                            totalSKUs: selectedPlan.totalSKUs,
+                            totalBrands: selectedPlan.totalBrands
+                          };
+
+                          try {
+                            const res = await fetch("http://localhost:8000/auth/checkout-register", {
+                              method: "POST",
+                              headers: {
+                                "Content-Type": "application/json"
+                              },
+                              body: JSON.stringify(payload)
+                            });
+
+                            if (!res.ok) {
+                              const errData = await res.json().catch(() => ({}));
+                              throw new Error(errData.detail || "Registration failed");
+                            }
+
+                            // On success, redirect to vendor login with email parameter for auto-filling
+                            window.location.href = `http://localhost:3000/vendor/login?email=${encodeURIComponent(email)}`;
+                          } catch (err: any) {
+                            console.error("Checkout registration failed:", err);
+                            alert("Registration failed: " + err.message);
+                            setIsProcessingPayment(false);
+                          }
                         }
                       }}
                       className="bg-[#00b074] hover:bg-[#009660] text-white font-extrabold py-4 px-10 rounded-xl text-xs uppercase tracking-widest transition-all duration-200 cursor-pointer shadow-lg shadow-[#00b074]/20"
