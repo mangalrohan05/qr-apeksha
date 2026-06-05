@@ -38,7 +38,8 @@ export default function App() {
   const [city, setCity] = useState<string>('');
   const [stateName, setStateName] = useState<string>('');
   const [pinCode, setPinCode] = useState<string>('');
-  const country = 'India';
+  const [selectedCountry, setSelectedCountry] = useState<string>('India');
+  const [isGeolocating, setIsGeolocating] = useState<boolean>(false);
   const [industry, setIndustry] = useState<string>('');
   const [website, setWebsite] = useState<string>('');
 
@@ -73,6 +74,31 @@ export default function App() {
   const [agreePrivacy, setAgreePrivacy] = useState<boolean>(false);
   const [agreeDataProcessing, setAgreeDataProcessing] = useState<boolean>(false);
 
+  // Interactive plan sizing states (Business)
+  const [businessUsers, setBusinessUsers] = useState<number>(5);
+  const [businessSKUs, setBusinessSKUs] = useState<number>(25);
+
+  // Interactive plan sizing states (Business Pro)
+  const [proUsers, setProUsers] = useState<number>(50);
+  const [proSKUs, setProSKUs] = useState<number>(500);
+  const [proBrands, setProBrands] = useState<number>(5);
+
+  const [selectedPlan, setSelectedPlan] = useState<SelectedPlanInfo>({
+    name: 'Free Trial',
+    price: 0,
+    interval: 'trial',
+    basePrice: 0,
+    extraUsers: 0,
+    extraUsersCost: 0,
+    extraSKUs: 0,
+    extraSKUsCost: 0,
+    extraBrands: 0,
+    extraBrandsCost: 0,
+    totalUsers: 1,
+    totalSKUs: 1,
+    totalBrands: 1
+  });
+
   const resetCheckout = () => {
     setCheckoutStep(1);
     setErrors({});
@@ -86,6 +112,7 @@ export default function App() {
     setCity('');
     setStateName('');
     setPinCode('');
+    setSelectedCountry('India');
     setIndustry('');
     setWebsite('');
     setFullName('');
@@ -112,12 +139,17 @@ export default function App() {
     setAgreeTerms(false);
     setAgreePrivacy(false);
     setAgreeDataProcessing(false);
+    setBusinessUsers(5);
+    setBusinessSKUs(25);
+    setProUsers(50);
+    setProSKUs(500);
+    setProBrands(5);
   };
 
-  const validateStep = (step: number): boolean => {
+  const validateStep = (stepId: 'company' | 'contact' | 'addons' | 'compliance' | 'payment'): boolean => {
     const newErrors: Record<string, string> = {};
 
-    if (step === 1) {
+    if (stepId === 'company') {
       if (!legalName.trim()) newErrors.legalName = 'Legal company name is required';
       if (!companyType) newErrors.companyType = 'Company type is required';
 
@@ -155,7 +187,7 @@ export default function App() {
       if (!industry) newErrors.industry = 'Industry/sector is required';
     }
 
-    if (step === 2) {
+    if (stepId === 'contact') {
       if (!fullName.trim()) newErrors.fullName = 'Full name is required';
 
       if (!email.trim()) {
@@ -183,7 +215,11 @@ export default function App() {
       if (!designation.trim()) newErrors.designation = 'Designation/role is required';
     }
 
-    if (step === 3) {
+    if (stepId === 'addons') {
+      // Addons don't have validation errors since they are sliders/dropdowns with default values
+    }
+
+    if (stepId === 'compliance') {
       if (!gstCertFile) newErrors.gstCertFile = 'GST Certificate is required';
       if (!incDocFile) newErrors.incDocFile = 'Incorporation document is required';
 
@@ -198,7 +234,7 @@ export default function App() {
       }
     }
 
-    if (step === 4) {
+    if (stepId === 'payment') {
       if (!agreeTerms) newErrors.agreeTerms = 'Acceptance required';
       if (!agreePrivacy) newErrors.agreePrivacy = 'Acceptance required';
       if (!agreeDataProcessing) newErrors.agreeDataProcessing = 'Consent required';
@@ -208,6 +244,66 @@ export default function App() {
     return Object.keys(newErrors).length === 0;
   };
 
+  useEffect(() => {
+    if (selectedPlan.name === 'Business') {
+      const baseCost = isAnnual ? 55000 : 5000;
+      const extraUsersCount = businessUsers - 5;
+      const extraUsersC = (extraUsersCount / 5) * (isAnnual ? 5000 : 450);
+
+      let extraSKUsC = 0;
+      if (businessSKUs === 35) {
+        extraSKUsC = isAnnual ? 10000 : 900;
+      } else if (businessSKUs === 75) {
+        extraSKUsC = isAnnual ? 45000 : 4000;
+      }
+
+      const totalCost = baseCost + extraUsersC + extraSKUsC;
+
+      setSelectedPlan(prev => ({
+        ...prev,
+        price: totalCost,
+        basePrice: baseCost,
+        extraUsers: extraUsersCount,
+        extraUsersCost: extraUsersC,
+        extraSKUs: businessSKUs - 25,
+        extraSKUsCost: extraSKUsC,
+        totalUsers: businessUsers,
+        totalSKUs: businessSKUs,
+      }));
+    } else if (selectedPlan.name === 'Business Pro') {
+      const baseCost = isAnnual ? 245000 : 22500;
+      const extraUsersCount = proUsers - 50;
+      const extraUsersC = (extraUsersCount / 5) * (isAnnual ? 5000 : 450);
+
+      let extraSKUsC = 0;
+      if (proSKUs === 510) {
+        extraSKUsC = isAnnual ? 10000 : 900;
+      } else if (proSKUs === 550) {
+        extraSKUsC = isAnnual ? 45000 : 4000;
+      }
+
+      const extraBrandsCount = proBrands - 5;
+      const extraBrandsC = extraBrandsCount * (isAnnual ? 10000 : 900);
+
+      const totalCost = baseCost + extraUsersC + extraSKUsC + extraBrandsC;
+
+      setSelectedPlan(prev => ({
+        ...prev,
+        price: totalCost,
+        basePrice: baseCost,
+        extraUsers: extraUsersCount,
+        extraUsersCost: extraUsersC,
+        extraSKUs: proSKUs - 500,
+        extraSKUsCost: extraSKUsC,
+        extraBrands: extraBrandsCount,
+        extraBrandsCost: extraBrandsC,
+        totalUsers: proUsers,
+        totalSKUs: proSKUs,
+        totalBrands: proBrands
+      }));
+    }
+  }, [selectedPlan.name, businessUsers, businessSKUs, proUsers, proSKUs, proBrands, isAnnual]);
+
   // State to track the selected payment method gateway
   const [paymentMethod, setPaymentMethod] = useState<string>('razorpay');
 
@@ -216,17 +312,82 @@ export default function App() {
 
   const [logoTheme, setLogoTheme] = useState<'light' | 'dark'>('light');
 
-  // Interactive plan sizing states (Business)
-  const [businessUsers, setBusinessUsers] = useState<number>(5);
-  const [businessSKUs, setBusinessSKUs] = useState<number>(25);
 
-  // Interactive plan sizing states (Business Pro)
-  const [proUsers, setProUsers] = useState<number>(50);
-  const [proSKUs, setProSKUs] = useState<number>(500);
-  const [proBrands, setProBrands] = useState<number>(5);
 
   // Free Trial side drawer toggle state
   const [isFreeTrialDrawerOpen, setIsFreeTrialDrawerOpen] = useState<boolean>(false);
+
+  // --- REAL-TIME LOCATION API (CountriesNow) ---
+  const [countriesList, setCountriesList] = useState<string[]>([]);
+  const [statesList, setStatesList] = useState<string[]>([]);
+  const [citiesList, setCitiesList] = useState<string[]>([]);
+  const [isLoadingCountries, setIsLoadingCountries] = useState<boolean>(false);
+  const [isLoadingStates, setIsLoadingStates] = useState<boolean>(false);
+  const [isLoadingCities, setIsLoadingCities] = useState<boolean>(false);
+
+  // Fetch all countries once on mount
+  useEffect(() => {
+    setIsLoadingCountries(true);
+    fetch('https://countriesnow.space/api/v0.1/countries/positions')
+      .then(r => r.json())
+      .then(d => {
+        if (d.data) {
+          const names: string[] = d.data.map((c: { name: string }) => c.name).sort();
+          setCountriesList(names);
+          // pre-select India if it's in the list
+          if (names.includes('India') && !selectedCountry) setSelectedCountry('India');
+        }
+      })
+      .catch(() => { })
+      .finally(() => setIsLoadingCountries(false));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  // Fetch states whenever selectedCountry changes
+  useEffect(() => {
+    if (!selectedCountry) { setStatesList([]); setCitiesList([]); return; }
+    setStatesList([]);
+    setCitiesList([]);
+    setStateName('');
+    setCity('');
+    setIsLoadingStates(true);
+    fetch('https://countriesnow.space/api/v0.1/countries/states', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ country: selectedCountry }),
+    })
+      .then(r => r.json())
+      .then(d => {
+        if (d.data?.states) {
+          setStatesList(d.data.states.map((s: { name: string }) => s.name).sort());
+        }
+      })
+      .catch(() => { })
+      .finally(() => setIsLoadingStates(false));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectedCountry]);
+
+  // Fetch cities whenever stateName changes
+  useEffect(() => {
+    if (!selectedCountry || !stateName) { setCitiesList([]); return; }
+    setCitiesList([]);
+    setCity('');
+    setIsLoadingCities(true);
+    fetch('https://countriesnow.space/api/v0.1/countries/state/cities', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ country: selectedCountry, state: stateName }),
+    })
+      .then(r => r.json())
+      .then(d => {
+        if (d.data && Array.isArray(d.data)) {
+          setCitiesList((d.data as string[]).sort());
+        }
+      })
+      .catch(() => { })
+      .finally(() => setIsLoadingCities(false));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [stateName]);
 
   // Scroll to top of the page when the page changes
   useEffect(() => {
@@ -275,21 +436,7 @@ export default function App() {
 
 
 
-  const [selectedPlan, setSelectedPlan] = useState<SelectedPlanInfo>({
-    name: 'Free Trial',
-    price: 0,
-    interval: 'trial',
-    basePrice: 0,
-    extraUsers: 0,
-    extraUsersCost: 0,
-    extraSKUs: 0,
-    extraSKUsCost: 0,
-    extraBrands: 0,
-    extraBrandsCost: 0,
-    totalUsers: 1,
-    totalSKUs: 1,
-    totalBrands: 1
-  });
+
 
   const handleSelectPlan = (planType: 'free' | 'business' | 'pro' | 'enterprise') => {
     resetCheckout();
@@ -598,16 +745,9 @@ export default function App() {
       case 'plans': {
         // Business plan calculations
         const businessBaseCost = isAnnual ? 55000 : 5000;
-        const businessExtraUsersCost = ((businessUsers - 5) / 5) * (isAnnual ? 5000 : 450);
-        const businessExtraSKUsCost = businessSKUs === 35 ? (isAnnual ? 10000 : 900) : (businessSKUs === 75 ? (isAnnual ? 45000 : 4000) : 0);
-        const businessTotalCost = businessBaseCost + businessExtraUsersCost + businessExtraSKUsCost;
 
         // Business Pro calculations
         const proBaseCost = isAnnual ? 245000 : 22500;
-        const proExtraUsersCost = ((proUsers - 50) / 5) * (isAnnual ? 5000 : 450);
-        const proExtraSKUsCost = proSKUs === 510 ? (isAnnual ? 10000 : 900) : (proSKUs === 550 ? (isAnnual ? 45000 : 4000) : 0);
-        const proExtraBrandsCost = (proBrands - 5) * (isAnnual ? 10000 : 900);
-        const proTotalCost = proBaseCost + proExtraUsersCost + proExtraSKUsCost + proExtraBrandsCost;
 
         return (
           <div data-theme="light" className="animate-fadeIn pt-24 pb-32 bg-slate-50 text-slate-800 relative overflow-x-hidden">
@@ -628,33 +768,20 @@ export default function App() {
                 </span>
               </div>
 
-              {/* Drawer Banner Trigger Card (High visibility banner) */}
+              {/* Free Trial Banner — simple & clean */}
               <div className="pt-6 max-w-2xl mx-auto">
-                <div
-                  onClick={() => setIsFreeTrialDrawerOpen(true)}
-                  className="bg-gradient-to-r from-blue-600 via-blue-700 to-indigo-700 hover:from-blue-700 hover:to-indigo-800 rounded-3xl p-5 flex flex-col sm:flex-row items-center justify-between gap-4 cursor-pointer hover:shadow-xl transition-all duration-300 transform hover:-translate-y-0.5 border border-blue-500/20 text-left shadow-md group"
-                >
-                  <div className="flex items-center gap-4">
-                    <span className="flex-shrink-0 w-12 h-12 rounded-2xl bg-white/10 flex items-center justify-center text-xl animate-pulse">
-                      🎁
-                    </span>
-                    <div>
-                      <h4 className="text-sm font-bold text-white tracking-wide uppercase">
-                        Start with a 14-Day Free Trial
-                      </h4>
-                      <p className="text-xs text-blue-100 font-normal mt-0.5">
-                        Get 250 free verification scans. No credit card or contract required.
-                      </p>
-                    </div>
+                <div className="flex items-center justify-between gap-4 bg-white border border-slate-200 rounded-xl px-5 py-3.5">
+                  <div className="flex items-center gap-3 text-left">
+                    <span className="text-xs font-semibold text-slate-400 bg-slate-100 px-2.5 py-1 rounded-md whitespace-nowrap">Free</span>
+                    <p className="text-sm text-slate-700 font-normal">
+                      Try free for 14 days — <span className="text-slate-500">250 scans, no credit card needed.</span>
+                    </p>
                   </div>
                   <button
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      setIsFreeTrialDrawerOpen(true);
-                    }}
-                    className="flex-shrink-0 bg-white hover:bg-slate-100 text-blue-600 font-bold px-6 py-3 rounded-2xl text-xs uppercase tracking-wider transition-colors shadow-sm active:scale-95 cursor-pointer group-hover:scale-105"
+                    onClick={() => setIsFreeTrialDrawerOpen(true)}
+                    className="flex-shrink-0 text-xs font-semibold text-white bg-[#003057] hover:bg-[#004a87] px-4 py-2 rounded-lg transition-colors cursor-pointer whitespace-nowrap"
                   >
-                    Try for Free →
+                    Start Trial
                   </button>
                 </div>
               </div>
@@ -685,7 +812,7 @@ export default function App() {
                         </span>
                         <span className="text-base font-bold">₹</span>
                         <span className="text-4xl font-extrabold tracking-tight">
-                          {businessTotalCost.toLocaleString('en-IN')}
+                          {businessBaseCost.toLocaleString('en-IN')}
                         </span>
                         <span className="text-slate-400 text-xs ml-1">
                           /{isAnnual ? 'yr' : 'mo'}
@@ -700,41 +827,24 @@ export default function App() {
                     <div className="space-y-3.5 pt-2">
                       <div className="space-y-1">
                         <label className="block text-[10px] font-bold text-slate-400 uppercase tracking-wider">
-                          Team Members
+                          Team Members (add-ons)
                         </label>
-                        <div className="flex items-center bg-slate-100 rounded-xl p-1.5 w-full justify-between">
-                          <button
-                            onClick={() => setBusinessUsers(Math.max(5, businessUsers - 5))}
-                            className="w-8 h-8 rounded-lg bg-white shadow-sm flex items-center justify-center font-bold text-slate-600 hover:bg-slate-50 active:scale-95 disabled:opacity-50 cursor-pointer"
-                            disabled={businessUsers <= 5}
-                          >
-                            –
-                          </button>
+                        <div className="flex items-center bg-slate-100 rounded-xl p-3.5 w-full justify-between">
                           <span className="text-xs font-medium text-slate-800 font-sans">
-                            {businessUsers} users
+                            5 users
                           </span>
-                          <button
-                            onClick={() => setBusinessUsers(businessUsers + 5)}
-                            className="w-8 h-8 rounded-lg bg-white shadow-sm flex items-center justify-center font-bold text-slate-600 hover:bg-slate-50 active:scale-95 cursor-pointer"
-                          >
-                            +
-                          </button>
                         </div>
                       </div>
 
                       <div className="space-y-1">
                         <label className="block text-[10px] font-bold text-slate-400 uppercase tracking-wider">
-                          SKUs Count Limits
+                          SKUs Count Limits (add-ons)
                         </label>
-                        <select
-                          value={businessSKUs}
-                          onChange={(e) => setBusinessSKUs(Number(e.target.value))}
-                          className="w-full bg-slate-100 text-slate-800 border-none rounded-xl p-3.5 text-xs font-sans focus:outline-none focus:ring-2 focus:ring-blue-500 cursor-pointer"
-                        >
-                          <option value={25}>25 SKUs (included)</option>
-                          <option value={35}>35 SKUs (+{isAnnual ? '₹10,000/yr' : '₹900/mo'})</option>
-                          <option value={75}>75 SKUs (+{isAnnual ? '₹45,000/yr' : '₹4,000/mo'})</option>
-                        </select>
+                        <div className="flex items-center bg-slate-100 rounded-xl p-3.5 w-full justify-between">
+                          <span className="text-xs font-medium text-slate-800 font-sans">
+                            25 SKUs
+                          </span>
+                        </div>
                       </div>
                     </div>
 
@@ -775,7 +885,7 @@ export default function App() {
                         </span>
                         <span className="text-base font-bold">₹</span>
                         <span className="text-4xl font-extrabold tracking-tight text-white">
-                          {proTotalCost.toLocaleString('en-IN')}
+                          {proBaseCost.toLocaleString('en-IN')}
                         </span>
                         <span className="text-slate-400 text-xs ml-1">
                           /{isAnnual ? 'yr' : 'mo'}
@@ -790,64 +900,34 @@ export default function App() {
                     <div className="space-y-3.5 pt-2">
                       <div className="space-y-1">
                         <label className="block text-[10px] font-bold text-slate-500 uppercase tracking-wider">
-                          Team Members
+                          Team Members (add-ons)
                         </label>
-                        <div className="flex items-center bg-slate-800 border border-slate-700/50 rounded-xl p-1.5 w-full justify-between">
-                          <button
-                            onClick={() => setProUsers(Math.max(50, proUsers - 5))}
-                            className="w-8 h-8 rounded-lg bg-slate-700 text-white flex items-center justify-center font-bold hover:bg-slate-600 active:scale-95 disabled:opacity-50 cursor-pointer border-none"
-                            disabled={proUsers <= 50}
-                          >
-                            –
-                          </button>
+                        <div className="flex items-center bg-slate-800 border border-slate-700/50 rounded-xl p-3.5 w-full justify-between">
                           <span className="text-xs font-medium text-white font-sans">
-                            {proUsers} users
+                            50 users
                           </span>
-                          <button
-                            onClick={() => setProUsers(proUsers + 5)}
-                            className="w-8 h-8 rounded-lg bg-slate-700 text-white flex items-center justify-center font-bold hover:bg-slate-600 active:scale-95 cursor-pointer border-none"
-                          >
-                            +
-                          </button>
                         </div>
                       </div>
 
                       <div className="space-y-1">
                         <label className="block text-[10px] font-bold text-slate-500 uppercase tracking-wider">
-                          SKUs Count Limits
+                          SKUs Count Limits (add-ons)
                         </label>
-                        <select
-                          value={proSKUs}
-                          onChange={(e) => setProSKUs(Number(e.target.value))}
-                          className="w-full bg-slate-800 text-white border border-slate-700/50 rounded-xl p-3.5 text-xs font-sans focus:outline-none focus:ring-2 focus:ring-blue-500 cursor-pointer"
-                        >
-                          <option value={500}>500 SKUs (included)</option>
-                          <option value={510}>510 SKUs (+{isAnnual ? '₹10,000/yr' : '₹900/mo'})</option>
-                          <option value={550}>550 SKUs (+{isAnnual ? '₹45,000/yr' : '₹4,000/mo'})</option>
-                        </select>
+                        <div className="flex items-center bg-slate-800 border border-slate-700/50 rounded-xl p-3.5 w-full justify-between">
+                          <span className="text-xs font-medium text-white font-sans">
+                            500 SKUs
+                          </span>
+                        </div>
                       </div>
 
                       <div className="space-y-1">
                         <label className="block text-[10px] font-bold text-slate-500 uppercase tracking-wider">
-                          Brands Registry
+                          Brands Registry (add-ons)
                         </label>
-                        <div className="flex items-center bg-slate-800 border border-slate-700/50 rounded-xl p-1.5 w-full justify-between">
-                          <button
-                            onClick={() => setProBrands(Math.max(5, proBrands - 1))}
-                            className="w-8 h-8 rounded-lg bg-slate-700 text-white flex items-center justify-center font-bold hover:bg-slate-600 active:scale-95 disabled:opacity-50 cursor-pointer border-none"
-                            disabled={proBrands <= 5}
-                          >
-                            –
-                          </button>
+                        <div className="flex items-center bg-slate-800 border border-slate-700/50 rounded-xl p-3.5 w-full justify-between">
                           <span className="text-xs font-medium text-white font-sans">
-                            {proBrands} brands
+                            5 brands
                           </span>
-                          <button
-                            onClick={() => setProBrands(proBrands + 1)}
-                            className="w-8 h-8 rounded-lg bg-slate-700 text-white flex items-center justify-center font-bold hover:bg-slate-600 active:scale-95 cursor-pointer border-none"
-                          >
-                            +
-                          </button>
                         </div>
                       </div>
                     </div>
@@ -907,202 +987,109 @@ export default function App() {
               </div>
             </div>
 
-            {/* Features Comparison Table */}
+            {/* Features Comparison Section — card-based modern layout */}
             <div className="max-w-7xl mx-auto px-6 pt-24 pb-8">
-              <div className="text-center space-y-4 mb-12">
-                <h3 className="text-3xl font-light text-[#003057] tracking-tight">
-                  Compare Plan Features in Detail
+              <div className="text-center space-y-3 mb-14">
+                <span className="text-[11px] font-bold uppercase tracking-widest text-[#00b074] bg-[#00b074]/10 px-3 py-1 rounded-md inline-block border border-[#00b074]/20">Feature Breakdown</span>
+                <h3 className="text-3xl font-light text-[#003057] tracking-tight mt-2">
+                  Everything compared, clearly
                 </h3>
                 <p className="text-slate-500 text-sm max-w-xl mx-auto">
-                  Find the exact feature fit for your packaging validation and product tracking goals.
+                  Know exactly what you're getting before you commit. Every feature, every plan.
                 </p>
               </div>
 
-              <div className="overflow-x-auto rounded-3xl border border-slate-200/80 bg-white shadow-sm">
-                <table className="w-full border-collapse text-left">
-                  <thead>
-                    <tr className="border-b border-slate-200 bg-slate-50/75">
-                      <th className="p-5 text-xs font-bold uppercase tracking-wider text-slate-400 w-1/4">Features Matrix</th>
-                      <th className="p-5 text-xs font-bold uppercase tracking-wider text-slate-400 text-center w-3/16">Free Trial</th>
-                      <th className="p-5 text-xs font-bold uppercase tracking-wider text-slate-400 text-center w-3/16">Business</th>
-                      <th className="p-5 text-xs font-bold uppercase tracking-wider text-blue-600 text-center w-3/16 bg-blue-50/30 border-x border-blue-200/40">Business Pro</th>
-                      <th className="p-5 text-xs font-bold uppercase tracking-wider text-slate-400 text-center w-3/16">Enterprise</th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-slate-150">
-
-                    {/* Section: Pricing & Billing */}
-                    <tr className="bg-slate-50/30">
-                      <td colSpan={5} className="p-4 text-xs font-extrabold text-[#003057] tracking-wide uppercase bg-slate-100/40">
-                        Pricing & Terms
-                      </td>
-                    </tr>
-                    <tr className="hover:bg-slate-50/50 transition-colors">
-                      <td className="p-4.5 text-xs font-semibold text-slate-700">Annual base cost (excl. GST)</td>
-                      <td className="p-4.5 text-xs text-slate-500 text-center">₹0</td>
-                      <td className="p-4.5 text-xs text-slate-650 font-medium text-center">₹55,000</td>
-                      <td className="p-4.5 text-xs text-blue-700 font-bold text-center bg-blue-50/20 border-x border-blue-200/20">₹2,45,000</td>
-                      <td className="p-4.5 text-xs text-slate-700 font-semibold text-center">Contact Sales</td>
-                    </tr>
-                    <tr className="hover:bg-slate-50/50 transition-colors">
-                      <td className="p-4.5 text-xs font-semibold text-slate-700">Monthly option</td>
-                      <td className="p-4.5 text-xs text-slate-400 text-center">—</td>
-                      <td className="p-4.5 text-xs text-slate-400 text-center">N/A</td>
-                      <td className="p-4.5 text-xs text-slate-400 text-center bg-blue-50/20 border-x border-blue-200/20">N/A</td>
-                      <td className="p-4.5 text-xs text-slate-600 text-center">Custom</td>
-                    </tr>
-                    <tr className="hover:bg-slate-50/50 transition-colors">
-                      <td className="p-4.5 text-xs font-semibold text-slate-700">Billing commitment</td>
-                      <td className="p-4.5 text-xs text-slate-500 text-center">14-day trial</td>
-                      <td className="p-4.5 text-xs text-slate-500 text-center">1 year</td>
-                      <td className="p-4.5 text-xs text-slate-550 text-center bg-blue-50/20 border-x border-blue-200/20">1 year</td>
-                      <td className="p-4.5 text-xs text-slate-550 text-center">Custom</td>
-                    </tr>
-
-                    {/* Section: Capacity Limits */}
-                    <tr className="bg-slate-50/30">
-                      <td colSpan={5} className="p-4 text-xs font-extrabold text-[#003057] tracking-wide uppercase bg-slate-100/40">
-                        Operational Capacity Limits
-                      </td>
-                    </tr>
-                    <tr className="hover:bg-slate-50/50 transition-colors">
-                      <td className="p-4.5 text-xs font-semibold text-slate-700">Brand Registries included</td>
-                      <td className="p-4.5 text-xs text-slate-500 text-center">1 brand</td>
-                      <td className="p-4.5 text-xs text-slate-500 text-center">1 brand</td>
-                      <td className="p-4.5 text-xs text-blue-700 font-bold text-center bg-blue-50/20 border-x border-blue-200/20">5 brands <span className="text-[9px] font-normal text-slate-400 block mt-0.5">(extendable)</span></td>
-                      <td className="p-4.5 text-xs text-slate-700 font-semibold text-center">Unlimited</td>
-                    </tr>
-                    <tr className="hover:bg-slate-50/50 transition-colors">
-                      <td className="p-4.5 text-xs font-semibold text-slate-700">SKU Count capacity</td>
-                      <td className="p-4.5 text-xs text-slate-500 text-center">1 SKU</td>
-                      <td className="p-4.5 text-xs text-slate-500 text-center">25 SKUs <span className="text-[9px] font-normal text-slate-400 block mt-0.5">(extendable)</span></td>
-                      <td className="p-4.5 text-xs text-blue-700 font-bold text-center bg-blue-50/20 border-x border-blue-200/20">500 SKUs <span className="text-[9px] font-normal text-slate-400 block mt-0.5">(extendable)</span></td>
-                      <td className="p-4.5 text-xs text-slate-700 font-semibold text-center">Unlimited</td>
-                    </tr>
-                    <tr className="hover:bg-slate-50/50 transition-colors">
-                      <td className="p-4.5 text-xs font-semibold text-slate-700">Team user seats</td>
-                      <td className="p-4.5 text-xs text-slate-500 text-center">1 user</td>
-                      <td className="p-4.5 text-xs text-slate-500 text-center">5 users <span className="text-[9px] font-normal text-slate-400 block mt-0.5">(extendable)</span></td>
-                      <td className="p-4.5 text-xs text-blue-700 font-bold text-center bg-blue-50/20 border-x border-blue-200/20">50 users <span className="text-[9px] font-normal text-slate-400 block mt-0.5">(extendable)</span></td>
-                      <td className="p-4.5 text-xs text-slate-700 font-semibold text-center">Unlimited</td>
-                    </tr>
-                    <tr className="hover:bg-slate-50/50 transition-colors">
-                      <td className="p-4.5 text-xs font-semibold text-slate-700">Product verifications (Annual)</td>
-                      <td className="p-4.5 text-xs text-slate-500 text-center">250 scans</td>
-                      <td className="p-4.5 text-xs text-slate-500 text-center">100,000 scans</td>
-                      <td className="p-4.5 text-xs text-blue-700 font-bold text-center bg-blue-50/20 border-x border-blue-200/20">Unlimited <span className="text-[9px] font-normal text-slate-400 block mt-0.5">(fair use)</span></td>
-                      <td className="p-4.5 text-xs text-slate-700 font-semibold text-center">Unlimited</td>
-                    </tr>
-
-                    {/* Section: Features */}
-                    <tr className="bg-slate-50/30">
-                      <td colSpan={5} className="p-4 text-xs font-extrabold text-[#003057] tracking-wide uppercase bg-slate-100/40">
-                        Feature Modules
-                      </td>
-                    </tr>
-                    <tr className="hover:bg-slate-50/50 transition-colors">
-                      <td className="p-4.5 text-xs font-semibold text-slate-700">Unique Authentiq QR Generator</td>
-                      <td className="p-4.5 text-center"><span className="text-emerald-500 font-extrabold text-base">✓</span></td>
-                      <td className="p-4.5 text-center"><span className="text-emerald-500 font-extrabold text-base">✓</span></td>
-                      <td className="p-4.5 text-center bg-blue-50/20 border-x border-blue-200/20"><span className="text-emerald-500 font-extrabold text-base">✓</span></td>
-                      <td className="p-4.5 text-center"><span className="text-emerald-500 font-extrabold text-base">✓</span></td>
-                    </tr>
-                    <tr className="hover:bg-slate-50/50 transition-colors">
-                      <td className="p-4.5 text-xs font-semibold text-slate-700">AI authenticity scoring (OpenCLIP)</td>
-                      <td className="p-4.5 text-center"><span className="text-emerald-500 font-extrabold text-base">✓</span></td>
-                      <td className="p-4.5 text-center"><span className="text-emerald-500 font-extrabold text-base">✓</span></td>
-                      <td className="p-4.5 text-center bg-blue-50/20 border-x border-blue-200/20"><span className="text-emerald-500 font-extrabold text-base">✓</span></td>
-                      <td className="p-4.5 text-center"><span className="text-emerald-500 font-extrabold text-base">✓</span></td>
-                    </tr>
-                    <tr className="hover:bg-slate-50/50 transition-colors">
-                      <td className="p-4.5 text-xs font-semibold text-slate-700">Mobile scan & verify page UI</td>
-                      <td className="p-4.5 text-center"><span className="text-emerald-500 font-extrabold text-base">✓</span></td>
-                      <td className="p-4.5 text-center"><span className="text-emerald-500 font-extrabold text-base">✓</span></td>
-                      <td className="p-4.5 text-center bg-blue-50/20 border-x border-blue-200/20"><span className="text-emerald-500 font-extrabold text-base">✓</span></td>
-                      <td className="p-4.5 text-center"><span className="text-emerald-500 font-extrabold text-base">✓</span></td>
-                    </tr>
-                    <tr className="hover:bg-slate-50/50 transition-colors">
-                      <td className="p-4.5 text-xs font-semibold text-slate-700">Report counterfeit & brand callback</td>
-                      <td className="p-4.5 text-center"><span className="text-emerald-500 font-extrabold text-base">✓</span></td>
-                      <td className="p-4.5 text-center"><span className="text-emerald-500 font-extrabold text-base">✓</span></td>
-                      <td className="p-4.5 text-center bg-blue-50/20 border-x border-blue-200/20"><span className="text-emerald-500 font-extrabold text-base">✓</span></td>
-                      <td className="p-4.5 text-center"><span className="text-emerald-500 font-extrabold text-base">✓</span></td>
-                    </tr>
-
-                    <tr className="hover:bg-slate-50/50 transition-colors">
-                      <td className="p-4.5 text-xs font-semibold text-slate-700">Location intelligence & geocodes</td>
-                      <td className="p-4.5 text-center"><span className="text-rose-500 font-extrabold text-base">✗</span></td>
-                      <td className="p-4.5 text-xs text-slate-500 text-center">Region-level</td>
-                      <td className="p-4.5 text-xs text-blue-700 font-bold text-center bg-blue-50/20 border-x border-blue-200/20">Full heatmaps</td>
-                      <td className="p-4.5 text-xs text-slate-700 font-semibold text-center">Full logistics</td>
-                    </tr>
-                    <tr className="hover:bg-slate-50/50 transition-colors">
-                      <td className="p-4.5 text-xs font-semibold text-slate-700">CSV / Excel import & export</td>
-                      <td className="p-4.5 text-center"><span className="text-rose-500 font-extrabold text-base">✗</span></td>
-                      <td className="p-4.5 text-center"><span className="text-emerald-500 font-extrabold text-base">✓</span></td>
-                      <td className="p-4.5 text-center bg-blue-50/20 border-x border-blue-200/20"><span className="text-emerald-500 font-extrabold text-base">✓</span></td>
-                      <td className="p-4.5 text-center"><span className="text-emerald-500 font-extrabold text-base">✓</span></td>
-                    </tr>
-                    <tr className="hover:bg-slate-50/50 transition-colors">
-                      <td className="p-4.5 text-xs font-semibold text-slate-700">Bulk serialization QR engine</td>
-                      <td className="p-4.5 text-center"><span className="text-rose-500 font-extrabold text-base">✗</span></td>
-                      <td className="p-4.5 text-center"><span className="text-rose-500 font-extrabold text-base">✗</span></td>
-                      <td className="p-4.5 text-center bg-blue-50/20 border-x border-blue-200/20"><span className="text-emerald-500 font-extrabold text-base">✓</span></td>
-                      <td className="p-4.5 text-center"><span className="text-emerald-500 font-extrabold text-base">✓</span></td>
-                    </tr>
-                    <tr className="hover:bg-slate-50/50 transition-colors">
-                      <td className="p-4.5 text-xs font-semibold text-slate-700">Advanced security telemetry</td>
-                      <td className="p-4.5 text-center"><span className="text-rose-500 font-extrabold text-base">✗</span></td>
-                      <td className="p-4.5 text-center"><span className="text-rose-500 font-extrabold text-base">✗</span></td>
-                      <td className="p-4.5 text-center bg-blue-50/20 border-x border-blue-200/20"><span className="text-emerald-500 font-extrabold text-base">✓</span></td>
-                      <td className="p-4.5 text-center"><span className="text-emerald-500 font-extrabold text-base">✓</span></td>
-                    </tr>
-                    <tr className="hover:bg-slate-50/50 transition-colors">
-                      <td className="p-4.5 text-xs font-semibold text-slate-700">Case & report registry</td>
-                      <td className="p-4.5 text-xs text-slate-500 text-center font-medium">Basic</td>
-                      <td className="p-4.5 text-center"><span className="text-emerald-500 font-extrabold text-base">✓</span></td>
-                      <td className="p-4.5 text-center bg-blue-50/20 border-x border-blue-200/20"><span className="text-emerald-500 font-extrabold text-base">✓</span></td>
-                      <td className="p-4.5 text-center"><span className="text-emerald-500 font-extrabold text-base">✓</span></td>
-                    </tr>
-                    <tr className="hover:bg-slate-50/50 transition-colors">
-                      <td className="p-4.5 text-xs font-semibold text-slate-700">Integrations API & Webhooks</td>
-                      <td className="p-4.5 text-center"><span className="text-rose-500 font-extrabold text-base">✗</span></td>
-                      <td className="p-4.5 text-center"><span className="text-rose-500 font-extrabold text-base">✗</span></td>
-                      <td className="p-4.5 text-center bg-blue-50/20 border-x border-blue-200/20"><span className="text-emerald-500 font-extrabold text-base">✓</span></td>
-                      <td className="p-4.5 text-center"><span className="text-emerald-500 font-extrabold text-base">✓</span></td>
-                    </tr>
-                    <tr className="hover:bg-slate-50/50 transition-colors">
-                      <td className="p-4.5 text-xs font-semibold text-slate-700">SSO & Custom User Roles</td>
-                      <td className="p-4.5 text-center"><span className="text-rose-500 font-extrabold text-base">✗</span></td>
-                      <td className="p-4.5 text-center"><span className="text-rose-500 font-extrabold text-base">✗</span></td>
-                      <td className="p-4.5 text-center bg-blue-50/20 border-x border-blue-200/20"><span className="text-rose-500 font-extrabold text-base">✗</span></td>
-                      <td className="p-4.5 text-center"><span className="text-emerald-500 font-extrabold text-base">✓</span></td>
-                    </tr>
-
-                    {/* Section: Support */}
-                    <tr className="bg-slate-50/30">
-                      <td colSpan={5} className="p-4 text-xs font-extrabold text-[#003057] tracking-wide uppercase bg-slate-100/40">
-                        Support & Onboarding
-                      </td>
-                    </tr>
-                    <tr className="hover:bg-slate-50/50 transition-colors">
-                      <td className="p-4.5 text-xs font-semibold text-slate-700">Customer Support channel</td>
-                      <td className="p-4.5 text-center"><span className="text-rose-500 font-extrabold text-base">✗</span></td>
-                      <td className="p-4.5 text-xs text-slate-500 text-center">Standard Email</td>
-                      <td className="p-4.5 text-xs text-blue-700 font-bold text-center bg-blue-50/20 border-x border-blue-200/20">Priority support</td>
-                      <td className="p-4.5 text-xs text-slate-700 font-semibold text-center">Dedicated CSM + SLA</td>
-                    </tr>
-                    <tr className="hover:bg-slate-50/50 transition-colors">
-                      <td className="p-4.5 text-xs font-semibold text-slate-700">Credit card required to start</td>
-                      <td className="p-4.5 text-xs text-slate-600 font-medium text-center">No</td>
-                      <td className="p-4.5 text-xs text-slate-400 text-center">—</td>
-                      <td className="p-4.5 text-xs text-slate-400 text-center bg-blue-50/20 border-x border-blue-200/20">—</td>
-                      <td className="p-4.5 text-xs text-slate-400 text-center">—</td>
-                    </tr>
-
-                  </tbody>
-                </table>
+              {/* Plan header pills */}
+              <div className="grid grid-cols-5 gap-3 mb-4 px-2">
+                <div />
+                {[['Free Trial', false], ['Business', false], ['Business Pro', true], ['Enterprise', false]].map(([name, hot]) => (
+                  <div key={String(name)} className={`rounded-xl py-2.5 px-2 text-center text-[10px] font-bold uppercase tracking-widest ${hot ? 'bg-blue-600 text-white shadow-md shadow-blue-500/20' : 'bg-slate-100 text-slate-500'
+                    }`}>
+                    {hot && <span className="block text-[8px] font-normal tracking-wider opacity-80 mb-0.5">★ Most Popular</span>}
+                    {String(name)}
+                  </div>
+                ))}
               </div>
+
+              {/* Comparison groups */}
+              {[
+                {
+                  category: '💰 Pricing & Terms',
+                  rows: [
+                    { feature: 'Annual base cost (excl. GST)', vals: ['₹0', '₹55,000', '₹2,45,000', 'Contact Sales'] },
+                    { feature: 'Monthly option', vals: ['—', 'N/A', 'N/A', 'Custom'] },
+                    { feature: 'Billing commitment', vals: ['14-day trial', '1 year', '1 year', 'Custom'] },
+                  ]
+                },
+                {
+                  category: '📦 Capacity Limits',
+                  rows: [
+                    { feature: 'Brand Registries included', vals: ['1 brand', '1 brand', '5 brands (+)', 'Unlimited'] },
+                    { feature: 'SKU Count capacity', vals: ['1 SKU', '25 SKUs (+)', '500 SKUs (+)', 'Unlimited'] },
+                    { feature: 'Team user seats', vals: ['1 user', '5 users (+)', '50 users (+)', 'Unlimited'] },
+                    { feature: 'Product verifications (Annual)', vals: ['250 scans', '100,000 scans', 'Unlimited', 'Unlimited'] },
+                  ]
+                },
+                {
+                  category: '⚙️ Feature Modules',
+                  rows: [
+                    { feature: 'Unique Authentiq QR Generator', vals: [true, true, true, true] },
+                    { feature: 'AI authenticity scoring (OpenCLIP)', vals: [true, true, true, true] },
+                    { feature: 'Mobile scan & verify page UI', vals: [true, true, true, true] },
+                    { feature: 'Report counterfeit & brand callback', vals: [true, true, true, true] },
+                    { feature: 'Location intelligence & geocodes', vals: [false, 'Region-level', 'Full heatmaps', 'Full logistics'] },
+                    { feature: 'CSV / Excel import & export', vals: [false, true, true, true] },
+                    { feature: 'Bulk serialization QR engine', vals: [false, false, true, true] },
+                    { feature: 'Advanced security telemetry', vals: [false, false, true, true] },
+                    { feature: 'Case & report registry', vals: ['Basic', true, true, true] },
+                    { feature: 'Integrations API & Webhooks', vals: [false, false, true, true] },
+                    { feature: 'SSO & Custom User Roles', vals: [false, false, false, true] },
+                  ]
+                },
+                {
+                  category: '🛎️ Support & Onboarding',
+                  rows: [
+                    { feature: 'Customer Support channel', vals: [false, 'Standard Email', 'Priority support', 'Dedicated CSM + SLA'] },
+                    { feature: 'Credit card required to start', vals: ['No', '—', '—', '—'] },
+                  ]
+                },
+              ].map((group) => (
+                <div key={group.category} className="mb-6 bg-white rounded-2xl border border-slate-200/80 overflow-hidden shadow-sm">
+                  {/* Category header */}
+                  <div className="px-5 py-3 bg-slate-50/80 border-b border-slate-200/60">
+                    <span className="text-[11px] font-bold uppercase tracking-wider text-[#003057]">{group.category}</span>
+                  </div>
+                  {group.rows.map((row, ri) => (
+                    <div key={ri} className={`grid grid-cols-5 gap-0 ${ri < group.rows.length - 1 ? 'border-b border-slate-100' : ''
+                      } hover:bg-slate-50/60 transition-colors`}>
+                      <div className="px-5 py-3.5 text-xs font-medium text-slate-700 flex items-center">{row.feature}</div>
+                      {row.vals.map((val, vi) => {
+                        const isProCol = vi === 2;
+                        const cellBase = `px-3 py-3.5 text-center text-xs flex items-center justify-center ${isProCol ? 'bg-blue-50/40 border-x border-blue-200/20' : ''
+                          }`;
+                        if (val === true) return (
+                          <div key={vi} className={cellBase}>
+                            <span className="inline-flex items-center justify-center w-5 h-5 rounded-full bg-emerald-50 border border-emerald-200">
+                              <svg className="w-3 h-3 text-emerald-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}><path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" /></svg>
+                            </span>
+                          </div>
+                        );
+                        if (val === false) return (
+                          <div key={vi} className={cellBase}>
+                            <span className="inline-flex items-center justify-center w-5 h-5 rounded-full bg-slate-100 border border-slate-200">
+                              <svg className="w-3 h-3 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}><path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" /></svg>
+                            </span>
+                          </div>
+                        );
+                        return (
+                          <div key={vi} className={`${cellBase} ${isProCol ? 'font-semibold text-blue-700' : 'text-slate-600'
+                            }`}>{String(val)}</div>
+                        );
+                      })}
+                    </div>
+                  ))}
+                </div>
+              ))}
             </div>
 
             {/* Below Fold Info Block */}
@@ -1659,6 +1646,26 @@ export default function App() {
         const calculatedTax = selectedPlan.price * taxRate;
         const totalAmount = selectedPlan.price + calculatedTax;
 
+        const hasAddOns = selectedPlan.name === 'Business' || selectedPlan.name === 'Business Pro';
+
+        // Dynamic step items
+        const stepItems = hasAddOns ? [
+          { s: 1, label: 'Company', id: 'company' },
+          { s: 2, label: 'Contact', id: 'contact' },
+          { s: 3, label: 'Add-Ons', id: 'addons' },
+          { s: 4, label: 'Compliance', id: 'compliance' },
+          { s: 5, label: 'Payment', id: 'payment' }
+        ] : [
+          { s: 1, label: 'Company', id: 'company' },
+          { s: 2, label: 'Contact', id: 'contact' },
+          { s: 3, label: 'Compliance', id: 'compliance' },
+          { s: 4, label: 'Payment', id: 'payment' }
+        ];
+
+        const totalSteps = stepItems.length;
+        const currentStepItem = stepItems[checkoutStep - 1];
+        const currentStepId = currentStepItem ? currentStepItem.id : 'company';
+
         return (
           <div data-theme="light" className="min-h-screen bg-slate-50 pt-36 pb-24 px-4 sm:px-6 lg:px-8 text-slate-800 animate-fadeIn relative font-sans">
 
@@ -1681,7 +1688,7 @@ export default function App() {
 
                     {/* Active Step Indicator pill */}
                     <div className="bg-[#003057] text-white px-4.5 py-1.5 rounded-full text-xs font-semibold tracking-wider">
-                      Step {checkoutStep} of 4
+                      Step {checkoutStep} of {totalSteps}
                     </div>
                   </div>
 
@@ -1693,16 +1700,11 @@ export default function App() {
                     {/* Active Progress Track Line */}
                     <div
                       className="absolute left-0 top-1/2 -translate-y-1/2 h-0.5 bg-blue-600 z-0 transition-all duration-500"
-                      style={{ width: `${((checkoutStep - 1) / 3) * 100}%` }}
+                      style={{ width: `${((checkoutStep - 1) / (totalSteps - 1)) * 100}%` }}
                     />
 
                     {/* Steps List */}
-                    {[
-                      { s: 1, label: 'Company' },
-                      { s: 2, label: 'Contact' },
-                      { s: 3, label: 'Compliance' },
-                      { s: 4, label: 'Payment' }
-                    ].map((stepItem) => {
+                    {stepItems.map((stepItem) => {
                       const isActive = checkoutStep >= stepItem.s;
                       const isCurrent = checkoutStep === stepItem.s;
                       return (
@@ -1712,8 +1714,9 @@ export default function App() {
                             onClick={() => {
                               // Allow moving to a step only if valid up to that point
                               let valid = true;
-                              for (let i = 1; i < stepItem.s; i++) {
-                                if (!validateStep(i)) {
+                              for (let i = 0; i < stepItem.s - 1; i++) {
+                                const prevStepId = stepItems[i].id as 'company' | 'contact' | 'addons' | 'compliance' | 'payment';
+                                if (!validateStep(prevStepId)) {
                                   valid = false;
                                   break;
                                 }
@@ -1724,10 +1727,10 @@ export default function App() {
                               }
                             }}
                             className={`w-9 h-9 rounded-full flex items-center justify-center font-bold text-xs border-2 transition-all duration-300 cursor-pointer ${isCurrent
-                                ? 'bg-blue-600 border-blue-600 text-white shadow-lg shadow-blue-500/20 scale-110'
-                                : isActive
-                                  ? 'bg-blue-50 border-blue-600 text-blue-600'
-                                  : 'bg-white border-slate-300 text-slate-400'
+                              ? 'bg-blue-600 border-blue-600 text-white shadow-lg shadow-blue-500/20 scale-110'
+                              : isActive
+                                ? 'bg-blue-50 border-blue-600 text-blue-600'
+                                : 'bg-white border-slate-300 text-slate-400'
                               }`}
                           >
                             {isActive && checkoutStep > stepItem.s ? '✓' : stepItem.s}
@@ -1745,7 +1748,7 @@ export default function App() {
                 {/* Form fields depending on Step */}
 
                 {/* Step 1: Company Details */}
-                {checkoutStep === 1 && (
+                {currentStepId === 'company' && (
                   <div className="space-y-6 animate-fadeIn">
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                       <div className="space-y-1.5">
@@ -1838,62 +1841,170 @@ export default function App() {
                       />
                     </div>
 
-                    <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-                      <div className="space-y-1.5">
-                        <label className="block text-xs font-bold uppercase tracking-wider text-slate-500">City *</label>
-                        <input
-                          type="text"
-                          value={city}
-                          onChange={(e) => setCity(e.target.value)}
-                          placeholder="Mumbai"
-                          className={`w-full bg-slate-50/50 border rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-blue-600 text-slate-800 font-normal transition-colors placeholder-slate-400 ${errors.city ? 'border-red-500 ring-1 ring-red-500' : 'border-slate-200'}`}
-                        />
-                        {errors.city && <p className="text-[10px] text-red-500 font-medium">{errors.city}</p>}
-                      </div>
+                    {/* Country → State → City cascaded dropdowns with Geolocation */}
+                    <div className="space-y-1">
+                      <div className="flex items-center justify-between">
+                        <label className="block text-xs font-bold uppercase tracking-wider text-slate-500">Location *</label>
+                        <button
+                          type="button"
+                          onClick={() => {
+                            if (!navigator.geolocation) return;
+                            setIsGeolocating(true);
+                            navigator.geolocation.getCurrentPosition(
+                              async (pos) => {
+                                try {
+                                  const { latitude, longitude } = pos.coords;
+                                  const res = await fetch(
+                                    `https://nominatim.openstreetmap.org/reverse?lat=${latitude}&lon=${longitude}&format=json&accept-language=en`
+                                  );
+                                  const data = await res.json();
+                                  const addr = data.address || {};
 
-                      <div className="space-y-1.5">
-                        <label className="block text-xs font-bold uppercase tracking-wider text-slate-500">State *</label>
-                        <select
-                          value={stateName}
-                          onChange={(e) => setStateName(e.target.value)}
-                          className={`w-full bg-slate-50/50 border rounded-xl px-4 py-3.5 text-sm focus:outline-none focus:border-blue-600 text-slate-800 font-sans transition-colors cursor-pointer ${errors.stateName ? 'border-red-500 ring-1 ring-red-500' : 'border-slate-200'}`}
+                                  // Set country — useEffect will trigger states fetch
+                                  const detectedCountry = addr.country || '';
+                                  // Try matching against loaded countriesList (case-insensitive)
+                                  const matched = countriesList.find(
+                                    c => c.toLowerCase() === detectedCountry.toLowerCase()
+                                  ) || detectedCountry;
+                                  setSelectedCountry(matched);
+
+                                  // Store detected state/city as hints — useEffects will fire after country resolves
+                                  const detectedState = addr.state || addr.region || '';
+                                  const detectedCity = addr.city || addr.town || addr.village || '';
+
+                                  // Slight delay so state list has time to load before we try to set it
+                                  setTimeout(() => {
+                                    if (detectedState) {
+                                      setStateName(detectedState);
+                                    }
+                                    setTimeout(() => {
+                                      if (detectedCity) setCity(detectedCity);
+                                    }, 800);
+                                  }, 800);
+
+                                  if (addr.postcode) {
+                                    setPinCode(addr.postcode.replace(/\D/g, '').slice(0, 10));
+                                  }
+                                } catch { }
+                                setIsGeolocating(false);
+                              },
+                              () => setIsGeolocating(false),
+                              { timeout: 8000 }
+                            );
+                          }}
+                          className="flex items-center gap-1.5 text-[10px] font-semibold text-blue-600 hover:text-blue-700 bg-blue-50 hover:bg-blue-100 border border-blue-200/60 px-3 py-1 rounded-lg transition-colors cursor-pointer"
                         >
-                          <option value="">Select State</option>
-                          <option value="Maharashtra">Maharashtra</option>
-                          <option value="Karnataka">Karnataka</option>
-                          <option value="Delhi">Delhi</option>
-                          <option value="Rajasthan">Rajasthan</option>
-                          <option value="Tamil Nadu">Tamil Nadu</option>
-                          <option value="Uttar Pradesh">Uttar Pradesh</option>
-                          <option value="Gujarat">Gujarat</option>
-                          <option value="Haryana">Haryana</option>
-                          <option value="Telangana">Telangana</option>
-                          <option value="West Bengal">West Bengal</option>
-                        </select>
-                        {errors.stateName && <p className="text-[10px] text-red-500 font-medium">{errors.stateName}</p>}
+                          {isGeolocating ? (
+                            <>
+                              <svg className="w-3 h-3 animate-spin" fill="none" viewBox="0 0 24 24"><circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" /><path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z" /></svg>
+                              Detecting...
+                            </>
+                          ) : (
+                            <>
+                              <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" /><path strokeLinecap="round" strokeLinejoin="round" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" /></svg>
+                              Auto-detect
+                            </>
+                          )}
+                        </button>
                       </div>
 
-                      <div className="space-y-1.5">
-                        <label className="block text-xs font-bold uppercase tracking-wider text-slate-500">PIN Code *</label>
-                        <input
-                          type="text"
-                          value={pinCode}
-                          onChange={(e) => setPinCode(e.target.value)}
-                          placeholder="400001"
-                          maxLength={6}
-                          className={`w-full bg-slate-50/50 border rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-blue-600 text-slate-800 font-normal transition-colors placeholder-slate-400 ${errors.pinCode ? 'border-red-500 ring-1 ring-red-500' : 'border-slate-200'}`}
-                        />
-                        {errors.pinCode && <p className="text-[10px] text-red-500 font-medium">{errors.pinCode}</p>}
+                      {/* Row 1: Country + PIN */}
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-1">
+                        <div className="space-y-1.5">
+                          <label className="block text-[10px] font-semibold uppercase tracking-wider text-slate-400">Country *</label>
+                          <div className="relative">
+                            <select
+                              value={selectedCountry}
+                              onChange={(e) => setSelectedCountry(e.target.value)}
+                              disabled={isLoadingCountries}
+                              className={`w-full bg-slate-50/50 border rounded-xl px-4 py-3.5 text-sm focus:outline-none focus:border-blue-600 text-slate-800 font-sans transition-colors cursor-pointer border-slate-200 disabled:opacity-60`}
+                            >
+                              {isLoadingCountries
+                                ? <option>Loading countries...</option>
+                                : <>
+                                  <option value="">Select Country</option>
+                                  {countriesList.map(c => <option key={c} value={c}>{c}</option>)}
+                                </>
+                              }
+                            </select>
+                            {isLoadingCountries && (
+                              <div className="absolute right-3 top-1/2 -translate-y-1/2">
+                                <svg className="w-4 h-4 animate-spin text-blue-500" fill="none" viewBox="0 0 24 24"><circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" /><path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z" /></svg>
+                              </div>
+                            )}
+                          </div>
+                        </div>
+                        <div className="space-y-1.5">
+                          <label className="block text-[10px] font-semibold uppercase tracking-wider text-slate-400">PIN / ZIP Code *</label>
+                          <input
+                            type="text"
+                            value={pinCode}
+                            onChange={(e) => setPinCode(e.target.value)}
+                            placeholder={selectedCountry === 'India' ? '400001' : 'Postal / ZIP code'}
+                            maxLength={10}
+                            className={`w-full bg-slate-50/50 border rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-blue-600 text-slate-800 font-normal transition-colors placeholder-slate-400 ${errors.pinCode ? 'border-red-500 ring-1 ring-red-500' : 'border-slate-200'}`}
+                          />
+                          {errors.pinCode && <p className="text-[10px] text-red-500 font-medium">{errors.pinCode}</p>}
+                        </div>
                       </div>
 
-                      <div className="space-y-1.5">
-                        <label className="block text-xs font-bold uppercase tracking-wider text-slate-400">Country</label>
-                        <input
-                          type="text"
-                          value={country}
-                          readOnly
-                          className="w-full bg-slate-100 border border-slate-200 rounded-xl px-4 py-3 text-sm text-slate-500 font-normal transition-colors"
-                        />
+                      {/* Row 2: State + City */}
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div className="space-y-1.5">
+                          <label className="block text-[10px] font-semibold uppercase tracking-wider text-slate-400">State / Province *</label>
+                          <div className="relative">
+                            <select
+                              value={stateName}
+                              onChange={(e) => setStateName(e.target.value)}
+                              disabled={isLoadingStates || statesList.length === 0}
+                              className={`w-full bg-slate-50/50 border rounded-xl px-4 py-3.5 text-sm focus:outline-none focus:border-blue-600 text-slate-800 font-sans transition-colors cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed ${errors.stateName ? 'border-red-500 ring-1 ring-red-500' : 'border-slate-200'}`}
+                            >
+                              {isLoadingStates
+                                ? <option>Loading states...</option>
+                                : <>
+                                  <option value="">{selectedCountry ? 'Select State / Province' : 'Select a country first'}</option>
+                                  {statesList.map(s => <option key={s} value={s}>{s}</option>)}
+                                </>
+                              }
+                            </select>
+                            {isLoadingStates && (
+                              <div className="absolute right-3 top-1/2 -translate-y-1/2">
+                                <svg className="w-4 h-4 animate-spin text-blue-500" fill="none" viewBox="0 0 24 24"><circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" /><path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z" /></svg>
+                              </div>
+                            )}
+                          </div>
+                          {errors.stateName && <p className="text-[10px] text-red-500 font-medium">{errors.stateName}</p>}
+                        </div>
+                        <div className="space-y-1.5">
+                          <label className="block text-[10px] font-semibold uppercase tracking-wider text-slate-400">City *</label>
+                          <div className="relative">
+                            {citiesList.length > 0 && !isLoadingCities ? (
+                              <select
+                                value={city}
+                                onChange={(e) => setCity(e.target.value)}
+                                className={`w-full bg-slate-50/50 border rounded-xl px-4 py-3.5 text-sm focus:outline-none focus:border-blue-600 text-slate-800 font-sans transition-colors cursor-pointer ${errors.city ? 'border-red-500 ring-1 ring-red-500' : 'border-slate-200'}`}
+                              >
+                                <option value="">Select City</option>
+                                {citiesList.map(c => <option key={c} value={c}>{c}</option>)}
+                              </select>
+                            ) : (
+                              <input
+                                type="text"
+                                value={city}
+                                onChange={(e) => setCity(e.target.value)}
+                                placeholder={isLoadingCities ? 'Loading cities...' : stateName ? 'Enter city name' : 'Select a state first'}
+                                disabled={isLoadingCities}
+                                className={`w-full bg-slate-50/50 border rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-blue-600 text-slate-800 font-normal transition-colors placeholder-slate-400 disabled:opacity-50 ${errors.city ? 'border-red-500 ring-1 ring-red-500' : 'border-slate-200'}`}
+                              />
+                            )}
+                            {isLoadingCities && (
+                              <div className="absolute right-3 top-1/2 -translate-y-1/2">
+                                <svg className="w-4 h-4 animate-spin text-blue-500" fill="none" viewBox="0 0 24 24"><circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" /><path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z" /></svg>
+                              </div>
+                            )}
+                          </div>
+                          {errors.city && <p className="text-[10px] text-red-500 font-medium">{errors.city}</p>}
+                        </div>
                       </div>
                     </div>
 
@@ -1932,7 +2043,7 @@ export default function App() {
                 )}
 
                 {/* Step 2: Contact Details */}
-                {checkoutStep === 2 && (
+                {currentStepId === 'contact' && (
                   <div className="space-y-6 animate-fadeIn">
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                       <div className="space-y-1.5">
@@ -2085,8 +2196,185 @@ export default function App() {
                   </div>
                 )}
 
-                {/* Step 3: Trademark & Compliance Docs */}
-                {checkoutStep === 3 && (
+                {/* Step 3: Add-Ons Configuration (if applicable) */}
+                {currentStepId === 'addons' && (
+                  <div className="space-y-6 animate-fadeIn">
+                    <div>
+                      <h3 className="text-lg font-medium text-[#003057]">Customize Plan Add-Ons</h3>
+                      <p className="text-xs text-slate-500 mt-1">Configure additional capacities for your subscription.</p>
+                    </div>
+
+                    <div className="space-y-6">
+                      {selectedPlan.name === 'Business' && (
+                        <>
+                          {/* Team Members Add-On */}
+                          <div className="space-y-2 p-5 bg-slate-50 border border-slate-200 rounded-2xl">
+                            <div className="flex justify-between items-start">
+                              <div>
+                                <h4 className="text-sm font-semibold text-[#003057]">Team Members</h4>
+                                <p className="text-xs text-slate-500 mt-0.5">5 users included. Add in blocks of 5 users (+₹5,000/yr per block).</p>
+                              </div>
+                              {businessUsers > 5 && (
+                                <span className="text-xs font-bold text-blue-600 bg-blue-50 px-2 py-1 rounded border border-blue-100">
+                                  +₹{(((businessUsers - 5) / 5) * 5000).toLocaleString('en-IN')}/yr
+                                </span>
+                              )}
+                            </div>
+                            <div className="flex items-center bg-white border border-slate-200 rounded-xl p-2.5 justify-between max-w-xs mt-3">
+                              <button
+                                type="button"
+                                onClick={() => setBusinessUsers(Math.max(5, businessUsers - 5))}
+                                className="w-9 h-9 rounded-lg bg-slate-105 hover:bg-slate-200 flex items-center justify-center font-bold text-slate-700 active:scale-95 disabled:opacity-50 cursor-pointer border-none"
+                                disabled={businessUsers <= 5}
+                              >
+                                –
+                              </button>
+                              <span className="text-sm font-semibold text-slate-800 font-sans">
+                                {businessUsers} users
+                              </span>
+                              <button
+                                type="button"
+                                onClick={() => setBusinessUsers(businessUsers + 5)}
+                                className="w-9 h-9 rounded-lg bg-slate-105 hover:bg-slate-200 flex items-center justify-center font-bold text-slate-700 active:scale-95 cursor-pointer border-none"
+                              >
+                                +
+                              </button>
+                            </div>
+                          </div>
+
+                          {/* SKUs Add-On */}
+                          <div className="space-y-2 p-5 bg-slate-50 border border-slate-200 rounded-2xl">
+                            <div className="flex justify-between items-start">
+                              <div>
+                                <h4 className="text-sm font-semibold text-[#003057]">SKUs Count Limits</h4>
+                                <p className="text-xs text-slate-500 mt-0.5">25 SKUs included. Expand your product catalog limits.</p>
+                              </div>
+                              {businessSKUs > 25 && (
+                                <span className="text-xs font-bold text-blue-600 bg-blue-50 px-2 py-1 rounded border border-blue-100">
+                                  +₹{(businessSKUs === 35 ? 10000 : 45000).toLocaleString('en-IN')}/yr
+                                </span>
+                              )}
+                            </div>
+                            <div className="max-w-xs mt-3">
+                              <select
+                                value={businessSKUs}
+                                onChange={(e) => setBusinessSKUs(Number(e.target.value))}
+                                className="w-full bg-white text-slate-800 border border-slate-200 rounded-xl p-3.5 text-xs font-sans focus:outline-none focus:ring-2 focus:ring-blue-500 cursor-pointer"
+                              >
+                                <option value={25}>25 SKUs (included)</option>
+                                <option value={35}>35 SKUs (+₹10,000/yr)</option>
+                                <option value={75}>75 SKUs (+₹45,000/yr)</option>
+                              </select>
+                            </div>
+                          </div>
+                        </>
+                      )}
+
+                      {selectedPlan.name === 'Business Pro' && (
+                        <>
+                          {/* Team Members Add-On */}
+                          <div className="space-y-2 p-5 bg-slate-50 border border-slate-200 rounded-2xl">
+                            <div className="flex justify-between items-start">
+                              <div>
+                                <h4 className="text-sm font-semibold text-[#003057]">Team Members</h4>
+                                <p className="text-xs text-slate-500 mt-0.5">50 users included. Add in blocks of 5 users (+₹5,000/yr per block).</p>
+                              </div>
+                              {proUsers > 50 && (
+                                <span className="text-xs font-bold text-blue-600 bg-blue-50 px-2 py-1 rounded border border-blue-100">
+                                  +₹{(((proUsers - 50) / 5) * 5000).toLocaleString('en-IN')}/yr
+                                </span>
+                              )}
+                            </div>
+                            <div className="flex items-center bg-white border border-slate-200 rounded-xl p-2.5 justify-between max-w-xs mt-3">
+                              <button
+                                type="button"
+                                onClick={() => setProUsers(Math.max(50, proUsers - 5))}
+                                className="w-9 h-9 rounded-lg bg-slate-105 hover:bg-slate-200 flex items-center justify-center font-bold text-slate-700 active:scale-95 disabled:opacity-50 cursor-pointer border-none"
+                                disabled={proUsers <= 50}
+                              >
+                                –
+                              </button>
+                              <span className="text-sm font-semibold text-slate-800 font-sans">
+                                {proUsers} users
+                              </span>
+                              <button
+                                type="button"
+                                onClick={() => setProUsers(proUsers + 5)}
+                                className="w-9 h-9 rounded-lg bg-slate-105 hover:bg-slate-200 flex items-center justify-center font-bold text-slate-700 active:scale-95 cursor-pointer border-none"
+                              >
+                                +
+                              </button>
+                            </div>
+                          </div>
+
+                          {/* SKUs Add-On */}
+                          <div className="space-y-2 p-5 bg-slate-50 border border-slate-200 rounded-2xl">
+                            <div className="flex justify-between items-start">
+                              <div>
+                                <h4 className="text-sm font-semibold text-[#003057]">SKUs Count Limits</h4>
+                                <p className="text-xs text-slate-500 mt-0.5">500 SKUs included. Expand your product catalog limits.</p>
+                              </div>
+                              {proSKUs > 500 && (
+                                <span className="text-xs font-bold text-blue-600 bg-blue-50 px-2 py-1 rounded border border-blue-100">
+                                  +₹{(proSKUs === 510 ? 10000 : 45000).toLocaleString('en-IN')}/yr
+                                </span>
+                              )}
+                            </div>
+                            <div className="max-w-xs mt-3">
+                              <select
+                                value={proSKUs}
+                                onChange={(e) => setProSKUs(Number(e.target.value))}
+                                className="w-full bg-white text-slate-800 border border-slate-200 rounded-xl p-3.5 text-xs font-sans focus:outline-none focus:ring-2 focus:ring-blue-500 cursor-pointer"
+                              >
+                                <option value={500}>500 SKUs (included)</option>
+                                <option value={510}>510 SKUs (+₹10,000/yr)</option>
+                                <option value={550}>550 SKUs (+₹45,000/yr)</option>
+                              </select>
+                            </div>
+                          </div>
+
+                          {/* Brands Registry Add-On */}
+                          <div className="space-y-2 p-5 bg-slate-50 border border-slate-200 rounded-2xl">
+                            <div className="flex justify-between items-start">
+                              <div>
+                                <h4 className="text-sm font-semibold text-[#003057]">Brands Registry</h4>
+                                <p className="text-xs text-slate-500 mt-0.5">5 brands included. Add extra brands (+₹10,000/yr per brand).</p>
+                              </div>
+                              {proBrands > 5 && (
+                                <span className="text-xs font-bold text-blue-600 bg-blue-50 px-2 py-1 rounded border border-blue-100">
+                                  +₹{((proBrands - 5) * 10000).toLocaleString('en-IN')}/yr
+                                </span>
+                              )}
+                            </div>
+                            <div className="flex items-center bg-white border border-slate-200 rounded-xl p-2.5 justify-between max-w-xs mt-3">
+                              <button
+                                type="button"
+                                onClick={() => setProBrands(Math.max(5, proBrands - 1))}
+                                className="w-9 h-9 rounded-lg bg-slate-105 hover:bg-slate-200 flex items-center justify-center font-bold text-slate-700 active:scale-95 disabled:opacity-50 cursor-pointer border-none"
+                                disabled={proBrands <= 5}
+                              >
+                                –
+                              </button>
+                              <span className="text-sm font-semibold text-slate-800 font-sans">
+                                {proBrands} brands
+                              </span>
+                              <button
+                                type="button"
+                                onClick={() => setProBrands(proBrands + 1)}
+                                className="w-9 h-9 rounded-lg bg-slate-105 hover:bg-slate-200 flex items-center justify-center font-bold text-slate-700 active:scale-95 cursor-pointer border-none"
+                              >
+                                +
+                              </button>
+                            </div>
+                          </div>
+                        </>
+                      )}
+                    </div>
+                  </div>
+                )}
+
+                {/* Step 4: Trademark & Compliance Docs */}
+                {currentStepId === 'compliance' && (
                   <div className="space-y-6 animate-fadeIn">
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                       <div className="space-y-1.5">
@@ -2320,7 +2608,7 @@ export default function App() {
                 )}
 
                 {/* Step 4: Consent & Payment Selection */}
-                {checkoutStep === 4 && (
+                {currentStepId === 'payment' && (
                   <div className="space-y-6 animate-fadeIn">
 
                     {/* Consent Tickboxes with custom styled blue indicators */}
@@ -2482,11 +2770,12 @@ export default function App() {
                     </button>
                   )}
 
-                  {checkoutStep < 4 ? (
+                  {checkoutStep < totalSteps ? (
                     <button
                       type="button"
                       onClick={() => {
-                        if (validateStep(checkoutStep)) {
+                        const currentStepId = stepItems[checkoutStep - 1].id as 'company' | 'contact' | 'addons' | 'compliance' | 'payment';
+                        if (validateStep(currentStepId)) {
                           setCheckoutStep(checkoutStep + 1);
                         }
                       }}
@@ -2498,7 +2787,8 @@ export default function App() {
                     <button
                       type="button"
                       onClick={() => {
-                        if (validateStep(4)) {
+                        const currentStepId = stepItems[checkoutStep - 1].id as 'company' | 'contact' | 'addons' | 'compliance' | 'payment';
+                        if (validateStep(currentStepId)) {
                           setIsProcessingPayment(true);
                           setTimeout(() => {
                             window.location.href = "http://localhost:3000/vendor/login";
