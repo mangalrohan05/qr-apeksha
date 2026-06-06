@@ -3066,9 +3066,9 @@ export default function App() {
                   
                   {/* Visual trust security badge inside column */}
                   <div className="flex items-center gap-3.5 bg-slate-100/50 border border-slate-200 rounded-xl p-4.5">
-                    <span className="text-xl select-none">🔒</span>
+                    <span className="text-xl select-none">🛡️</span>
                     <p className="text-[10px] text-slate-500 font-normal leading-relaxed">
-                      All calculations are secured using 256-bit SSL transaction encryptions and verified against physical ledger validation certificates.
+                      Safe & secure checkout. Your data is protected, and you can upgrade, downgrade, or cancel your plan at any time from your settings.
                     </p>
                   </div>
                 </div>
