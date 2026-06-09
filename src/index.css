@@ -136,6 +136,12 @@
   -webkit-backdrop-filter: blur(15px);
   border-bottom: 1px solid rgba(226, 232, 240, 0.8);
   z-index: 1000;
+  transition: height 0.3s ease, padding 0.3s ease;
+}
+
+.navbar.nav-scrolled {
+  height: 4.5rem;
+  padding: 0 3%;
 }
 
 /* Brand styling */
@@ -214,3 +220,18 @@
   width: auto;
   object-fit: contain;
 }
+
+/* Text Shine Animation */
+@keyframes text-shine {
+  0% {
+    background-position: 0% 50%;
+  }
+  100% {
+    background-position: 100% 50%;
+  }
+}
+.animate-text-shine {
+  animation: text-shine 3s ease-in-out infinite alternate;
+  background-size: 200% auto;
+}
+
