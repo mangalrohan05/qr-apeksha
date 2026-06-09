@@ -22,7 +22,54 @@ interface SelectedPlanInfo {
 export default function App() {
   const [currentPage, setCurrentPage] = useState<Page>('home');
   const isAnnual = true; // default to annual as in comparison sheet
-  
+
+  const [isNavScrolled, setIsNavScrolled] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsNavScrolled(window.scrollY > 50);
+    };
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  // Initialize AOS (Animate On Scroll) dynamic scripts/stylesheets
+  useEffect(() => {
+    // 1. Inject AOS CSS
+    const linkId = 'aos-css';
+    if (!document.getElementById(linkId)) {
+      const link = document.createElement('link');
+      link.id = linkId;
+      link.rel = 'stylesheet';
+      link.href = 'https://unpkg.com/aos@2.3.1/dist/aos.css';
+      document.head.appendChild(link);
+    }
+
+    // 2. Inject AOS JS
+    const scriptId = 'aos-js';
+    let script = document.getElementById(scriptId) as HTMLScriptElement;
+    if (!script) {
+      script = document.createElement('script');
+      script.id = scriptId;
+      script.src = 'https://unpkg.com/aos@2.3.1/dist/aos.js';
+      script.async = true;
+      script.onload = () => {
+        // @ts-ignore
+        if (window.AOS) {
+          // @ts-ignore
+          window.AOS.init({ once: true });
+        }
+      };
+      document.body.appendChild(script);
+    } else {
+      // @ts-ignore
+      if (window.AOS) {
+        // @ts-ignore
+        window.AOS.init({ once: true });
+      }
+    }
+  }, [currentPage]);
+
   // Stepper step state: 1 (Company), 2 (Contact), 3 (Trademark & Compliance), 4 (Consent & Pay)
   const [checkoutStep, setCheckoutStep] = useState<number>(1);
   const [errors, setErrors] = useState<Record<string, string>>({});
@@ -162,7 +209,7 @@ export default function App() {
     if (stepId === 'company') {
       if (!legalName.trim()) newErrors.legalName = 'Legal company name is required';
       if (!companyType) newErrors.companyType = 'Company type is required';
-      
+
       if (!gstin.trim()) {
         newErrors.gstin = 'GSTIN is required';
       } else {
@@ -184,7 +231,7 @@ export default function App() {
       if (!addressLine1.trim()) newErrors.addressLine1 = 'Registered address line 1 is required';
       if (!city.trim()) newErrors.city = 'City is required';
       if (!stateName) newErrors.stateName = 'State is required';
-      
+
       if (!pinCode.trim()) {
         newErrors.pinCode = 'PIN code is required';
       } else {
@@ -199,7 +246,7 @@ export default function App() {
 
     if (stepId === 'contact') {
       if (!fullName.trim()) newErrors.fullName = 'Full name is required';
-      
+
       if (!email.trim()) {
         newErrors.email = 'Work email is required';
       } else {
@@ -275,7 +322,7 @@ export default function App() {
       const baseCost = isAnnual ? 55000 : 5000;
       const extraUsersCount = businessUsers - 5;
       const extraUsersC = (extraUsersCount / 5) * (isAnnual ? 5000 : 450);
-      
+
       let extraSKUsC = 0;
       if (businessSKUs === 35) {
         extraSKUsC = isAnnual ? 10000 : 900;
@@ -329,7 +376,7 @@ export default function App() {
       }));
     }
   }, [selectedPlan.name, businessUsers, businessSKUs, proUsers, proSKUs, proBrands, isAnnual]);
-  
+
   // State to track the selected payment method gateway
   const [paymentMethod, setPaymentMethod] = useState<string>('razorpay');
 
@@ -364,9 +411,9 @@ export default function App() {
           if (names.includes('India') && !selectedCountry) setSelectedCountry('India');
         }
       })
-      .catch(() => {})
+      .catch(() => { })
       .finally(() => setIsLoadingCountries(false));
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   // Fetch states whenever selectedCountry changes
@@ -388,9 +435,9 @@ export default function App() {
           setStatesList(d.data.states.map((s: { name: string }) => s.name).sort());
         }
       })
-      .catch(() => {})
+      .catch(() => { })
       .finally(() => setIsLoadingStates(false));
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedCountry]);
 
   // Fetch cities whenever stateName changes
@@ -410,9 +457,9 @@ export default function App() {
           setCitiesList((d.data as string[]).sort());
         }
       })
-      .catch(() => {})
+      .catch(() => { })
       .finally(() => setIsLoadingCities(false));
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [stateName]);
 
   // Scroll to top of the page when the page changes
@@ -430,7 +477,7 @@ export default function App() {
     const handleIntersect = () => {
       const sections = document.querySelectorAll('[data-theme]');
       let activeTheme: 'light' | 'dark' = 'light';
-      
+
       for (let i = 0; i < sections.length; i++) {
         const rect = sections[i].getBoundingClientRect();
         if (rect.top <= 96 && rect.bottom > 96) {
@@ -510,7 +557,7 @@ export default function App() {
       const baseCost = isAnnual ? 55000 : 5000;
       const extraUsersCount = businessUsers - 5;
       const extraUsersC = (extraUsersCount / 5) * (isAnnual ? 5000 : 450);
-      
+
       let extraSKUsC = 0;
       if (businessSKUs === 35) {
         extraSKUsC = isAnnual ? 10000 : 900;
@@ -587,35 +634,39 @@ export default function App() {
         return (
           /* Main container allows vertical scrolling below the fold in pure white */
           <div className="animate-fadeIn space-y-36 pb-32 bg-white text-slate-800">
-            
+
             {/* SECTION 1: Above-the-fold Viewport Frame with Spatially Proportioned Page Rectangle */}
-            <div 
+            <div
               data-theme="dark"
-              className="w-full flex flex-col justify-center items-center text-center h-screen pt-24 px-4 bg-cover bg-center bg-fixed relative overflow-hidden"
-              style={{ 
-                backgroundImage: `linear-gradient(135deg, rgba(0, 48, 87, 0.88) 0%, rgba(0, 30, 54, 0.95) 100%), url('https://images.unsplash.com/photo-1634017839464-5c339ebe3cb4?auto=format&fit=crop&q=80&w=2500')` 
-              }}
+              className="w-full flex flex-col justify-center items-center text-center h-screen pt-24 px-4 relative overflow-hidden shadow-2xl bg-[#050b14]"
             >
+              {/* Background Layer (Scaled slightly to crop out any baked-in image borders/corners) */}
+              <div 
+                className="absolute inset-0 z-0 bg-cover bg-center scale-[1.03]"
+                style={{
+                  backgroundImage: `linear-gradient(135deg, rgba(0, 15, 30, 0.2) 0%, rgba(0, 5, 20, 0.5) 100%), url('/saas_royal_bg.png')`
+                }}
+              />
               <div className="max-w-7xl mx-auto px-6 w-full flex flex-col justify-center items-center text-center space-y-8 sm:space-y-10 relative z-10">
-                
+
                 {/* Launch Tag: Orange all-caps flat text */}
                 <div className="text-[#ff7b00] text-xs sm:text-sm font-normal tracking-[0.25em] uppercase mx-auto">
                   SPECIAL LAUNCH OFFER: SAVE 20% ON ANNUAL PROTECTION
                 </div>
-                
+
                 {/* Headline: Large text wrapping naturally */}
                 <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-[76px] font-light tracking-tight text-white leading-[1.15] max-w-6xl mx-auto">
                   Protect Your Brand. <span className="bg-gradient-to-r from-[#00b074] via-[#00e699] to-emerald-300 bg-clip-text text-transparent font-medium">Eliminate Counterfeits Instantly.</span>
                 </h1>
-                
+
                 {/* Subtext: Wider horizontally, wrapping naturally */}
                 <p className="text-slate-300 text-xs sm:text-sm md:text-base lg:text-lg font-light tracking-wide max-w-4xl mx-auto leading-relaxed">
                   Deploy dynamic cryptographic serialized tracking layers directly onto your physical packaging lines. Verify authenticity in milliseconds and claim your supply chain metrics.
                 </p>
-                
+
                 {/* Call to Action Button */}
                 <div className="pt-4">
-                  <button 
+                  <button
                     onClick={() => setCurrentPage('plans')}
                     className="px-16 py-4.5 bg-[#00b074] hover:bg-[#009660] text-white font-medium rounded-full transition-all duration-300 shadow-2xl shadow-[#00b074]/30 hover:scale-105 tracking-widest text-xs uppercase cursor-pointer"
                   >
@@ -627,34 +678,46 @@ export default function App() {
 
             {/* Container for scrolling sections below the fold rendering on clean white background */}
             <div data-theme="light" className="max-w-7xl mx-auto px-6 space-y-36">
-              
+
               {/* SECTION 2: Generous De-congested Spacing Value Pillars Grid (No Bold, Elegant Light/Medium Headers) */}
               <div className="space-y-16">
-                <div className="text-center space-y-4">
+                <div className="text-center space-y-4" data-aos="fade-down" data-aos-duration="800">
                   <h2 className="text-3xl font-light text-[#003057] tracking-tight sm:text-4xl">Complete Supply Integrity</h2>
                   <p className="text-slate-500 max-w-2xl mx-auto text-sm sm:text-base font-normal">Robust operational safety metrics built directly onto decentralised ledger architecture.</p>
                 </div>
 
                 {/* Increased layout gap to prevent tight card clutter */}
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-12 text-left">
-                  <div className="p-10 bg-slate-50 rounded-3xl shadow-xl space-y-6 border border-slate-100 transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl">
-                    <div className="w-14 h-14 bg-[#00b074]/10 rounded-2xl flex items-center justify-center text-2xl border border-[#00b074]/20">🛡️</div>
+                  <div data-aos="fade-up" data-aos-duration="1000" className="group p-10 bg-slate-50 rounded-3xl shadow-xl space-y-6 border border-slate-100 transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl cursor-pointer">
+                    <div className="w-14 h-14 bg-[#00b074]/10 rounded-2xl flex items-center justify-center border border-[#00b074]/20 transition-all duration-300 group-hover:scale-110 group-hover:bg-[#00b074] group-hover:border-[#00b074] group-hover:shadow-[0_8px_16px_rgba(0,176,116,0.25)]">
+                      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-7 h-7 text-[#00b074] transition-colors duration-300 group-hover:text-white">
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75 11.25 15 15 9.75m-3-7.036A11.959 11.959 0 0 1 3.598 6 11.99 11.99 0 0 0 3 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285Z" />
+                      </svg>
+                    </div>
                     <h3 className="text-xl font-medium text-[#003057] tracking-tight">Enterprise Fraud Mitigation</h3>
                     <p className="text-slate-500 text-sm leading-relaxed font-normal">
                       Protect market share with real-time cloned-code detection systems. Instantly flags and isolates duplicated serialization queries before fake goods clear retail registers.
                     </p>
                   </div>
 
-                  <div className="p-10 bg-slate-50 rounded-3xl shadow-xl space-y-6 border border-slate-100 transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl">
-                    <div className="w-14 h-14 bg-[#00b074]/10 rounded-2xl flex items-center justify-center text-2xl border border-[#00b074]/20">🌍</div>
+                  <div data-aos="fade-up" data-aos-duration="1000" data-aos-delay="100" className="group p-10 bg-slate-50 rounded-3xl shadow-xl space-y-6 border border-slate-100 transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl cursor-pointer">
+                    <div className="w-14 h-14 bg-[#00b074]/10 rounded-2xl flex items-center justify-center border border-[#00b074]/20 transition-all duration-300 group-hover:scale-110 group-hover:bg-[#00b074] group-hover:border-[#00b074] group-hover:shadow-[0_8px_16px_rgba(0,176,116,0.25)]">
+                      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-7 h-7 text-[#00b074] transition-colors duration-300 group-hover:text-white">
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M12 21a9.004 9.004 0 0 0 8.716-6.747M12 21a9.004 9.004 0 0 1-8.716-6.747M12 21c2.485 0 4.5-4.03 4.5-9S14.485 3 12 3m0 18c-2.485 0-4.5-4.03-4.5-9S9.515 3 12 3m0 0a8.997 8.997 0 0 1 7.843 4.582M12 3a8.997 8.997 0 0 0-7.843 4.582m15.686 0A11.953 11.953 0 0 1 12 10.5c-2.998 0-5.74-1.1-7.843-2.918m15.686 0A8.959 8.959 0 0 1 21 12c0 .778-.099 1.533-.284 2.253m0 0A17.919 17.919 0 0 1 12 16.5c-3.162 0-6.133-.815-8.716-2.247m0 0A9.015 9.015 0 0 1 3 12c0-1.605.42-3.113 1.157-4.418" />
+                      </svg>
+                    </div>
                     <h3 className="text-xl font-medium text-[#003057] tracking-tight">Global Compliance Standards</h3>
                     <p className="text-slate-500 text-sm leading-relaxed font-normal">
                       Completely aligned with international data protection protocols. Built with fully optimized encryption architecture ensuring complete safety for cross-border logistics distribution networks.
                     </p>
                   </div>
 
-                  <div className="p-10 bg-slate-50 rounded-3xl shadow-xl space-y-6 border border-slate-100 transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl">
-                    <div className="w-14 h-14 bg-[#00b074]/10 rounded-2xl flex items-center justify-center text-2xl border border-[#00b074]/20">🔌</div>
+                  <div data-aos="fade-up" data-aos-duration="1000" data-aos-delay="200" className="group p-10 bg-slate-50 rounded-3xl shadow-xl space-y-6 border border-slate-100 transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl cursor-pointer">
+                    <div className="w-14 h-14 bg-[#00b074]/10 rounded-2xl flex items-center justify-center border border-[#00b074]/20 transition-all duration-300 group-hover:scale-110 group-hover:bg-[#00b074] group-hover:border-[#00b074] group-hover:shadow-[0_8px_16px_rgba(0,176,116,0.25)]">
+                      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-7 h-7 text-[#00b074] transition-colors duration-300 group-hover:text-white">
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M14.25 9.75 16.5 12l-2.25 2.25m-4.5 0L7.5 12l2.25-2.25M6 20.25h12A2.25 2.25 0 0 0 20.25 18V6A2.25 2.25 0 0 0 18 3.75H6A2.25 2.25 0 0 0 3.75 6v12A2.25 2.25 0 0 0 6 20.25Z" />
+                      </svg>
+                    </div>
                     <h3 className="text-xl font-medium text-[#003057] tracking-tight">Seamless API Infrastructure</h3>
                     <p className="text-slate-500 text-sm leading-relaxed font-normal">
                       Plug verification tracking triggers straight into your existing ERP inventory setups, custom apps, or digital billing gateways using secure webhooks.
@@ -662,20 +725,20 @@ export default function App() {
                   </div>
                 </div>
               </div>
- 
+
               {/* SECTION 2.5: Strategic Vision (2-Column Split Layout, Flat Design, Animated) */}
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center py-8 overflow-hidden">
                 {/* Left Column (Text & Bullets) */}
-                <div className="space-y-6 text-left animate-slide-in-left">
-                  <h2 className="text-3xl sm:text-4xl font-light text-[#003057] tracking-tight">
+                <div className="space-y-6 text-left">
+                  <h2 data-aos="fade-right" className="text-3xl sm:text-4xl font-light text-[#003057] tracking-tight">
                     Unrivaled Supply Chain Visibility
                   </h2>
-                  <p className="text-slate-500 text-sm sm:text-base leading-relaxed font-normal">
+                  <p data-aos="fade-right" data-aos-delay="100" className="text-slate-500 text-sm sm:text-base leading-relaxed font-normal">
                     Go beyond simple tracking. Authentiq maps every stage of your product journey, providing end-to-end transparency from the factory floor to the end consumer.
                   </p>
-                  
+
                   {/* Bullet Points */}
-                  <ul className="space-y-4 pt-2 font-normal text-slate-500">
+                  <ul data-aos="fade-right" data-aos-delay="200" className="space-y-4 pt-2 font-normal text-slate-500">
                     <li className="flex items-start gap-3">
                       <span className="text-[#00b074] text-sm mt-0.5">✓</span>
                       <div className="text-sm sm:text-base leading-relaxed font-normal">
@@ -693,9 +756,9 @@ export default function App() {
 
                 {/* Right Column (Image) */}
                 <div className="animate-slide-in-right">
-                  <img 
-                    src="https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?auto=format&fit=crop&q=80&w=1000" 
-                    alt="Supply Chain Logistics Operations" 
+                  <img
+                    src="https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?auto=format&fit=crop&q=80&w=1000"
+                    alt="Supply Chain Logistics Operations"
                     className="w-full h-96 object-cover rounded-2xl shadow-xl transition-transform duration-500 hover:scale-[1.02]"
                   />
                 </div>
@@ -703,7 +766,7 @@ export default function App() {
 
               {/* SECTION 3: Open Workspace Roadmap Pathways Grid */}
               <div className="space-y-16">
-                <div className="text-center space-y-4">
+                <div className="text-center space-y-4" data-aos="fade-down" data-aos-duration="800">
                   <h2 className="text-3xl font-light text-[#003057] tracking-tight sm:text-4xl">How Authentiq Operates</h2>
                   <p className="text-slate-500 max-w-2xl mx-auto text-sm sm:text-base font-normal">Three straightforward steps protecting your brand catalog distribution items.</p>
                 </div>
@@ -714,7 +777,13 @@ export default function App() {
                     { title: '2. RUN VERIFICATION', badge: 'Instant Feedback', desc: 'Sub-millisecond verification logic checking database state logs without page freezing or delays.' },
                     { title: '3. CONSUMER TRUST', badge: 'Guaranteed Authenticity', desc: 'Build an immutable relationship with consumers by presenting transparent supply metrics upon scan.' }
                   ].map((feat, idx) => (
-                    <div key={idx} className="p-10 bg-slate-50 rounded-3xl shadow-xl border border-slate-100 transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl">
+                    <div 
+                      key={idx} 
+                      data-aos="fade-up" 
+                      data-aos-duration="1000" 
+                      data-aos-delay={idx * 150}
+                      className="p-10 bg-slate-50 rounded-3xl shadow-xl border border-slate-100 transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl"
+                    >
                       <span className="text-xs font-normal text-[#00b074] bg-[#00b074]/10 px-3 py-1 rounded-md border border-[#00b074]/20">{feat.badge}</span>
                       <h3 className="text-xl font-medium text-[#003057] mt-5 mb-3 tracking-tight">{feat.title}</h3>
                       <p className="text-slate-500 text-sm leading-relaxed font-normal">{feat.desc}</p>
@@ -737,24 +806,24 @@ export default function App() {
                     { q: "What happens when a counterfeit code signature is detected?", a: "The system triggers a real-time warning dashboard alert to your team, maps the scanning telemetry coordinates, and presents a 'Suspect Warning' screen to the consumer scanning the product." }
                   ].map((faq, idx) => (
                     <div key={idx} className="bg-slate-50/40 border border-slate-200/70 rounded-lg overflow-hidden hover:bg-slate-50 hover:border-[#00b074]/35 transition-all duration-300 shadow-sm hover:shadow-md">
-                      <button 
+                      <button
                         onClick={() => toggleFaq(idx)}
                         className="w-full py-3 px-5 text-left flex justify-between items-center bg-transparent transition-colors focus:outline-none cursor-pointer"
                       >
                         <h4 className="font-medium text-[#003057] text-xs sm:text-[13px] flex items-center pr-4">
-                          <span className="text-[#00b074] font-semibold text-xs sm:text-sm mr-2.5 flex-shrink-0">Q.</span> 
+                          <span className="text-[#00b074] font-semibold text-xs sm:text-sm mr-2.5 flex-shrink-0">Q.</span>
                           {faq.q}
                         </h4>
-                        <svg 
-                          className={`w-3.5 h-3.5 text-slate-400 transition-transform duration-350 flex-shrink-0 ${openFaqIndex === idx ? 'transform rotate-180 text-[#00b074]' : ''}`} 
-                          fill="none" 
-                          viewBox="0 0 24 24" 
+                        <svg
+                          className={`w-3.5 h-3.5 text-slate-400 transition-transform duration-350 flex-shrink-0 ${openFaqIndex === idx ? 'transform rotate-180 text-[#00b074]' : ''}`}
+                          fill="none"
+                          viewBox="0 0 24 24"
                           stroke="currentColor"
                         >
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M19 9l-7 7-7-7" />
                         </svg>
                       </button>
-                      
+
                       <div className={`transition-all duration-300 ease-in-out overflow-hidden ${openFaqIndex === idx ? 'max-h-40' : 'max-h-0'}`}>
                         <p className="pl-9 pr-5 pb-3.5 text-slate-500 text-[11px] sm:text-xs leading-relaxed font-normal bg-transparent">
                           {faq.a}
@@ -777,7 +846,7 @@ export default function App() {
 
         return (
           <div data-theme="light" className="animate-fadeIn pt-24 pb-32 bg-slate-50 text-slate-800 relative overflow-x-hidden">
-            
+
             {/* Header Area */}
             <div className="max-w-7xl mx-auto px-6 pt-12 text-center space-y-4">
               <h2 className="text-4xl sm:text-5xl font-light text-[#003057] tracking-tight">
@@ -786,7 +855,7 @@ export default function App() {
               <p className="text-slate-500 max-w-2xl mx-auto text-sm sm:text-base font-normal">
                 Deploy cryptographic serialized tracking directly onto your packaging lines. Select or customize your parameters below.
               </p>
-              
+
               {/* Billed Annually Indicator */}
               <div className="pt-4 flex items-center justify-center">
                 <span className="text-xs font-bold px-4 py-1.5 bg-blue-50 text-blue-600 rounded-full border border-blue-200/60 tracking-wider uppercase">
@@ -816,7 +885,7 @@ export default function App() {
             {/* Grid Container (3 Columns: Business, Business Pro, Enterprise) */}
             <div className="max-w-7xl mx-auto px-6 pt-16">
               <div className="grid grid-cols-1 md:grid-cols-3 gap-8 items-stretch w-full">
-                
+
                 {/* 1. Business Card */}
                 <div className="flex flex-col justify-between p-8 bg-white border border-slate-200/80 rounded-3xl shadow-sm hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
                   <div className="space-y-6">
@@ -873,7 +942,7 @@ export default function App() {
 
                   </div>
 
-                  <button 
+                  <button
                     onClick={() => handleSelectPlan('business')}
                     className="mt-8 w-full py-4 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-2xl transition-all duration-200 text-xs tracking-wider uppercase shadow-md cursor-pointer"
                   >
@@ -887,7 +956,7 @@ export default function App() {
                   <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-blue-600 text-white px-4 py-1 rounded-full text-[9px] font-bold tracking-widest uppercase shadow-md border border-blue-400/30">
                     Most Popular
                   </div>
-                  
+
                   <div className="space-y-6">
                     <div>
                       <span className="text-xs font-semibold uppercase tracking-widest text-blue-400 bg-blue-900/40 px-3 py-1 rounded-md border border-blue-500/20">
@@ -951,7 +1020,7 @@ export default function App() {
 
                   </div>
 
-                  <button 
+                  <button
                     onClick={() => handleSelectPlan('pro')}
                     className="mt-8 w-full py-4 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-2xl transition-all duration-200 text-xs tracking-wider uppercase shadow-lg shadow-blue-500/20 cursor-pointer border-none"
                   >
@@ -992,7 +1061,7 @@ export default function App() {
 
                   </div>
 
-                  <button 
+                  <button
                     onClick={() => handleSelectPlan('enterprise')}
                     className="mt-8 w-full py-4 bg-slate-800 hover:bg-slate-900 text-white font-semibold rounded-2xl transition-all duration-200 text-xs tracking-wider uppercase cursor-pointer"
                   >
@@ -1019,9 +1088,8 @@ export default function App() {
               <div className="grid grid-cols-5 gap-3 mb-4 px-2">
                 <div />
                 {[['Free Trial', false], ['Business', false], ['Business Pro', true], ['Enterprise', false]].map(([name, hot]) => (
-                  <div key={String(name)} className={`rounded-xl py-2.5 px-2 text-center text-[10px] font-bold uppercase tracking-widest ${
-                    hot ? 'bg-blue-600 text-white shadow-md shadow-blue-500/20' : 'bg-slate-100 text-slate-500'
-                  }`}>
+                  <div key={String(name)} className={`rounded-xl py-2.5 px-2 text-center text-[10px] font-bold uppercase tracking-widest ${hot ? 'bg-blue-600 text-white shadow-md shadow-blue-500/20' : 'bg-slate-100 text-slate-500'
+                    }`}>
                     {hot && <span className="block text-[8px] font-normal tracking-wider opacity-80 mb-0.5">★ Most Popular</span>}
                     {String(name)}
                   </div>
@@ -1077,15 +1145,13 @@ export default function App() {
                     <span className="text-[11px] font-bold uppercase tracking-wider text-[#003057]">{group.category}</span>
                   </div>
                   {group.rows.map((row, ri) => (
-                    <div key={ri} className={`grid grid-cols-5 gap-0 ${
-                      ri < group.rows.length - 1 ? 'border-b border-slate-100' : ''
-                    } hover:bg-slate-50/60 transition-colors`}>
+                    <div key={ri} className={`grid grid-cols-5 gap-0 ${ri < group.rows.length - 1 ? 'border-b border-slate-100' : ''
+                      } hover:bg-slate-50/60 transition-colors`}>
                       <div className="px-5 py-3.5 text-xs font-medium text-slate-700 flex items-center">{row.feature}</div>
                       {row.vals.map((val, vi) => {
                         const isProCol = vi === 2;
-                        const cellBase = `px-3 py-3.5 text-center text-xs flex items-center justify-center ${
-                          isProCol ? 'bg-blue-50/40 border-x border-blue-200/20' : ''
-                        }`;
+                        const cellBase = `px-3 py-3.5 text-center text-xs flex items-center justify-center ${isProCol ? 'bg-blue-50/40 border-x border-blue-200/20' : ''
+                          }`;
                         if (val === true) return (
                           <div key={vi} className={cellBase}>
                             <span className="inline-flex items-center justify-center w-5 h-5 rounded-full bg-emerald-50 border border-emerald-200">
@@ -1101,9 +1167,8 @@ export default function App() {
                           </div>
                         );
                         return (
-                          <div key={vi} className={`${cellBase} ${
-                            isProCol ? 'font-semibold text-blue-700' : 'text-slate-600'
-                          }`}>{String(val)}</div>
+                          <div key={vi} className={`${cellBase} ${isProCol ? 'font-semibold text-blue-700' : 'text-slate-600'
+                            }`}>{String(val)}</div>
                         );
                       })}
                     </div>
@@ -1111,21 +1176,21 @@ export default function App() {
                 </div>
               ))}
             </div>
-                    
+
             {/* Below Fold Info Block */}
             <div className="w-full bg-[#f8fafc] py-20 text-slate-800 mt-28 border-t border-slate-200/50">
               <div className="max-w-7xl mx-auto px-12 grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
-                
+
                 <div className="lg:col-span-6 space-y-6 text-left">
-                  <h2 className="text-4xl font-light tracking-tight text-[#003057] leading-tight">
+                  <h2 className="text-4xl font-light tracking-tight text-[#003057] leading-tight" data-aos="fade-right">
                     Professional Tracking <br />
                     <span className="text-blue-600 font-medium">Ownership Standards</span>
                   </h2>
-                  <p className="text-slate-500 text-sm sm:text-base leading-relaxed font-normal">
+                  <p className="text-slate-500 text-sm sm:text-base leading-relaxed font-normal" data-aos="fade-right" data-aos-delay="100">
                     We don't just generate codes; we secure your infrastructure footprint. Our commitment to factory-grade dynamic verification logic ensures that every project meets the highest standards of stability and long-term ledger integrity.
                   </p>
-                  
-                  <div className="space-y-3 pt-2 font-normal">
+
+                  <div className="space-y-3 pt-2 font-normal" data-aos="fade-right" data-aos-delay="200">
                     <div className="flex items-center gap-3 text-sm text-[#003057]">
                       <span className="w-5 h-5 rounded-full bg-blue-50 border border-blue-200 flex items-center justify-center text-blue-600 text-xs font-normal">✓</span>
                       Tier-1 Cryptographic QR Generation
@@ -1148,32 +1213,30 @@ export default function App() {
 
             {/* --- SLIDING DRAWER SYSTEM FOR FREE TRIAL --- */}
             {/* Drawer Backdrop Overlay */}
-            <div 
-              className={`fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 transition-opacity duration-300 ${
-                isFreeTrialDrawerOpen ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'
-              }`}
+            <div
+              className={`fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 transition-opacity duration-300 ${isFreeTrialDrawerOpen ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'
+                }`}
               onClick={() => setIsFreeTrialDrawerOpen(false)}
             />
-            
+
             {/* Drawer Panel */}
-            <div 
-              className={`fixed top-0 right-0 h-full w-full max-w-md bg-white shadow-2xl z-50 transform transition-transform duration-300 ease-out flex flex-col justify-between p-8 border-l border-slate-200 text-left ${
-                isFreeTrialDrawerOpen ? 'translate-x-0' : 'translate-x-full'
-              }`}
+            <div
+              className={`fixed top-0 right-0 h-full w-full max-w-md bg-white shadow-2xl z-50 transform transition-transform duration-300 ease-out flex flex-col justify-between p-8 border-l border-slate-200 text-left ${isFreeTrialDrawerOpen ? 'translate-x-0' : 'translate-x-full'
+                }`}
             >
               {/* Close Button Header */}
               <div className="flex justify-between items-center pb-4 border-b border-slate-100">
                 <span className="text-xs font-semibold uppercase tracking-widest text-slate-400">
                   Free Option
                 </span>
-                <button 
+                <button
                   onClick={() => setIsFreeTrialDrawerOpen(false)}
                   className="text-slate-400 hover:text-slate-700 text-xl font-bold p-1 cursor-pointer focus:outline-none border-none bg-transparent"
                 >
                   ✕
                 </button>
               </div>
-              
+
               {/* Drawer Content Body */}
               <div className="flex-1 overflow-y-auto py-6 space-y-6">
                 <div>
@@ -1207,8 +1270,8 @@ export default function App() {
 
 
               </div>
-              
-              <button 
+
+              <button
                 onClick={() => {
                   setIsFreeTrialDrawerOpen(false);
                   handleSelectPlan('free');
@@ -1224,131 +1287,241 @@ export default function App() {
       }
       case 'products':
         return (
-          <div data-theme="light" className="w-full bg-[#f8fafc] text-slate-800 animate-fadeIn font-sans pt-32 pb-24">
-            <div className="max-w-7xl mx-auto px-12 space-y-32">
+          <section id="products" className="relative bg-[#090d16] pt-40 pb-24 min-h-screen">
+            <div className="max-w-7xl mx-auto px-6 lg:px-8">
               
-              {/* Main Header */}
-              <div className="text-center space-y-4">
-                <h1 className="text-4xl font-light tracking-tight text-[#003057] sm:text-5xl">Platform Walkthrough</h1>
-                <p className="text-slate-500 max-w-xl mx-auto text-sm sm:text-base font-normal leading-relaxed">
-                  Discover how our end-to-end cryptographic authentication pipeline secures your brand integrity and validates products in real-time.
+              {/* Platform Title */}
+              <div className="text-center mb-24 flex flex-col items-center px-4" data-aos="fade-down" data-aos-duration="1000">
+                <span className="text-[#10b981] text-xs font-bold uppercase tracking-[0.25em] mb-8">
+                  SERVICES & CAPABILITIES
+                </span>
+                <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-white tracking-tight leading-none mb-6">
+                  Cryptographic <span className="bg-gradient-to-r from-[#10b981] to-emerald-300 bg-clip-text text-transparent font-medium">Authentication Pipeline</span>
+                </h1>
+                <p className="text-slate-300 max-w-3xl mx-auto text-base sm:text-lg font-normal leading-relaxed">
+                  Protect brand equity, eliminate counterfeits, and build unbreakable customer trust with our end-to-end verification infrastructure.
                 </p>
               </div>
 
-              {/* SECTION 1: VENDOR */}
-              <div className="space-y-16">
-                {/* Section Header */}
-                <div className="border-b border-slate-200 pb-6 text-left">
-                  <h2 className="text-2xl font-medium text-[#003057] tracking-tight sm:text-3xl">Vendor</h2>
-                  <p className="text-slate-500 text-sm mt-2 max-w-3xl font-normal leading-relaxed">
-                    The Vendor portal provides brand owners and manufacturers with a robust control center to manage product catalogs, orchestrate batch serialization, and monitor security telemetry. Standard users access basic registries and QR batches, while Premium tier users unlock advanced features including interactive geocoded threat mapping, CSV/Excel bulk sync, and expanded capacity limits.
-                  </p>
+              {/* Card 1: Image Left, Text Right */}
+              <div 
+                data-aos="fade-up" 
+                data-aos-duration="1000" 
+                className="sticky top-28 mb-16 bg-[#0f172a]/95 backdrop-blur-md p-10 md:p-12 rounded-[2rem] border border-[#10b981]/20 shadow-2xl flex flex-col lg:flex-row items-center gap-12 z-10 min-h-[480px] lg:min-h-[520px]"
+              >
+                <div className="w-full lg:w-1/2 bg-[#0b0f19] p-4 rounded-2xl border border-slate-700/50 flex items-center justify-center">
+                  <div className="w-full aspect-[16/10] bg-[#0c0e17] p-2.5 rounded-[1.5rem] shadow-2xl border-4 border-slate-800/80">
+                    <img 
+                      src="/Dashboard.png" 
+                      alt="Vendor Control Panel Dashboard" 
+                      className="rounded-xl w-full h-full object-cover transition-transform duration-500 hover:scale-[1.02]" 
+                    />
+                  </div>
                 </div>
-
-                <div className="space-y-24">
-                  {/* Card 1: Vendor Control Panel (Text Left, Image Right) */}
-                  <div className="grid grid-cols-1 lg:grid-cols-12 gap-16 items-center">
-                    <div className="lg:col-span-6 space-y-6 text-left">
-                      <span className="text-[#00b074] text-xs font-semibold uppercase tracking-widest bg-[#00b074]/10 px-3 py-1 rounded-md border border-[#00b074]/20">01 / MONITORING</span>
-                      <h2 className="text-3xl font-light text-[#003057] tracking-tight sm:text-4xl">Centralized Vendor Control Panel</h2>
-                      <p className="text-slate-500 text-sm sm:text-base leading-relaxed font-normal">
-                        Track registered batches, total system scans, and suspicious entries in real time via live WebSockets. The dashboard activity stream features a 60-second sliding-window client IP deduplicator to prevent duplicate event logs.
-                      </p>
-                    </div>
-                    <div className="lg:col-span-6">
-                      <div className="w-full rounded-2xl overflow-hidden cursor-pointer bg-white p-4 pb-6 pr-6">
-                        <img 
-                          src="/Dashboard.png" 
-                          alt="Vendor Control Panel Dashboard" 
-                          className="w-full h-auto block rounded-xl transition-all duration-500 ease-out hover:scale-105"
-                        />
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Card 2: Product QR (Image Left, Text Right) */}
-                  <div className="grid grid-cols-1 lg:grid-cols-12 gap-16 items-center">
-                    <div className="lg:col-span-6 order-last lg:order-first">
-                      <div className="w-full rounded-2xl overflow-hidden cursor-pointer bg-slate-50 p-4 pb-6 pr-6">
-                        <img 
-                          src="/QR.png" 
-                          alt="Product QR Code Generation" 
-                          className="w-full h-auto block rounded-xl transition-all duration-500 ease-out hover:scale-105"
-                        />
-                      </div>
-                    </div>
-                    <div className="lg:col-span-6 space-y-6 text-left">
-                      <span className="text-[#00b074] text-xs font-semibold uppercase tracking-widest bg-[#00b074]/10 px-3 py-1 rounded-md border border-[#00b074]/20">02 / SERIALIZATION</span>
-                      <h2 className="text-3xl font-light text-[#003057] tracking-tight sm:text-4xl">Dynamic Product QR Code Registry</h2>
-                      <p className="text-slate-500 text-sm sm:text-base leading-relaxed font-normal">
-                        Connect registered templates to manufacturing batches to generate cryptographically secure QR code identifiers. Vendors can copy direct verification links or export high-resolution SVGs for packaging and hangtags.
-                      </p>
-                    </div>
-                  </div>
+                <div className="flex-1 text-left space-y-6">
+                  <h2 className="text-3xl md:text-4xl font-extrabold text-white leading-tight">Centralized Vendor Control Panel</h2>
+                  <p className="text-slate-300 text-base md:text-lg leading-relaxed font-normal">
+                    Track registered batches, total system scans, and suspicious entries in real time via live WebSockets. The dashboard activity stream features a 60-second sliding-window client IP deduplicator to prevent duplicate event logs.
+                  </p>
                 </div>
               </div>
 
-              {/* SECTION 2: CONSUMER */}
-              <div className="space-y-16">
-                {/* Section Header */}
-                <div className="border-b border-slate-200 pb-6 text-left">
-                  <h2 className="text-2xl font-medium text-[#003057] tracking-tight sm:text-3xl">Consumer</h2>
-                  <p className="text-slate-500 text-sm mt-2 max-w-3xl font-normal leading-relaxed">
-                    The Consumer portal delivers a lightweight, mobile-first, friction-free verification interface. Upon scanning a physical QR code, the portal validates the active status of the code, shielding customers from revoked or counterfeit batches. Users then proceed through a guided camera-capture flow, launching their native device camera to submit product photos for sub-second visual validation.
+              {/* Card 2: Image Right, Text Left */}
+              <div 
+                data-aos="fade-up" 
+                data-aos-duration="1000" 
+                data-aos-delay="100"
+                className="sticky top-32 mb-16 bg-[#0f172a]/95 backdrop-blur-md p-10 md:p-12 rounded-[2rem] border border-[#10b981]/30 shadow-2xl flex flex-col lg:flex-row-reverse items-center gap-12 z-20 min-h-[480px] lg:min-h-[520px]"
+              >
+                <div className="w-full lg:w-1/2 bg-[#0b0f19] p-4 rounded-2xl border border-slate-700/50 flex items-center justify-center">
+                  <div className="w-full aspect-[16/10] bg-[#0c0e17] p-2.5 rounded-[1.5rem] shadow-2xl border-4 border-slate-800/80">
+                    <img 
+                      src="/custom_qr_modal.png" 
+                      alt="Product QR Code Generation" 
+                      className="rounded-xl w-full h-full object-cover transition-transform duration-500 hover:scale-[1.02]" 
+                    />
+                  </div>
+                </div>
+                <div className="flex-1 text-left space-y-6">
+                  <h2 className="text-3xl md:text-4xl font-extrabold text-white leading-tight">Dynamic Product QR Code Registry</h2>
+                  <p className="text-slate-300 text-base md:text-lg leading-relaxed font-normal">
+                    Connect registered templates to manufacturing batches to generate cryptographically secure QR code identifiers. Vendors can copy direct verification links or export high-resolution SVGs for packaging and hangtags.
                   </p>
                 </div>
+              </div>
 
-                <div className="space-y-24">
-                  {/* Card 3: Verify Images (Text Left, Image Right) */}
-                  <div className="grid grid-cols-1 lg:grid-cols-12 gap-16 items-center">
-                    <div className="lg:col-span-6 space-y-6 text-left">
-                      <span className="text-[#00b074] text-xs font-semibold uppercase tracking-widest bg-[#00b074]/10 px-3 py-1 rounded-md border border-[#00b074]/20">03 / CAPTURE</span>
-                      <h2 className="text-3xl font-light text-[#003057] tracking-tight sm:text-4xl">Multi-Angle Image Quality Gate</h2>
-                      <p className="text-slate-500 text-sm sm:text-base leading-relaxed font-normal">
-                        Upload three compulsory views—Front, Back, and Label—and an optional Purchase Receipt. The system utilizes mobile-optimized uploads (`capture="environment"`) to immediately run inputs through brightness, focus, and blur quality gates.
-                      </p>
-                    </div>
-                    <div className="lg:col-span-6">
-                      <div className="w-full rounded-2xl overflow-hidden border border-slate-200 cursor-pointer bg-[#060814] p-4 pb-6 pr-6">
-                        <img 
-                          src="/Image.png" 
-                          alt="Capture Product Details" 
-                          className="w-full h-auto block rounded-xl transition-all duration-500 ease-out hover:scale-105"
-                        />
-                      </div>
+              {/* Card 3: Image Left, Text Right */}
+              <div 
+                data-aos="fade-up" 
+                data-aos-duration="1000" 
+                data-aos-delay="150"
+                className="sticky top-36 mb-16 bg-[#0f172a]/95 backdrop-blur-md p-10 md:p-12 rounded-[2rem] border border-[#10b981]/40 shadow-2xl flex flex-col lg:flex-row items-center gap-12 z-30 min-h-[480px] lg:min-h-[520px]"
+              >
+                <div className="w-full lg:w-1/2 bg-[#0b0f19] p-4 rounded-2xl border border-slate-700/50 flex items-center justify-center">
+                  <div className="w-full aspect-[16/10] bg-[#0c0e17] p-2.5 rounded-[1.5rem] shadow-2xl border-4 border-slate-800/80">
+                    <img 
+                      src="/Image.png" 
+                      alt="Capture Product Details" 
+                      className="rounded-xl w-full h-full object-cover transition-transform duration-500 hover:scale-[1.02]" 
+                    />
+                  </div>
+                </div>
+                <div className="flex-1 text-left space-y-6">
+                  <h2 className="text-3xl md:text-4xl font-extrabold text-white leading-tight">Multi-Angle Image Quality Gate</h2>
+                  <p className="text-slate-300 text-base md:text-lg leading-relaxed font-normal">
+                    Upload three compulsory views—Front, Back, and Label—and an optional Purchase Receipt. The system utilizes mobile-optimized uploads (`capture="environment"`) to immediately run inputs through brightness, focus, and blur quality gates.
+                  </p>
+                </div>
+              </div>
+
+              {/* Card 4: Image Right, Text Left */}
+              <div 
+                data-aos="fade-up" 
+                data-aos-duration="1000" 
+                data-aos-delay="200"
+                className="sticky top-40 mb-32 bg-[#0f172a]/95 backdrop-blur-md p-10 md:p-12 rounded-[2rem] border border-[#10b981]/50 shadow-2xl flex flex-col lg:flex-row-reverse items-center gap-12 z-40 min-h-[480px] lg:min-h-[520px]"
+              >
+                <div className="w-full lg:w-1/2 bg-[#0b0f19] p-4 rounded-2xl border border-slate-700/50 flex items-center justify-center">
+                  <div className="w-full aspect-[16/10] bg-[#0c0e17] p-2.5 rounded-[1.5rem] shadow-2xl border-4 border-slate-800/80">
+                    <div className="w-full h-full rounded-xl overflow-hidden relative">
+                      <img 
+                        src="/Verify-Success.png" 
+                        alt="Authentiq Verification UI" 
+                        className="w-full h-full object-contain object-center scale-[1.03] transition-transform duration-500 hover:scale-[1.05]" 
+                      />
                     </div>
                   </div>
-
-                  {/* Card 4: Results (Image Left, Text Right) */}
-                  <div className="grid grid-cols-1 lg:grid-cols-12 gap-16 items-center">
-                    <div className="lg:col-span-6 order-last lg:order-first">
-                      <div className="w-full rounded-2xl overflow-hidden border border-slate-200 cursor-pointer bg-[#060814] p-4 pb-6 pr-6">
-                        <img 
-                          src="/Verify-Success.png" 
-                          alt="AI Authenticity Verdict" 
-                          className="w-full h-auto block rounded-xl transition-all duration-500 ease-out hover:scale-105"
-                        />
-                      </div>
-                    </div>
-                    <div className="lg:col-span-6 space-y-6 text-left">
-                      <span className="text-[#00b074] text-xs font-semibold uppercase tracking-widest bg-[#00b074]/10 px-3 py-1 rounded-md border border-[#00b074]/20">04 / VERDICT</span>
-                      <h2 className="text-3xl font-light text-[#003057] tracking-tight sm:text-4xl">AI-Powered Authenticity Verdict</h2>
-                      <p className="text-slate-500 text-sm sm:text-base leading-relaxed font-normal">
-                        Display ledger-backed authenticity verdicts. The OpenCLIP engine calculates cosine similarity, the pHash duplicate check flags replay attacks, and OCR matches label serials. Verdicts are returned on a themed dial: Green (≥80% Authentic), Yellow (65%-79% Review), or Red (under 65% Counterfeit, triggering pre-filled brand support emails).
-                      </p>
-                    </div>
-                  </div>
+                </div>
+                <div className="flex-1 text-left space-y-6">
+                  <h2 className="text-3xl md:text-4xl font-extrabold text-white leading-tight">AI-Powered Authenticity Verdict</h2>
+                  <p className="text-slate-300 text-base md:text-lg leading-relaxed font-normal">
+                    Display ledger-backed authenticity verdicts. The OpenCLIP engine calculates cosine similarity, the pHash duplicate check flags replay attacks, and OCR matches label serials. Verdicts are returned on a themed dial: Green (≥80% Authentic), Yellow (65%-79% Review), or Red (under 65% Counterfeit).
+                  </p>
                 </div>
               </div>
 
             </div>
-          </div>
+
+            {/* Capabilities Grid Section */}
+            <div className="relative z-50 bg-white border-t border-slate-200 py-24" data-aos="fade-up" data-aos-duration="1000">
+              <div className="max-w-7xl mx-auto px-6 lg:px-8">
+                <div className="text-center mb-16 flex flex-col items-center px-4">
+                  <span className="text-[#10b981] text-xs font-bold uppercase tracking-[0.25em] mb-8">
+                    TECHNICAL CAPABILITIES
+                  </span>
+                  <h2 className="text-3xl sm:text-4xl font-extrabold text-slate-800 tracking-tight mb-6">
+                    Enterprise Trust Infrastructure
+                  </h2>
+                  <p className="text-slate-600 max-w-2xl mx-auto text-sm sm:text-base font-normal">
+                    High-performance security modules designed for massive scale serial tracking and sub-millisecond query verification.
+                  </p>
+                </div>
+
+                {/* 3x2 Grid of sharp command-center style cards */}
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                  
+                  {/* Card 1: Immutable Ledger */}
+                  <div className="bg-[#003057] border border-[#10b981]/20 p-8 rounded-lg space-y-6 hover:border-[#10b981] hover:shadow-[0_0_20px_rgba(16,185,129,0.15)] transition-all duration-300 group text-left">
+                    <div className="flex items-center gap-4">
+                      <div className="w-12 h-12 flex-shrink-0 flex items-center justify-center rounded bg-[#10b981]/5 border border-[#10b981]/25 text-[#10b981] group-hover:bg-[#10b981]/10 transition-colors">
+                        <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.5">
+                          <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z" />
+                        </svg>
+                      </div>
+                      <h3 className="text-lg font-bold text-white tracking-tight">Immutable Ledger</h3>
+                    </div>
+                    <p className="text-slate-300 text-sm leading-relaxed font-normal">
+                      Every code generated and scan checked is permanently locked on decentralized blocks, creating an unalterable transaction path.
+                    </p>
+                  </div>
+
+                  {/* Card 2: Real-Time Telemetry */}
+                  <div className="bg-[#003057] border border-[#10b981]/20 p-8 rounded-lg space-y-6 hover:border-[#10b981] hover:shadow-[0_0_20px_rgba(16,185,129,0.15)] transition-all duration-300 group text-left">
+                    <div className="flex items-center gap-4">
+                      <div className="w-12 h-12 flex-shrink-0 flex items-center justify-center rounded bg-[#10b981]/5 border border-[#10b981]/25 text-[#10b981] group-hover:bg-[#10b981]/10 transition-colors">
+                        <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.5">
+                          <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 3v11.25A2.25 2.25 0 006 16.5h2.25M3.75 3h-1.5m1.5 0h1.5m0 0h11.25A2.25 2.25 0 0118 5.25V14.25m-14.25 0h14.25M6 16.5H4.5M6 16.5h12m0 0h1.5m-1.5 0v3m-3.375-3h.008v.008h-.008V16.5zm0-3h.008v.008h-.008v-.008zm0-3h.008v.008h-.008V10.5zm-3 3h.008v.008h-.008v-.008zm0-3h.008v.008h-.008V10.5z" />
+                        </svg>
+                      </div>
+                      <h3 className="text-lg font-bold text-white tracking-tight">Real-Time Telemetry</h3>
+                    </div>
+                    <p className="text-slate-300 text-sm leading-relaxed font-normal">
+                      Instantly map geolocations, IP signatures, and hardware environments on query events, flagging clones within seconds.
+                    </p>
+                  </div>
+
+                  {/* Card 3: Advanced Cryptography */}
+                  <div className="bg-[#003057] border border-[#10b981]/20 p-8 rounded-lg space-y-6 hover:border-[#10b981] hover:shadow-[0_0_20px_rgba(16,185,129,0.15)] transition-all duration-300 group text-left">
+                    <div className="flex items-center gap-4">
+                      <div className="w-12 h-12 flex-shrink-0 flex items-center justify-center rounded bg-[#10b981]/5 border border-[#10b981]/25 text-[#10b981] group-hover:bg-[#10b981]/10 transition-colors">
+                        <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.5">
+                          <path strokeLinecap="round" strokeLinejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z" />
+                        </svg>
+                      </div>
+                      <h3 className="text-lg font-bold text-white tracking-tight">Advanced Cryptography</h3>
+                    </div>
+                    <p className="text-slate-300 text-sm leading-relaxed font-normal">
+                      Secured by dynamic serialization algorithms, generating unique cryptographic signature hashes for individual packaging units.
+                    </p>
+                  </div>
+
+                  {/* Card 4: API & ERP Sync */}
+                  <div className="bg-[#003057] border border-[#10b981]/20 p-8 rounded-lg space-y-6 hover:border-[#10b981] hover:shadow-[0_0_20px_rgba(16,185,129,0.15)] transition-all duration-300 group text-left">
+                    <div className="flex items-center gap-4">
+                      <div className="w-12 h-12 flex-shrink-0 flex items-center justify-center rounded bg-[#10b981]/5 border border-[#10b981]/25 text-[#10b981] group-hover:bg-[#10b981]/10 transition-colors">
+                        <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.5">
+                          <path strokeLinecap="round" strokeLinejoin="round" d="M7.5 21L3 16.5m0 0L7.5 12M3 16.5h13.5m0-13.5L21 7.5m0 0L17.5 12M21 7.5H7.5" />
+                        </svg>
+                      </div>
+                      <h3 className="text-lg font-bold text-white tracking-tight">API & ERP Sync</h3>
+                    </div>
+                    <p className="text-slate-300 text-sm leading-relaxed font-normal">
+                      Fully documented REST APIs and secure webhooks connect triggers into SAP, Oracle, and customized inventory warehouses.
+                    </p>
+                  </div>
+
+                  {/* Card 5: AI Anomaly Detection */}
+                  <div className="bg-[#003057] border border-[#10b981]/20 p-8 rounded-lg space-y-6 hover:border-[#10b981] hover:shadow-[0_0_20px_rgba(16,185,129,0.15)] transition-all duration-300 group text-left">
+                    <div className="flex items-center gap-4">
+                      <div className="w-12 h-12 flex-shrink-0 flex items-center justify-center rounded bg-[#10b981]/5 border border-[#10b981]/25 text-[#10b981] group-hover:bg-[#10b981]/10 transition-colors">
+                        <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.5">
+                          <path strokeLinecap="round" strokeLinejoin="round" d="M9.813 15.904L9 21m0 0l-.813-5.096L9 21zm0 0h1m-1 0H8m6.813-5.096L15 21m0 0l-.813-5.096L15 21zm0 0h1m-1 0h-1m-7-5a7 7 0 1114 0c0 1.617-.553 3.096-1.47 4.274l-.441.564A1.996 1.996 0 0015 18H9a1.996 1.996 0 00-1.09-.262l-.441-.564A6.977 6.977 0 017 11z" />
+                        </svg>
+                      </div>
+                      <h3 className="text-lg font-bold text-white tracking-tight">AI Anomaly Detection</h3>
+                    </div>
+                    <p className="text-slate-300 text-sm leading-relaxed font-normal">
+                      Our lightweight ML engine dynamically parses scan behaviors, immediately identifying abnormal high-frequency replay attack patterns.
+                    </p>
+                  </div>
+
+                  {/* Card 6: Global Access Registry */}
+                  <div className="bg-[#003057] border border-[#10b981]/20 p-8 rounded-lg space-y-6 hover:border-[#10b981] hover:shadow-[0_0_20px_rgba(16,185,129,0.15)] transition-all duration-300 group text-left">
+                    <div className="flex items-center gap-4">
+                      <div className="w-12 h-12 flex-shrink-0 flex items-center justify-center rounded bg-[#10b981]/5 border border-[#10b981]/25 text-[#10b981] group-hover:bg-[#10b981]/10 transition-colors">
+                        <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.5">
+                          <path strokeLinecap="round" strokeLinejoin="round" d="M12 21a9.004 9.004 0 008.716-6.747M12 21a9.004 9.004 0 01-8.716-6.747M12 21c2.485 0 4.5-4.03 4.5-9S14.485 3 12 3m0 18c-2.485 0-4.5-4.03-4.5-9S9.515 3 12 3m0 0a8.997 8.997 0 017.843 4.582M12 3a8.997 8.997 0 00-7.843 4.582m15.686 0A11.953 11.953 0 0112 10.5c-2.998 0-5.74-1.1-7.843-2.918m15.686 0A8.959 8.959 0 0121 12c0 .778-.099 1.533-.284 2.253m0 0A17.919 17.919 0 0112 16.5c-3.162 0-6.133-.815-8.716-2.247m0 0A9.015 9.015 0 013 12c0-.778.099-1.533.284-2.253" />
+                        </svg>
+                      </div>
+                      <h3 className="text-lg font-bold text-white tracking-tight">Global Access Registry</h3>
+                    </div>
+                    <p className="text-slate-300 text-sm leading-relaxed font-normal">
+                      Redundant global registries ensure your consumers can check item authenticity anywhere in the world with 99.99% uptime.
+                    </p>
+                  </div>
+
+                </div>
+              </div>
+
+            </div>
+          </section>
         );
+
 
       case 'about':
         return (
-          <div className="w-full bg-white text-slate-800 animate-fadeIn font-sans pb-24">
-            
+          <div className="w-full bg-white text-slate-800 animate-fadeIn font-sans pb-0">
+
             {/* Section 1: Hero Banner (The Story) */}
             <div data-theme="dark" className="w-full h-screen pt-24 flex items-center justify-center relative overflow-hidden bg-[#003057]">
               {/* Dynamic SVG Network Background (Crisp, High-Resolution, Animated) */}
@@ -1364,36 +1537,36 @@ export default function App() {
 
                   {/* Connecting Lines */}
                   {/* Route 1: Asia to North America */}
-                  <path 
-                    d="M 200 450 Q 450 150 700 350" 
-                    stroke="url(#gradient-green)" 
-                    strokeWidth="2" 
+                  <path
+                    d="M 200 450 Q 450 150 700 350"
+                    stroke="url(#gradient-green)"
+                    strokeWidth="2"
                     strokeDasharray="8 6"
                     className="animate-dash"
                   />
                   {/* Route 2: Europe to North America */}
-                  <path 
-                    d="M 700 350 Q 850 100 1100 250" 
-                    stroke="#00b074" 
-                    strokeWidth="1.5" 
+                  <path
+                    d="M 700 350 Q 850 100 1100 250"
+                    stroke="#00b074"
+                    strokeWidth="1.5"
                     opacity="0.6"
                   />
                   {/* Route 3: Asia to Europe */}
-                  <path 
-                    d="M 200 450 Q 600 200 1100 250" 
-                    stroke="url(#gradient-green)" 
-                    strokeWidth="2" 
+                  <path
+                    d="M 200 450 Q 600 200 1100 250"
+                    stroke="url(#gradient-green)"
+                    strokeWidth="2"
                     strokeDasharray="12 8"
                     className="animate-dash-reverse"
                   />
                   {/* Route 4: South America to North America */}
-                  <path 
-                    d="M 500 650 Q 600 500 700 350" 
-                    stroke="#00b074" 
-                    strokeWidth="1" 
+                  <path
+                    d="M 500 650 Q 600 500 700 350"
+                    stroke="#00b074"
+                    strokeWidth="1"
                     opacity="0.4"
                   />
-                  
+
                   {/* Gradients */}
                   <defs>
                     <linearGradient id="gradient-green" x1="0%" y1="0%" x2="100%" y2="100%">
@@ -1426,13 +1599,13 @@ export default function App() {
                 {/* Airplane flying across screen */}
                 <div className="absolute top-[20%] left-[30%] animate-float-airplane opacity-60">
                   <svg className="w-8 h-8 text-[#00b074]" fill="currentColor" viewBox="0 0 24 24">
-                    <path d="M21 16v-2l-8-5V3.5c0-.83-.67-1.5-1.5-1.5S10 2.67 10 3.5V9l-8 5v2l8-2.5V19l-2 1.5V22l3.5-1 3.5 1v-1.5L13 19v-5.5L21 16z"/>
+                    <path d="M21 16v-2l-8-5V3.5c0-.83-.67-1.5-1.5-1.5S10 2.67 10 3.5V9l-8 5v2l8-2.5V19l-2 1.5V22l3.5-1 3.5 1v-1.5L13 19v-5.5L21 16z" />
                   </svg>
                 </div>
                 {/* Cargo Ship */}
                 <div className="absolute bottom-[25%] right-[25%] animate-float-ship opacity-50">
                   <svg className="w-8 h-8 text-[#00b074]" fill="currentColor" viewBox="0 0 24 24">
-                    <path d="M20 21c-1.39 0-2.78-.47-4-1.32-2.44 1.71-5.56 1.71-8 0C6.78 20.53 5.39 21 4 21H2v2h2c1.91 0 3.63-.57 5-1.56 1.37.99 3.09 1.56 5 1.56s3.63-.57 5-1.56c1.37.99 3.09 1.56 5 1.56h2v-2h-2zM4 19h16v-5l-2-2h-3V9H9v3H6l-2 2v5z"/>
+                    <path d="M20 21c-1.39 0-2.78-.47-4-1.32-2.44 1.71-5.56 1.71-8 0C6.78 20.53 5.39 21 4 21H2v2h2c1.91 0 3.63-.57 5-1.56 1.37.99 3.09 1.56 5 1.56s3.63-.57 5-1.56c1.37.99 3.09 1.56 5 1.56h2v-2h-2zM4 19h16v-5l-2-2h-3V9H9v3H6l-2 2v5z" />
                   </svg>
                 </div>
                 {/* QR Code Node */}
@@ -1469,7 +1642,7 @@ export default function App() {
                     Our platform integrates seamlessly with existing manufacturing processes, transforming packaging into dynamic entry points for product authentication, lifecycle tracking, and consumer trust.
                   </p>
                   <div className="pt-4">
-                    <button 
+                    <button
                       onClick={() => setCurrentPage('contact')}
                       className="px-8 py-3 bg-[#00b074] hover:bg-[#009660] text-white font-normal rounded-full transition-all duration-300 shadow-md hover:scale-105 tracking-wider text-sm cursor-pointer"
                     >
@@ -1481,11 +1654,49 @@ export default function App() {
                 {/* Right Column */}
                 <div className="lg:col-span-6">
                   <div className="w-full h-96 rounded-2xl overflow-hidden shadow-xl cursor-pointer">
-                    <img 
-                      src="https://images.unsplash.com/photo-1507537297725-24a1c029d3ca?auto=format&fit=crop&q=80&w=1200" 
-                      alt="Secure packaging scanning" 
+                    <img
+                      src="https://images.unsplash.com/photo-1507537297725-24a1c029d3ca?auto=format&fit=crop&q=80&w=1200"
+                      alt="Secure packaging scanning"
                       className="w-full h-full object-cover transition-all duration-500 ease-out hover:scale-105"
                     />
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Section 2.5: Mission Section (Left: 40%, Right: 60%) */}
+            <div className="w-full bg-[#0f172a] py-28 border-t border-slate-800/50 relative z-20">
+              <div className="max-w-7xl mx-auto px-12 grid grid-cols-1 lg:grid-cols-5 gap-16 items-center">
+                {/* Left Column (Mission) - 40% */}
+                <div className="lg:col-span-2 space-y-6 text-left" data-aos="fade-right" data-aos-duration="1000">
+                  <span className="text-[#10b981] text-xs font-bold uppercase tracking-[0.25em] block">
+                    OUR MISSION
+                  </span>
+                  <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-white tracking-tight leading-tight">
+                    Verify Instantly. <br />
+                    <span className="bg-gradient-to-r from-[#10b981] via-[#34d399] to-emerald-300 bg-clip-text text-transparent font-medium animate-text-shine">
+                      Trust Absolutely.
+                    </span>
+                  </h2>
+                  <p className="text-slate-300 text-sm sm:text-base leading-relaxed font-normal">
+                    Authentiq optimizes global supply chains by maximizing data integrity while eliminating counterfeit friction. By embedding factory-grade cryptographic serial tracking layers directly into the manufacturing pipeline, we give brands the power to verify physical items in real time.
+                  </p>
+                </div>
+
+                {/* Right Column (Principle Box) - 60% */}
+                <div className="lg:col-span-3 text-left" data-aos="fade-left" data-aos-duration="1000" data-aos-delay="100">
+                  <div className="bg-[#1e293b]/25 backdrop-blur-md p-10 rounded-2xl rounded-l-none border border-slate-800/60 border-l-4 border-l-[#10b981] shadow-2xl space-y-6">
+                    <span className="text-[#10b981] text-xs font-bold uppercase tracking-[0.20em] block">
+                      Founding Principle
+                    </span>
+                    <blockquote className="space-y-4">
+                      <p className="text-xl sm:text-2xl font-light text-slate-100 italic leading-relaxed">
+                        "The greatest vulnerability in global supply chains isn't complexity—it's ambiguity. Authentiq provides definitive proof where there was once only uncertainty."
+                      </p>
+                      <footer className="text-slate-400 text-sm font-medium">
+                        — The Authentiq Charter
+                      </footer>
+                    </blockquote>
                   </div>
                 </div>
               </div>
@@ -1552,6 +1763,75 @@ export default function App() {
               </div>
             </div>
 
+            {/* Section 4: Our Journey Vertical Timeline Section */}
+            <div className="w-full bg-[#0f172a] py-28 border-t border-slate-800/50 relative z-20">
+              <div className="max-w-7xl mx-auto px-12 grid grid-cols-1 lg:grid-cols-5 gap-16 items-center">
+                
+                {/* Left Side (40% width / lg:col-span-2) */}
+                <div className="lg:col-span-2 space-y-6 text-left relative lg:-top-8" data-aos="fade-right" data-aos-duration="1000">
+                  <span className="text-[#10b981] text-xs font-bold uppercase tracking-[0.25em] block">
+                    OUR JOURNEY
+                  </span>
+                  <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-white tracking-tight leading-tight">
+                    How we got here
+                  </h2>
+                </div>
+
+                {/* Right Side (60% width / lg:col-span-3) */}
+                <div className="lg:col-span-3 relative" data-aos="fade-left" data-aos-duration="1000" data-aos-delay="100">
+                  {/* Vertical line connecting the steps */}
+                  <div className="absolute left-4 top-2 bottom-2 w-px bg-[#10b981]/30" />
+                  
+                  <div className="space-y-12">
+                    
+                    {/* Step 1 */}
+                    <div className="relative">
+                      {/* Circle dot centered on the line */}
+                      <div className="absolute left-1 top-1 w-6 h-6 rounded-full bg-[#0f172a] border-2 border-[#10b981] flex items-center justify-center text-xs font-bold text-[#10b981] shadow-[0_0_8px_rgba(16,185,129,0.3)]">
+                        1
+                      </div>
+                      <div className="pl-12 space-y-2 text-left">
+                        <h3 className="text-xl font-bold text-white tracking-tight">Cryptographic Foundation</h3>
+                        <p className="text-[#94a3b8] text-sm sm:text-base leading-relaxed font-normal">
+                          Built to solve the core problem of product ambiguity, our early work focused on creating an immutable, serial-level cryptographic identity for every item in a supply chain.
+                        </p>
+                      </div>
+                    </div>
+
+                    {/* Step 2 */}
+                    <div className="relative">
+                      {/* Circle dot centered on the line */}
+                      <div className="absolute left-1 top-1 w-6 h-6 rounded-full bg-[#0f172a] border-2 border-[#10b981] flex items-center justify-center text-xs font-bold text-[#10b981] shadow-[0_0_8px_rgba(16,185,129,0.3)]">
+                        2
+                      </div>
+                      <div className="pl-12 space-y-2 text-left">
+                        <h3 className="text-xl font-bold text-white tracking-tight">Dynamic Verification</h3>
+                        <p className="text-[#94a3b8] text-sm sm:text-base leading-relaxed font-normal">
+                          The platform evolved to support real-time telemetry and supply chain synchronization, moving brands from reactive counterfeit detection to proactive, data-driven provenance.
+                        </p>
+                      </div>
+                    </div>
+
+                    {/* Step 3 */}
+                    <div className="relative">
+                      {/* Circle dot centered on the line */}
+                      <div className="absolute left-1 top-1 w-6 h-6 rounded-full bg-[#0f172a] border-2 border-[#10b981] flex items-center justify-center text-xs font-bold text-[#10b981] shadow-[0_0_8px_rgba(16,185,129,0.3)]">
+                        3
+                      </div>
+                      <div className="pl-12 space-y-2 text-left">
+                        <h3 className="text-xl font-bold text-white tracking-tight">Trust at Scale</h3>
+                        <p className="text-[#94a3b8] text-sm sm:text-base leading-relaxed font-normal">
+                          Ongoing development emphasizes enterprise-grade governance and forensic-level transparency—trusted by global organizations that require accountable, secure verification infrastructure.
+                        </p>
+                      </div>
+                    </div>
+
+                  </div>
+                </div>
+
+              </div>
+            </div>
+
           </div>
         );
 
@@ -1560,7 +1840,7 @@ export default function App() {
           /* Neutral Background page container to make cards pop */
           <div data-theme="light" className="w-full min-h-screen bg-slate-50 pt-40 pb-16 px-6 sm:px-12 animate-fadeIn">
             <div className="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-12 items-start text-left">
-              
+
               {/* Left Column: Get in touch & Info details */}
               <div className="lg:col-span-5 space-y-8">
                 <div className="space-y-4">
@@ -1618,36 +1898,36 @@ export default function App() {
                 <form onSubmit={(e) => e.preventDefault()} className="space-y-5 font-normal">
                   <div className="space-y-1.5">
                     <label className="block text-xs font-normal uppercase tracking-wider text-slate-500">Full Name</label>
-                    <input 
-                      type="text" 
-                      placeholder="John Doe" 
+                    <input
+                      type="text"
+                      placeholder="John Doe"
                       className="w-full bg-slate-50/50 border border-slate-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-[#00b074] text-slate-800 font-normal transition-colors placeholder-slate-400"
                     />
                   </div>
 
                   <div className="space-y-1.5">
                     <label className="block text-xs font-normal uppercase tracking-wider text-slate-500">Email Address</label>
-                    <input 
-                      type="email" 
-                      placeholder="you@domain.com" 
+                    <input
+                      type="email"
+                      placeholder="you@domain.com"
                       className="w-full bg-slate-50/50 border border-slate-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-[#00b074] text-slate-800 font-normal transition-colors placeholder-slate-400"
                     />
                   </div>
 
                   <div className="space-y-1.5">
                     <label className="block text-xs font-normal uppercase tracking-wider text-slate-500">Project Type</label>
-                    <input 
-                      type="text" 
-                      placeholder="Supply Chain Protection / Serialized QR" 
+                    <input
+                      type="text"
+                      placeholder="Supply Chain Protection / Serialized QR"
                       className="w-full bg-slate-50/50 border border-slate-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-[#00b074] text-slate-800 font-normal transition-colors placeholder-slate-400"
                     />
                   </div>
 
                   <div className="space-y-1.5">
                     <label className="block text-xs font-normal uppercase tracking-wider text-slate-500">Inquiry Details</label>
-                    <textarea 
+                    <textarea
                       rows={4}
-                      placeholder="Describe your tracking volume and logistics requirements..." 
+                      placeholder="Describe your tracking volume and logistics requirements..."
                       className="w-full bg-slate-50/50 border border-slate-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-[#00b074] text-slate-800 font-normal transition-colors placeholder-slate-400 resize-none"
                     />
                   </div>
@@ -1667,7 +1947,7 @@ export default function App() {
         const taxRate = 0.18;
         const calculatedTax = selectedPlan.price * taxRate;
         const totalAmount = selectedPlan.price + calculatedTax;
-        
+
         const hasAddOns = selectedPlan.name === 'Business' || selectedPlan.name === 'Business Pro';
 
         // Dynamic step items
@@ -1690,13 +1970,13 @@ export default function App() {
 
         return (
           <div data-theme="light" className="min-h-screen bg-slate-50 pt-36 pb-24 px-4 sm:px-6 lg:px-8 text-slate-800 animate-fadeIn relative font-sans">
-            
+
             {/* Main Double Column Content */}
             <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-10 items-start">
-              
+
               {/* Left Column: Form & Stepper Stepped Interface */}
               <div className="lg:col-span-8 bg-white border border-slate-200/80 rounded-3xl shadow-xl p-8 sm:p-10 space-y-8 text-left">
-                
+
                 {/* Visual Stepper Header */}
                 <div className="border-b border-slate-150 pb-8">
                   <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6">
@@ -1707,24 +1987,24 @@ export default function App() {
                       <h2 className="text-3xl font-light text-[#003057] mt-3">Account Verification Setup</h2>
                       <p className="text-xs text-slate-500 mt-1 font-normal">Complete compliance details to sync your brand credentials.</p>
                     </div>
-                    
+
                     {/* Active Step Indicator pill */}
                     <div className="bg-[#003057] text-white px-4.5 py-1.5 rounded-full text-xs font-semibold tracking-wider">
                       Step {checkoutStep} of {totalSteps}
                     </div>
                   </div>
- 
+
                   {/* Progressive Horizontal Stepper Bar */}
                   <div className="relative flex items-center justify-between w-full mt-8">
                     {/* Background Progress Track Line */}
                     <div className="absolute left-0 right-0 top-1/2 -translate-y-1/2 h-0.5 bg-slate-200 z-0" />
-                    
+
                     {/* Active Progress Track Line */}
-                    <div 
-                      className="absolute left-0 top-1/2 -translate-y-1/2 h-0.5 bg-blue-600 z-0 transition-all duration-500" 
+                    <div
+                      className="absolute left-0 top-1/2 -translate-y-1/2 h-0.5 bg-blue-600 z-0 transition-all duration-500"
                       style={{ width: `${((checkoutStep - 1) / (totalSteps - 1)) * 100}%` }}
                     />
-                    
+
                     {/* Steps List */}
                     {stepItems.map((stepItem) => {
                       const isActive = checkoutStep >= stepItem.s;
@@ -1748,19 +2028,17 @@ export default function App() {
                                 setErrors({});
                               }
                             }}
-                            className={`w-9 h-9 rounded-full flex items-center justify-center font-bold text-xs border-2 transition-all duration-300 cursor-pointer ${
-                              isCurrent 
-                                ? 'bg-blue-600 border-blue-600 text-white shadow-lg shadow-blue-500/20 scale-110' 
-                                : isActive 
-                                  ? 'bg-blue-50 border-blue-600 text-blue-600' 
-                                  : 'bg-white border-slate-300 text-slate-400'
-                            }`}
+                            className={`w-9 h-9 rounded-full flex items-center justify-center font-bold text-xs border-2 transition-all duration-300 cursor-pointer ${isCurrent
+                              ? 'bg-blue-600 border-blue-600 text-white shadow-lg shadow-blue-500/20 scale-110'
+                              : isActive
+                                ? 'bg-blue-50 border-blue-600 text-blue-600'
+                                : 'bg-white border-slate-300 text-slate-400'
+                              }`}
                           >
                             {isActive && checkoutStep > stepItem.s ? '✓' : stepItem.s}
                           </button>
-                          <span className={`text-[10px] mt-2 font-bold uppercase tracking-wider hidden sm:block ${
-                            isCurrent ? 'text-blue-600' : isActive ? 'text-slate-700' : 'text-slate-450'
-                          }`}>
+                          <span className={`text-[10px] mt-2 font-bold uppercase tracking-wider hidden sm:block ${isCurrent ? 'text-blue-600' : isActive ? 'text-slate-700' : 'text-slate-450'
+                            }`}>
                             {stepItem.label}
                           </span>
                         </div>
@@ -1770,18 +2048,18 @@ export default function App() {
                 </div>
 
                 {/* Form fields depending on Step */}
-                
+
                 {/* Step 1: Company Details */}
                 {currentStepId === 'company' && (
                   <div className="space-y-6 animate-fadeIn">
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                       <div className="space-y-1.5">
                         <label className="block text-xs font-bold uppercase tracking-wider text-slate-500">Legal Company Name *</label>
-                        <input 
-                          type="text" 
+                        <input
+                          type="text"
                           value={legalName}
                           onChange={(e) => setLegalName(e.target.value)}
-                          placeholder="Acme Brands Private Limited" 
+                          placeholder="Acme Brands Private Limited"
                           className={`w-full bg-slate-50/50 border rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-blue-600 text-slate-800 font-normal transition-colors placeholder-slate-400 ${errors.legalName ? 'border-red-500 ring-1 ring-red-500' : 'border-slate-200'}`}
                         />
                         {errors.legalName && <p className="text-[10px] text-red-500 font-medium">{errors.legalName}</p>}
@@ -1789,7 +2067,7 @@ export default function App() {
 
                       <div className="space-y-1.5">
                         <label className="block text-xs font-bold uppercase tracking-wider text-slate-500">Company Type *</label>
-                        <select 
+                        <select
                           value={companyType}
                           onChange={(e) => setCompanyType(e.target.value)}
                           className={`w-full bg-slate-50/50 border rounded-xl px-4 py-3.5 text-sm focus:outline-none focus:border-blue-600 text-slate-800 font-sans transition-colors cursor-pointer ${errors.companyType ? 'border-red-500 ring-1 ring-red-500' : 'border-slate-200'}`}
@@ -1808,11 +2086,11 @@ export default function App() {
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                       <div className="space-y-1.5">
                         <label className="block text-xs font-bold uppercase tracking-wider text-slate-500">GSTIN *</label>
-                        <input 
-                          type="text" 
+                        <input
+                          type="text"
                           value={gstin}
                           onChange={(e) => setGstin(e.target.value)}
-                          placeholder="27AAAAA1111A1Z1" 
+                          placeholder="27AAAAA1111A1Z1"
                           className={`w-full bg-slate-50/50 border rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-blue-600 text-slate-800 font-normal transition-colors placeholder-slate-400 ${errors.gstin ? 'border-red-500 ring-1 ring-red-500' : 'border-slate-200'}`}
                         />
                         {errors.gstin && <p className="text-[10px] text-red-500 font-medium">{errors.gstin}</p>}
@@ -1820,11 +2098,11 @@ export default function App() {
 
                       <div className="space-y-1.5">
                         <label className="block text-xs font-bold uppercase tracking-wider text-slate-500">PAN *</label>
-                        <input 
-                          type="text" 
+                        <input
+                          type="text"
                           value={pan}
                           onChange={(e) => setPan(e.target.value)}
-                          placeholder="ABCDE1234F" 
+                          placeholder="ABCDE1234F"
                           className={`w-full bg-slate-50/50 border rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-blue-600 text-slate-800 font-normal transition-colors placeholder-slate-400 ${errors.pan ? 'border-red-500 ring-1 ring-red-500' : 'border-slate-200'}`}
                         />
                         {errors.pan && <p className="text-[10px] text-red-500 font-medium">{errors.pan}</p>}
@@ -1832,11 +2110,11 @@ export default function App() {
 
                       <div className="space-y-1.5">
                         <label className="block text-xs font-bold uppercase tracking-wider text-slate-550">CIN (Corporate ID)</label>
-                        <input 
-                          type="text" 
+                        <input
+                          type="text"
                           value={cin}
                           onChange={(e) => setCin(e.target.value)}
-                          placeholder="U12345MH2026PTC123456" 
+                          placeholder="U12345MH2026PTC123456"
                           className="w-full bg-slate-50/50 border border-slate-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-blue-600 text-slate-800 font-normal transition-colors placeholder-slate-400"
                         />
                       </div>
@@ -1844,11 +2122,11 @@ export default function App() {
 
                     <div className="space-y-1.5">
                       <label className="block text-xs font-bold uppercase tracking-wider text-slate-500">Registered Address Line 1 *</label>
-                      <input 
-                        type="text" 
+                      <input
+                        type="text"
                         value={addressLine1}
                         onChange={(e) => setAddressLine1(e.target.value)}
-                        placeholder="Floor 4, Block B, Tech Hub Complex" 
+                        placeholder="Floor 4, Block B, Tech Hub Complex"
                         className={`w-full bg-slate-50/50 border rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-blue-600 text-slate-800 font-normal transition-colors placeholder-slate-400 ${errors.addressLine1 ? 'border-red-500 ring-1 ring-red-500' : 'border-slate-200'}`}
                       />
                       {errors.addressLine1 && <p className="text-[10px] text-red-500 font-medium">{errors.addressLine1}</p>}
@@ -1856,11 +2134,11 @@ export default function App() {
 
                     <div className="space-y-1.5">
                       <label className="block text-xs font-bold uppercase tracking-wider text-slate-555">Registered Address Line 2</label>
-                      <input 
-                        type="text" 
+                      <input
+                        type="text"
                         value={addressLine2}
                         onChange={(e) => setAddressLine2(e.target.value)}
-                        placeholder="Industrial Area, Phase II" 
+                        placeholder="Industrial Area, Phase II"
                         className="w-full bg-slate-50/50 border border-slate-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-blue-600 text-slate-800 font-normal transition-colors placeholder-slate-400"
                       />
                     </div>
@@ -1909,7 +2187,7 @@ export default function App() {
                                   if (addr.postcode) {
                                     setPinCode(addr.postcode.replace(/\D/g, '').slice(0, 10));
                                   }
-                                } catch {}
+                                } catch { }
                                 setIsGeolocating(false);
                               },
                               () => setIsGeolocating(false),
@@ -1920,7 +2198,7 @@ export default function App() {
                         >
                           {isGeolocating ? (
                             <>
-                              <svg className="w-3 h-3 animate-spin" fill="none" viewBox="0 0 24 24"><circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"/><path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z"/></svg>
+                              <svg className="w-3 h-3 animate-spin" fill="none" viewBox="0 0 24 24"><circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" /><path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z" /></svg>
                               Detecting...
                             </>
                           ) : (
@@ -1946,14 +2224,14 @@ export default function App() {
                               {isLoadingCountries
                                 ? <option>Loading countries...</option>
                                 : <>
-                                    <option value="">Select Country</option>
-                                    {countriesList.map(c => <option key={c} value={c}>{c}</option>)}
-                                  </>
+                                  <option value="">Select Country</option>
+                                  {countriesList.map(c => <option key={c} value={c}>{c}</option>)}
+                                </>
                               }
                             </select>
                             {isLoadingCountries && (
                               <div className="absolute right-3 top-1/2 -translate-y-1/2">
-                                <svg className="w-4 h-4 animate-spin text-blue-500" fill="none" viewBox="0 0 24 24"><circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"/><path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z"/></svg>
+                                <svg className="w-4 h-4 animate-spin text-blue-500" fill="none" viewBox="0 0 24 24"><circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" /><path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z" /></svg>
                               </div>
                             )}
                           </div>
@@ -1986,14 +2264,14 @@ export default function App() {
                               {isLoadingStates
                                 ? <option>Loading states...</option>
                                 : <>
-                                    <option value="">{selectedCountry ? 'Select State / Province' : 'Select a country first'}</option>
-                                    {statesList.map(s => <option key={s} value={s}>{s}</option>)}
-                                  </>
+                                  <option value="">{selectedCountry ? 'Select State / Province' : 'Select a country first'}</option>
+                                  {statesList.map(s => <option key={s} value={s}>{s}</option>)}
+                                </>
                               }
                             </select>
                             {isLoadingStates && (
                               <div className="absolute right-3 top-1/2 -translate-y-1/2">
-                                <svg className="w-4 h-4 animate-spin text-blue-500" fill="none" viewBox="0 0 24 24"><circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"/><path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z"/></svg>
+                                <svg className="w-4 h-4 animate-spin text-blue-500" fill="none" viewBox="0 0 24 24"><circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" /><path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z" /></svg>
                               </div>
                             )}
                           </div>
@@ -2023,7 +2301,7 @@ export default function App() {
                             )}
                             {isLoadingCities && (
                               <div className="absolute right-3 top-1/2 -translate-y-1/2">
-                                <svg className="w-4 h-4 animate-spin text-blue-500" fill="none" viewBox="0 0 24 24"><circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"/><path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z"/></svg>
+                                <svg className="w-4 h-4 animate-spin text-blue-500" fill="none" viewBox="0 0 24 24"><circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" /><path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z" /></svg>
                               </div>
                             )}
                           </div>
@@ -2035,7 +2313,7 @@ export default function App() {
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                       <div className="space-y-1.5">
                         <label className="block text-xs font-bold uppercase tracking-wider text-slate-500">Industry / Sector *</label>
-                        <select 
+                        <select
                           value={industry}
                           onChange={(e) => setIndustry(e.target.value)}
                           className={`w-full bg-slate-50/50 border rounded-xl px-4 py-3.5 text-sm focus:outline-none focus:border-blue-600 text-slate-800 font-sans transition-colors cursor-pointer ${errors.industry ? 'border-red-500 ring-1 ring-red-500' : 'border-slate-200'}`}
@@ -2054,11 +2332,11 @@ export default function App() {
 
                       <div className="space-y-1.5">
                         <label className="block text-xs font-bold uppercase tracking-wider text-slate-555">Company Website</label>
-                        <input 
-                          type="url" 
+                        <input
+                          type="url"
                           value={website}
                           onChange={(e) => setWebsite(e.target.value)}
-                          placeholder="https://www.acmebrands.com" 
+                          placeholder="https://www.acmebrands.com"
                           className="w-full bg-slate-50/50 border border-slate-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-blue-600 text-slate-800 font-normal transition-colors placeholder-slate-400"
                         />
                       </div>
@@ -2132,15 +2410,15 @@ export default function App() {
                           <span className="flex items-center bg-slate-100 border border-slate-200 rounded-xl px-3 text-slate-500 font-sans text-sm font-semibold select-none">
                             +91
                           </span>
-                          <input 
-                            type="tel" 
+                          <input
+                            type="tel"
                             value={phone}
                             onChange={(e) => {
                               const v = e.target.value.replace(/\D/g, '');
                               setPhone(v);
                               setIsOtpVerified(false);
                             }}
-                            placeholder="9876543210" 
+                            placeholder="9876543210"
                             maxLength={10}
                             className={`flex-1 bg-slate-50/50 border rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-blue-600 text-slate-800 font-normal transition-colors placeholder-slate-400 ${errors.phone ? 'border-red-500 ring-1 ring-red-500' : 'border-slate-200'}`}
                           />
@@ -2223,7 +2501,7 @@ export default function App() {
                               We sent a verification SMS to <span className="font-semibold text-slate-800">+91 {phone}</span>.
                             </p>
                           </div>
-                          
+
                           <div className="bg-blue-50 border border-blue-200 rounded-xl p-3.5 text-left text-xs text-blue-700 space-y-1">
                             <span className="font-bold">⚠️ Test Simulator Hint:</span>
                             <p className="font-normal">Enter code <span className="font-black underline tracking-widest text-blue-900 font-sans">1234</span> to successfully complete OTP validation.</p>
@@ -2231,19 +2509,19 @@ export default function App() {
 
                           <div className="space-y-1.5">
                             <label className="block text-[10px] font-bold text-slate-400 uppercase tracking-wider text-left">4-Digit Security OTP</label>
-                            <input 
-                              type="text" 
+                            <input
+                              type="text"
                               maxLength={4}
                               value={otpInput}
                               onChange={(e) => setOtpInput(e.target.value.replace(/\D/g, ''))}
-                              placeholder="0 0 0 0" 
+                              placeholder="0 0 0 0"
                               className="w-full text-center text-xl font-bold tracking-[0.75em] bg-slate-50 border border-slate-200 rounded-xl py-3.5 focus:outline-none focus:border-blue-600 font-mono text-slate-800 placeholder-slate-300"
                             />
                             {errors.otp && <p className="text-[10px] text-red-500 font-semibold">{errors.otp}</p>}
                           </div>
 
                           <div className="flex gap-3 pt-2">
-                            <button 
+                            <button
                               type="button"
                               onClick={() => {
                                 setShowOtpPopup(false);
@@ -2254,7 +2532,7 @@ export default function App() {
                             >
                               Cancel
                             </button>
-                            <button 
+                            <button
                               type="button"
                               onClick={() => {
                                 if (otpInput === '1234') {
@@ -2365,7 +2643,7 @@ export default function App() {
                               )}
                             </div>
                             <div className="flex items-center bg-white border border-slate-200 rounded-xl p-2.5 justify-between max-w-xs mt-3">
-                              <button 
+                              <button
                                 type="button"
                                 onClick={() => setBusinessUsers(Math.max(5, businessUsers - 5))}
                                 className="w-9 h-9 rounded-lg bg-slate-105 hover:bg-slate-200 flex items-center justify-center font-bold text-slate-700 active:scale-95 disabled:opacity-50 cursor-pointer border-none"
@@ -2376,7 +2654,7 @@ export default function App() {
                               <span className="text-sm font-semibold text-slate-800 font-sans">
                                 {businessUsers} users
                               </span>
-                              <button 
+                              <button
                                 type="button"
                                 onClick={() => setBusinessUsers(businessUsers + 5)}
                                 className="w-9 h-9 rounded-lg bg-slate-105 hover:bg-slate-200 flex items-center justify-center font-bold text-slate-700 active:scale-95 cursor-pointer border-none"
@@ -2400,7 +2678,7 @@ export default function App() {
                               )}
                             </div>
                             <div className="max-w-xs mt-3">
-                              <select 
+                              <select
                                 value={businessSKUs}
                                 onChange={(e) => setBusinessSKUs(Number(e.target.value))}
                                 className="w-full bg-white text-slate-800 border border-slate-200 rounded-xl p-3.5 text-xs font-sans focus:outline-none focus:ring-2 focus:ring-blue-500 cursor-pointer"
@@ -2430,7 +2708,7 @@ export default function App() {
                               )}
                             </div>
                             <div className="flex items-center bg-white border border-slate-200 rounded-xl p-2.5 justify-between max-w-xs mt-3">
-                              <button 
+                              <button
                                 type="button"
                                 onClick={() => setProUsers(Math.max(50, proUsers - 5))}
                                 className="w-9 h-9 rounded-lg bg-slate-105 hover:bg-slate-200 flex items-center justify-center font-bold text-slate-700 active:scale-95 disabled:opacity-50 cursor-pointer border-none"
@@ -2441,7 +2719,7 @@ export default function App() {
                               <span className="text-sm font-semibold text-slate-800 font-sans">
                                 {proUsers} users
                               </span>
-                              <button 
+                              <button
                                 type="button"
                                 onClick={() => setProUsers(proUsers + 5)}
                                 className="w-9 h-9 rounded-lg bg-slate-105 hover:bg-slate-200 flex items-center justify-center font-bold text-slate-700 active:scale-95 cursor-pointer border-none"
@@ -2465,7 +2743,7 @@ export default function App() {
                               )}
                             </div>
                             <div className="max-w-xs mt-3">
-                              <select 
+                              <select
                                 value={proSKUs}
                                 onChange={(e) => setProSKUs(Number(e.target.value))}
                                 className="w-full bg-white text-slate-800 border border-slate-200 rounded-xl p-3.5 text-xs font-sans focus:outline-none focus:ring-2 focus:ring-blue-500 cursor-pointer"
@@ -2491,7 +2769,7 @@ export default function App() {
                               )}
                             </div>
                             <div className="flex items-center bg-white border border-slate-200 rounded-xl p-2.5 justify-between max-w-xs mt-3">
-                              <button 
+                              <button
                                 type="button"
                                 onClick={() => setProBrands(Math.max(5, proBrands - 1))}
                                 className="w-9 h-9 rounded-lg bg-slate-105 hover:bg-slate-200 flex items-center justify-center font-bold text-slate-700 active:scale-95 disabled:opacity-50 cursor-pointer border-none"
@@ -2502,7 +2780,7 @@ export default function App() {
                               <span className="text-sm font-semibold text-slate-800 font-sans">
                                 {proBrands} brands
                               </span>
-                              <button 
+                              <button
                                 type="button"
                                 onClick={() => setProBrands(proBrands + 1)}
                                 className="w-9 h-9 rounded-lg bg-slate-105 hover:bg-slate-200 flex items-center justify-center font-bold text-slate-700 active:scale-95 cursor-pointer border-none"
@@ -2523,7 +2801,7 @@ export default function App() {
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                       <div className="space-y-1.5">
                         <label className="block text-xs font-bold uppercase tracking-wider text-slate-550">Trademark Registry Status</label>
-                        <select 
+                        <select
                           value={tmStatus}
                           onChange={(e) => setTmStatus(e.target.value)}
                           className="w-full bg-slate-50/50 border border-slate-200 rounded-xl px-4 py-3.5 text-sm focus:outline-none focus:border-blue-600 text-slate-800 font-sans transition-colors cursor-pointer"
@@ -2539,11 +2817,11 @@ export default function App() {
 
                       <div className="space-y-1.5">
                         <label className="block text-xs font-bold uppercase tracking-wider text-slate-555">TM Application Number</label>
-                        <input 
-                          type="text" 
+                        <input
+                          type="text"
                           value={tmNumber}
                           onChange={(e) => setTmNumber(e.target.value)}
-                          placeholder="TM-987654321" 
+                          placeholder="TM-987654321"
                           className="w-full bg-slate-50/50 border border-slate-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-blue-600 text-slate-800 font-normal transition-colors placeholder-slate-400"
                         />
                       </div>
@@ -2551,16 +2829,15 @@ export default function App() {
 
                     <div className="border-t border-slate-150 pt-6 space-y-5">
                       <h3 className="text-sm font-semibold text-[#003057] uppercase tracking-wider">Required Verification Certificates</h3>
-                      
+
                       {/* Document upload grids with dashed borders and click triggers */}
                       <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                         {/* GST Certificate */}
                         <div className="space-y-2">
                           <label className="block text-[11px] font-bold text-slate-400 uppercase tracking-wider">GST Certificate PDF *</label>
-                          <div 
-                            className={`border-2 border-dashed rounded-2xl p-5 flex flex-col items-center justify-center text-center cursor-pointer transition-all hover:bg-slate-50/50 ${
-                              gstCertFile ? 'border-emerald-500 bg-emerald-50/10' : errors.gstCertFile ? 'border-red-500 bg-red-50/5' : 'border-slate-200'
-                            }`}
+                          <div
+                            className={`border-2 border-dashed rounded-2xl p-5 flex flex-col items-center justify-center text-center cursor-pointer transition-all hover:bg-slate-50/50 ${gstCertFile ? 'border-emerald-500 bg-emerald-50/10' : errors.gstCertFile ? 'border-red-500 bg-red-50/5' : 'border-slate-200'
+                              }`}
                             onClick={() => {
                               const name = `gst_certificate_${legalName.toLowerCase().replace(/\s+/g, '_') || 'company'}.pdf`;
                               setGstCertFile(name);
@@ -2581,10 +2858,9 @@ export default function App() {
                         {/* Incorporation Certificate */}
                         <div className="space-y-2">
                           <label className="block text-[11px] font-bold text-slate-400 uppercase tracking-wider">Certificate of Incorporation PDF *</label>
-                          <div 
-                            className={`border-2 border-dashed rounded-2xl p-5 flex flex-col items-center justify-center text-center cursor-pointer transition-all hover:bg-slate-50/50 ${
-                              incDocFile ? 'border-emerald-500 bg-emerald-50/10' : errors.incDocFile ? 'border-red-500 bg-red-50/5' : 'border-slate-200'
-                            }`}
+                          <div
+                            className={`border-2 border-dashed rounded-2xl p-5 flex flex-col items-center justify-center text-center cursor-pointer transition-all hover:bg-slate-50/50 ${incDocFile ? 'border-emerald-500 bg-emerald-50/10' : errors.incDocFile ? 'border-red-500 bg-red-50/5' : 'border-slate-200'
+                              }`}
                             onClick={() => {
                               const name = `certificate_of_incorporation_${legalName.toLowerCase().replace(/\s+/g, '_') || 'company'}.pdf`;
                               setIncDocFile(name);
@@ -2611,7 +2887,7 @@ export default function App() {
                         {/* TM App Doc */}
                         <div className="space-y-1">
                           <label className="block text-[10px] font-bold text-slate-400 uppercase tracking-wider">TM Application PDF</label>
-                          <div 
+                          <div
                             onClick={() => setTmAppFile('trademark_application.pdf')}
                             className={`border rounded-xl p-3 text-center cursor-pointer text-xs font-normal border-slate-200 hover:bg-slate-50 flex items-center justify-center gap-2 ${tmAppFile ? 'bg-slate-100 border-slate-350' : ''}`}
                           >
@@ -2623,7 +2899,7 @@ export default function App() {
                         {/* TM Cert PDF */}
                         <div className="space-y-1">
                           <label className="block text-[10px] font-bold text-slate-400 uppercase tracking-wider">TM Certificate PDF</label>
-                          <div 
+                          <div
                             onClick={() => setTmCertFile('trademark_certificate.pdf')}
                             className={`border rounded-xl p-3 text-center cursor-pointer text-xs font-normal border-slate-200 hover:bg-slate-50 flex items-center justify-center gap-2 ${tmCertFile ? 'bg-slate-100 border-slate-350' : ''}`}
                           >
@@ -2635,7 +2911,7 @@ export default function App() {
                         {/* Brand Auth File */}
                         <div className="space-y-1">
                           <label className="block text-[10px] font-bold text-slate-400 uppercase tracking-wider">Brand Authorization Letter</label>
-                          <div 
+                          <div
                             onClick={() => setBrandAuthFile('brand_authorization.pdf')}
                             className={`border rounded-xl p-3 text-center cursor-pointer text-xs font-normal border-slate-200 hover:bg-slate-50 flex items-center justify-center gap-2 ${brandAuthFile ? 'bg-slate-100 border-slate-350' : ''}`}
                           >
@@ -2662,11 +2938,11 @@ export default function App() {
                           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-end">
                             <div className="space-y-1.5">
                               <label className="block text-xs font-bold uppercase tracking-wider text-slate-555">Drug License Number *</label>
-                              <input 
-                                type="text" 
+                              <input
+                                type="text"
                                 value={pharmaDrugLicense}
                                 onChange={(e) => setPharmaDrugLicense(e.target.value)}
-                                placeholder="DL-1234567890" 
+                                placeholder="DL-1234567890"
                                 className={`w-full bg-slate-50/50 border rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-blue-600 text-slate-800 font-normal transition-colors placeholder-slate-400 ${errors.pharmaDrugLicense ? 'border-red-500 ring-1 ring-red-500' : 'border-slate-200'}`}
                               />
                               {errors.pharmaDrugLicense && <p className="text-[10px] text-red-500 font-medium">{errors.pharmaDrugLicense}</p>}
@@ -2674,14 +2950,13 @@ export default function App() {
 
                             <div className="space-y-1.5">
                               <label className="block text-xs font-bold uppercase tracking-wider text-slate-400">Drug License Copy PDF *</label>
-                              <div 
+                              <div
                                 onClick={() => {
                                   setPharmaDrugLicenseFile('pharma_drug_license.pdf');
                                   setErrors({ ...errors, pharmaDrugLicenseFile: '' });
                                 }}
-                                className={`border-2 border-dashed rounded-2xl p-4.5 flex flex-col items-center justify-center text-center cursor-pointer transition-all hover:bg-slate-50/50 ${
-                                  pharmaDrugLicenseFile ? 'border-emerald-500 bg-emerald-50/10' : errors.pharmaDrugLicenseFile ? 'border-red-500 bg-red-50/5' : 'border-slate-200'
-                                }`}
+                                className={`border-2 border-dashed rounded-2xl p-4.5 flex flex-col items-center justify-center text-center cursor-pointer transition-all hover:bg-slate-50/50 ${pharmaDrugLicenseFile ? 'border-emerald-500 bg-emerald-50/10' : errors.pharmaDrugLicenseFile ? 'border-red-500 bg-red-50/5' : 'border-slate-200'
+                                  }`}
                               >
                                 <span className="text-xs font-semibold text-slate-700 truncate max-w-[150px]">
                                   {pharmaDrugLicenseFile ? pharmaDrugLicenseFile : 'Attach Drug License PDF'}
@@ -2698,11 +2973,11 @@ export default function App() {
                           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-end">
                             <div className="space-y-1.5">
                               <label className="block text-xs font-bold uppercase tracking-wider text-slate-555">FSSAI License Number *</label>
-                              <input 
-                                type="text" 
+                              <input
+                                type="text"
                                 value={fssaiLicense}
                                 onChange={(e) => setFssaiLicense(e.target.value)}
-                                placeholder="FSSAI-14-Digit-Code" 
+                                placeholder="FSSAI-14-Digit-Code"
                                 className={`w-full bg-slate-50/50 border rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-blue-600 text-slate-800 font-normal transition-colors placeholder-slate-400 ${errors.fssaiLicense ? 'border-red-500 ring-1 ring-red-500' : 'border-slate-200'}`}
                               />
                               {errors.fssaiLicense && <p className="text-[10px] text-red-500 font-medium">{errors.fssaiLicense}</p>}
@@ -2710,14 +2985,13 @@ export default function App() {
 
                             <div className="space-y-1.5">
                               <label className="block text-xs font-bold uppercase tracking-wider text-slate-400">FSSAI Certificate PDF *</label>
-                              <div 
+                              <div
                                 onClick={() => {
                                   setFssaiLicenseFile('fssai_compliance_certificate.pdf');
                                   setErrors({ ...errors, fssaiLicenseFile: '' });
                                 }}
-                                className={`border-2 border-dashed rounded-2xl p-4.5 flex flex-col items-center justify-center text-center cursor-pointer transition-all hover:bg-slate-50/50 ${
-                                  fssaiLicenseFile ? 'border-emerald-500 bg-emerald-50/10' : errors.fssaiLicenseFile ? 'border-red-500 bg-red-50/5' : 'border-slate-200'
-                                }`}
+                                className={`border-2 border-dashed rounded-2xl p-4.5 flex flex-col items-center justify-center text-center cursor-pointer transition-all hover:bg-slate-50/50 ${fssaiLicenseFile ? 'border-emerald-500 bg-emerald-50/10' : errors.fssaiLicenseFile ? 'border-red-500 bg-red-50/5' : 'border-slate-200'
+                                  }`}
                               >
                                 <span className="text-xs font-semibold text-slate-700 truncate max-w-[150px]">
                                   {fssaiLicenseFile ? fssaiLicenseFile : 'Attach FSSAI PDF'}
@@ -2733,14 +3007,13 @@ export default function App() {
                         {industry === 'Liquor' && (
                           <div className="space-y-1.5">
                             <label className="block text-xs font-bold uppercase tracking-wider text-slate-400">Excise & Liquor License PDF Upload *</label>
-                            <div 
+                            <div
                               onClick={() => {
                                 setExciseLicenseFile('excise_department_license.pdf');
                                 setErrors({ ...errors, exciseLicenseFile: '' });
                               }}
-                              className={`border-2 border-dashed rounded-2xl p-6 flex flex-col items-center justify-center text-center cursor-pointer transition-all hover:bg-slate-50/50 ${
-                                exciseLicenseFile ? 'border-emerald-500 bg-emerald-50/10' : errors.exciseLicenseFile ? 'border-red-500 bg-red-50/5' : 'border-slate-200'
-                              }`}
+                              className={`border-2 border-dashed rounded-2xl p-6 flex flex-col items-center justify-center text-center cursor-pointer transition-all hover:bg-slate-50/50 ${exciseLicenseFile ? 'border-emerald-500 bg-emerald-50/10' : errors.exciseLicenseFile ? 'border-red-500 bg-red-50/5' : 'border-slate-200'
+                                }`}
                             >
                               <span className="text-xl mb-1">📄</span>
                               <span className="text-xs font-semibold text-slate-700">
@@ -2759,19 +3032,18 @@ export default function App() {
                 {/* Step 4: Consent & Payment Selection */}
                 {currentStepId === 'payment' && (
                   <div className="space-y-6 animate-fadeIn">
-                    
+
                     {/* Consent Tickboxes with custom styled blue indicators */}
                     <div className="space-y-4">
                       <h3 className="text-sm font-semibold text-[#003057] uppercase tracking-wider">Legal Agreements</h3>
-                      
+
                       {/* 1. ToS Checkbox */}
-                      <div 
+                      <div
                         onClick={() => setAgreeTerms(!agreeTerms)}
                         className="flex items-start gap-4 p-4 rounded-2xl border border-slate-200/80 bg-slate-50/40 cursor-pointer hover:bg-slate-50 transition-colors"
                       >
-                        <div className={`w-6 h-6 rounded-md border-2 flex items-center justify-center flex-shrink-0 transition-all ${
-                          agreeTerms ? 'bg-blue-600 border-blue-600 text-white' : 'border-slate-300 bg-white'
-                        }`}>
+                        <div className={`w-6 h-6 rounded-md border-2 flex items-center justify-center flex-shrink-0 transition-all ${agreeTerms ? 'bg-blue-600 border-blue-600 text-white' : 'border-slate-300 bg-white'
+                          }`}>
                           {agreeTerms && <span className="text-xs font-black">✓</span>}
                         </div>
                         <div className="text-xs text-slate-500 font-normal leading-relaxed">
@@ -2782,13 +3054,12 @@ export default function App() {
                       {errors.agreeTerms && <p className="text-[10px] text-red-500 font-medium pl-10">{errors.agreeTerms}</p>}
 
                       {/* 2. Privacy Policy */}
-                      <div 
+                      <div
                         onClick={() => setAgreePrivacy(!agreePrivacy)}
                         className="flex items-start gap-4 p-4 rounded-2xl border border-slate-200/80 bg-slate-50/40 cursor-pointer hover:bg-slate-50 transition-colors"
                       >
-                        <div className={`w-6 h-6 rounded-md border-2 flex items-center justify-center flex-shrink-0 transition-all ${
-                          agreePrivacy ? 'bg-blue-600 border-blue-600 text-white' : 'border-slate-300 bg-white'
-                        }`}>
+                        <div className={`w-6 h-6 rounded-md border-2 flex items-center justify-center flex-shrink-0 transition-all ${agreePrivacy ? 'bg-blue-600 border-blue-600 text-white' : 'border-slate-300 bg-white'
+                          }`}>
                           {agreePrivacy && <span className="text-xs font-black">✓</span>}
                         </div>
                         <div className="text-xs text-slate-500 font-normal leading-relaxed">
@@ -2799,13 +3070,12 @@ export default function App() {
                       {errors.agreePrivacy && <p className="text-[10px] text-red-500 font-medium pl-10">{errors.agreePrivacy}</p>}
 
                       {/* 3. Data-processing Consent */}
-                      <div 
+                      <div
                         onClick={() => setAgreeDataProcessing(!agreeDataProcessing)}
                         className="flex items-start gap-4 p-4 rounded-2xl border border-slate-200/80 bg-slate-50/40 cursor-pointer hover:bg-slate-50 transition-colors"
                       >
-                        <div className={`w-6 h-6 rounded-md border-2 flex items-center justify-center flex-shrink-0 transition-all ${
-                          agreeDataProcessing ? 'bg-blue-600 border-blue-600 text-white' : 'border-slate-300 bg-white'
-                        }`}>
+                        <div className={`w-6 h-6 rounded-md border-2 flex items-center justify-center flex-shrink-0 transition-all ${agreeDataProcessing ? 'bg-blue-600 border-blue-600 text-white' : 'border-slate-300 bg-white'
+                          }`}>
                           {agreeDataProcessing && <span className="text-xs font-black">✓</span>}
                         </div>
                         <div className="text-xs text-slate-500 font-normal leading-relaxed">
@@ -2820,14 +3090,13 @@ export default function App() {
                     {selectedPlan.price > 0 ? (
                       <div className="border-t border-slate-150 pt-6 space-y-4">
                         <h3 className="text-sm font-semibold text-[#003057] uppercase tracking-wider">Select Payment Gateway</h3>
-                        
+
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                           {/* Razorpay */}
-                          <div 
+                          <div
                             onClick={() => setPaymentMethod('razorpay')}
-                            className={`p-4.5 rounded-2xl border-2 cursor-pointer flex items-center justify-between transition-all ${
-                              paymentMethod === 'razorpay' ? 'border-blue-600 bg-blue-50/30' : 'border-slate-200 bg-white hover:bg-slate-50'
-                            }`}
+                            className={`p-4.5 rounded-2xl border-2 cursor-pointer flex items-center justify-between transition-all ${paymentMethod === 'razorpay' ? 'border-blue-600 bg-blue-50/30' : 'border-slate-200 bg-white hover:bg-slate-50'
+                              }`}
                           >
                             <div className="flex items-center gap-3">
                               <div className="w-4.5 h-4.5 rounded-full border-2 border-blue-600 flex items-center justify-center p-0.5">
@@ -2842,11 +3111,10 @@ export default function App() {
                           </div>
 
                           {/* UPI */}
-                          <div 
+                          <div
                             onClick={() => setPaymentMethod('upi')}
-                            className={`p-4.5 rounded-2xl border-2 cursor-pointer flex items-center justify-between transition-all ${
-                              paymentMethod === 'upi' ? 'border-blue-600 bg-blue-50/30' : 'border-slate-200 bg-white hover:bg-slate-50'
-                            }`}
+                            className={`p-4.5 rounded-2xl border-2 cursor-pointer flex items-center justify-between transition-all ${paymentMethod === 'upi' ? 'border-blue-600 bg-blue-50/30' : 'border-slate-200 bg-white hover:bg-slate-50'
+                              }`}
                           >
                             <div className="flex items-center gap-3">
                               <div className="w-4.5 h-4.5 rounded-full border-2 border-blue-600 flex items-center justify-center p-0.5">
@@ -2885,7 +3153,7 @@ export default function App() {
                           <div>
                             <h3 className="text-lg font-bold text-[#003057]">Processing Secure Gateway</h3>
                             <p className="text-xs text-slate-500 mt-2 font-normal leading-relaxed">
-                              {selectedPlan.price > 0 
+                              {selectedPlan.price > 0
                                 ? "Contacting payment nodes and recording subscription ledger metadata..."
                                 : "Activating sandbox trial permissions on your vendor namespace..."}
                             </p>
@@ -3021,7 +3289,7 @@ export default function App() {
                         {selectedPlan.name}
                       </span>
                     </div>
-                    
+
                     <div className="flex justify-between items-center text-xs font-normal">
                       <span className="text-slate-500">Base Plan Charge</span>
                       <span className="text-slate-800 font-bold">₹{selectedPlan.basePrice.toLocaleString('en-IN')}</span>
@@ -3063,7 +3331,7 @@ export default function App() {
                       </div>
                     </div>
                   </div>
-                  
+
                   {/* Visual trust security badge inside column */}
                   <div className="flex items-center gap-3.5 bg-slate-100/50 border border-slate-200 rounded-xl p-4.5">
                     <span className="text-xl select-none">🛡️</span>
@@ -3084,60 +3352,60 @@ export default function App() {
 
   return (
     <div className="min-h-screen bg-white text-slate-800 font-sans antialiased selection:bg-[#00b074] selection:text-white">
-      
+
       {/* KEDIA-INSPIRED HEADER BAR */}
-      <header className="navbar">
+      <header className={`navbar ${isNavScrolled ? 'nav-scrolled' : ''}`}>
         <div className="w-full flex items-center justify-between relative">
-          
+
           {/* Logo Frame */}
           <div className="flex items-center cursor-pointer" onClick={() => setCurrentPage('home')}>
             <div className="logo-container relative">
               {/* Light Logo (white text, for dark backgrounds) */}
-              <img 
-                src="/authentiq_logo_light.svg" 
-                alt="Authentiq Logo Light" 
-                className={`logo absolute inset-0 transition-opacity duration-200 ${logoTheme === 'dark' ? 'opacity-100' : 'opacity-0'}`} 
+              <img
+                src="/authentiq_logo_light.svg"
+                alt="Authentiq Logo Light"
+                className={`logo absolute inset-0 transition-opacity duration-200 ${logoTheme === 'dark' ? 'opacity-100' : 'opacity-0'}`}
               />
               {/* Dark Logo (dark text, for light backgrounds) */}
-              <img 
-                src="/authentiq_logo_dark.svg" 
-                alt="Authentiq Logo Dark" 
-                className={`logo absolute inset-0 transition-opacity duration-200 ${logoTheme === 'light' ? 'opacity-100' : 'opacity-0'}`} 
+              <img
+                src="/authentiq_logo_dark.svg"
+                alt="Authentiq Logo Dark"
+                className={`logo absolute inset-0 transition-opacity duration-200 ${logoTheme === 'light' ? 'opacity-100' : 'opacity-0'}`}
               />
             </div>
           </div>
 
           {/* Centered Navigation Menu Array */}
           <nav className="flex items-center justify-center gap-10 absolute left-1/2 -translate-x-1/2">
-            <button 
+            <button
               onClick={() => setCurrentPage('home')}
               className={`text-base font-medium transition-all duration-200 cursor-pointer ${currentPage === 'home' ? 'active-nav underline decoration-2 underline-offset-8' : ''}`}
             >
               Home
             </button>
 
-            <button 
+            <button
               onClick={() => setCurrentPage('plans')}
               className={`text-base font-medium transition-all duration-200 cursor-pointer ${currentPage === 'plans' ? 'active-nav underline decoration-2 underline-offset-8' : ''}`}
             >
               Plans
             </button>
 
-            <button 
+            <button
               onClick={() => setCurrentPage('products')}
               className={`text-base font-medium transition-all duration-200 cursor-pointer ${currentPage === 'products' ? 'active-nav underline decoration-2 underline-offset-8' : ''}`}
             >
               Services
             </button>
 
-            <button 
+            <button
               onClick={() => setCurrentPage('about')}
               className={`text-base font-medium transition-all duration-200 cursor-pointer ${currentPage === 'about' ? 'active-nav underline decoration-2 underline-offset-8' : ''}`}
             >
               About us
             </button>
 
-            <button 
+            <button
               onClick={() => setCurrentPage('contact')}
               className={`text-base font-medium transition-all duration-200 cursor-pointer ${currentPage === 'contact' ? 'active-nav underline decoration-2 underline-offset-8' : ''}`}
             >
