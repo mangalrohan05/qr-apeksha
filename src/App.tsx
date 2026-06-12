@@ -764,34 +764,6 @@ export default function App() {
                 </div>
               </div>
 
-              {/* SECTION 3: Open Workspace Roadmap Pathways Grid */}
-              <div className="space-y-16">
-                <div className="text-center space-y-4" data-aos="fade-down" data-aos-duration="800">
-                  <h2 className="text-3xl font-light text-[#003057] tracking-tight sm:text-4xl">How Authentiq Operates</h2>
-                  <p className="text-slate-500 max-w-2xl mx-auto text-sm sm:text-base font-normal">Three straightforward steps protecting your brand catalog distribution items.</p>
-                </div>
-
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-12 text-left">
-                  {[
-                    { title: '1. SCAN PACKAGING', badge: 'Secure QR', desc: 'Unique tamper-proof dynamic codes generated natively for individual product packaging items.' },
-                    { title: '2. RUN VERIFICATION', badge: 'Instant Feedback', desc: 'Sub-millisecond verification logic checking database state logs without page freezing or delays.' },
-                    { title: '3. CONSUMER TRUST', badge: 'Guaranteed Authenticity', desc: 'Build an immutable relationship with consumers by presenting transparent supply metrics upon scan.' }
-                  ].map((feat, idx) => (
-                    <div 
-                      key={idx} 
-                      data-aos="fade-up" 
-                      data-aos-duration="1000" 
-                      data-aos-delay={idx * 150}
-                      className="p-10 bg-slate-50 rounded-3xl shadow-xl border border-slate-100 transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl"
-                    >
-                      <span className="text-xs font-normal text-[#00b074] bg-[#00b074]/10 px-3 py-1 rounded-md border border-[#00b074]/20">{feat.badge}</span>
-                      <h3 className="text-xl font-medium text-[#003057] mt-5 mb-3 tracking-tight">{feat.title}</h3>
-                      <p className="text-slate-500 text-sm leading-relaxed font-normal">{feat.desc}</p>
-                    </div>
-                  ))}
-                </div>
-              </div>
-
               {/* SECTION 4: Interactive Dropdown Menu Accordion FAQ System */}
               <div className="max-w-2xl mx-auto space-y-8">
                 <div className="text-center space-y-2">
@@ -803,7 +775,9 @@ export default function App() {
                   {[
                     { q: "How do dynamic QR identifiers differ from regular QR codes?", a: "Standard QR codes only route to a static web link. Authentiq generates unique dynamic serialized hash nodes for individual product items. If a single code signature gets copied or scanned abnormally, our filters immediately flags it." },
                     { q: "Can we integrate this into our existing packaging process?", a: "Yes. Our batch system hooks directly into high-throughput warehouse printers and label applicators via standard API structures, adding zero delay to physical line operations." },
-                    { q: "What happens when a counterfeit code signature is detected?", a: "The system triggers a real-time warning dashboard alert to your team, maps the scanning telemetry coordinates, and presents a 'Suspect Warning' screen to the consumer scanning the product." }
+                    { q: "What happens when a counterfeit code signature is detected?", a: "The system triggers a real-time warning dashboard alert to your team, maps the scanning telemetry coordinates, and presents a 'Suspect Warning' screen to the consumer scanning the product." },
+                    { q: "How do we verify the authenticity of each individual item?", a: "We assign a unique, tamper-proof dynamic QR code to every single unit, creating a digital twin that verifies the item’s origin and authenticity the moment it is scanned." },
+                    { q: "Is special equipment required to scan the Authentiq dynamic QR codes?", a: "No. Our system is designed to work with any standard smartphone camera. We prioritize accessibility, ensuring that consumers, logistics personnel, and retailers can verify authenticity without needing proprietary hardware or apps." }
                   ].map((faq, idx) => (
                     <div key={idx} className="bg-slate-50/40 border border-slate-200/70 rounded-lg overflow-hidden hover:bg-slate-50 hover:border-[#00b074]/35 transition-all duration-300 shadow-sm hover:shadow-md">
                       <button
@@ -853,7 +827,7 @@ export default function App() {
                 Predictable, Secure Verification Plans
               </h2>
               <p className="text-slate-500 max-w-2xl mx-auto text-sm sm:text-base font-normal">
-                Deploy cryptographic serialized tracking directly onto your packaging lines. Select or customize your parameters below.
+                Secure your supply chain with end-to-end serialized tracking. Pick the tier that best fits your distribution volume.
               </p>
 
               {/* Billed Annually Indicator */}
@@ -1062,7 +1036,7 @@ export default function App() {
                   </div>
 
                   <button
-                    onClick={() => handleSelectPlan('enterprise')}
+                    onClick={() => setCurrentPage('contact')}
                     className="mt-8 w-full py-4 bg-slate-800 hover:bg-slate-900 text-white font-semibold rounded-2xl transition-all duration-200 text-xs tracking-wider uppercase cursor-pointer"
                   >
                     Contact Sales
@@ -1314,7 +1288,7 @@ export default function App() {
                     <img 
                       src="/Dashboard.png" 
                       alt="Vendor Control Panel Dashboard" 
-                      className="rounded-xl w-full h-full object-cover transition-transform duration-500 hover:scale-[1.02]" 
+                      className="rounded-xl w-full h-full object-contain transition-transform duration-500 hover:scale-[1.02]" 
                     />
                   </div>
                 </div>
@@ -1421,7 +1395,7 @@ export default function App() {
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                   
                   {/* Card 1: Immutable Ledger */}
-                  <div className="bg-[#003057] border border-[#10b981]/20 p-8 rounded-lg space-y-6 hover:border-[#10b981] hover:shadow-[0_0_20px_rgba(16,185,129,0.15)] transition-all duration-300 group text-left">
+                  <div className="bg-[#0b2a40] border border-white/10 p-8 rounded-lg space-y-6 hover:border-[#10b981] hover:shadow-[0_0_20px_rgba(16,185,129,0.15)] transition-all duration-300 group text-left">
                     <div className="flex items-center gap-4">
                       <div className="w-12 h-12 flex-shrink-0 flex items-center justify-center rounded bg-[#10b981]/5 border border-[#10b981]/25 text-[#10b981] group-hover:bg-[#10b981]/10 transition-colors">
                         <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.5">
@@ -1436,7 +1410,7 @@ export default function App() {
                   </div>
 
                   {/* Card 2: Real-Time Telemetry */}
-                  <div className="bg-[#003057] border border-[#10b981]/20 p-8 rounded-lg space-y-6 hover:border-[#10b981] hover:shadow-[0_0_20px_rgba(16,185,129,0.15)] transition-all duration-300 group text-left">
+                  <div className="bg-[#0b2a40] border border-white/10 p-8 rounded-lg space-y-6 hover:border-[#10b981] hover:shadow-[0_0_20px_rgba(16,185,129,0.15)] transition-all duration-300 group text-left">
                     <div className="flex items-center gap-4">
                       <div className="w-12 h-12 flex-shrink-0 flex items-center justify-center rounded bg-[#10b981]/5 border border-[#10b981]/25 text-[#10b981] group-hover:bg-[#10b981]/10 transition-colors">
                         <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.5">
@@ -1451,7 +1425,7 @@ export default function App() {
                   </div>
 
                   {/* Card 3: Advanced Cryptography */}
-                  <div className="bg-[#003057] border border-[#10b981]/20 p-8 rounded-lg space-y-6 hover:border-[#10b981] hover:shadow-[0_0_20px_rgba(16,185,129,0.15)] transition-all duration-300 group text-left">
+                  <div className="bg-[#0b2a40] border border-white/10 p-8 rounded-lg space-y-6 hover:border-[#10b981] hover:shadow-[0_0_20px_rgba(16,185,129,0.15)] transition-all duration-300 group text-left">
                     <div className="flex items-center gap-4">
                       <div className="w-12 h-12 flex-shrink-0 flex items-center justify-center rounded bg-[#10b981]/5 border border-[#10b981]/25 text-[#10b981] group-hover:bg-[#10b981]/10 transition-colors">
                         <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.5">
@@ -1466,7 +1440,7 @@ export default function App() {
                   </div>
 
                   {/* Card 4: API & ERP Sync */}
-                  <div className="bg-[#003057] border border-[#10b981]/20 p-8 rounded-lg space-y-6 hover:border-[#10b981] hover:shadow-[0_0_20px_rgba(16,185,129,0.15)] transition-all duration-300 group text-left">
+                  <div className="bg-[#0b2a40] border border-white/10 p-8 rounded-lg space-y-6 hover:border-[#10b981] hover:shadow-[0_0_20px_rgba(16,185,129,0.15)] transition-all duration-300 group text-left">
                     <div className="flex items-center gap-4">
                       <div className="w-12 h-12 flex-shrink-0 flex items-center justify-center rounded bg-[#10b981]/5 border border-[#10b981]/25 text-[#10b981] group-hover:bg-[#10b981]/10 transition-colors">
                         <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.5">
@@ -1481,7 +1455,7 @@ export default function App() {
                   </div>
 
                   {/* Card 5: AI Anomaly Detection */}
-                  <div className="bg-[#003057] border border-[#10b981]/20 p-8 rounded-lg space-y-6 hover:border-[#10b981] hover:shadow-[0_0_20px_rgba(16,185,129,0.15)] transition-all duration-300 group text-left">
+                  <div className="bg-[#0b2a40] border border-white/10 p-8 rounded-lg space-y-6 hover:border-[#10b981] hover:shadow-[0_0_20px_rgba(16,185,129,0.15)] transition-all duration-300 group text-left">
                     <div className="flex items-center gap-4">
                       <div className="w-12 h-12 flex-shrink-0 flex items-center justify-center rounded bg-[#10b981]/5 border border-[#10b981]/25 text-[#10b981] group-hover:bg-[#10b981]/10 transition-colors">
                         <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.5">
@@ -1496,7 +1470,7 @@ export default function App() {
                   </div>
 
                   {/* Card 6: Global Access Registry */}
-                  <div className="bg-[#003057] border border-[#10b981]/20 p-8 rounded-lg space-y-6 hover:border-[#10b981] hover:shadow-[0_0_20px_rgba(16,185,129,0.15)] transition-all duration-300 group text-left">
+                  <div className="bg-[#0b2a40] border border-white/10 p-8 rounded-lg space-y-6 hover:border-[#10b981] hover:shadow-[0_0_20px_rgba(16,185,129,0.15)] transition-all duration-300 group text-left">
                     <div className="flex items-center gap-4">
                       <div className="w-12 h-12 flex-shrink-0 flex items-center justify-center rounded bg-[#10b981]/5 border border-[#10b981]/25 text-[#10b981] group-hover:bg-[#10b981]/10 transition-colors">
                         <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.5">
