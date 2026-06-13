@@ -190,50 +190,44 @@ export default function AboutPage({ setCurrentPage }: AboutPageProps) {
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {/* Pillar 1 */}
-            <div className="bg-white p-10 rounded-2xl border border-[#e2e8f0] transition-all duration-300 hover:shadow-lg space-y-6 text-left">
-              <div className="w-12 h-12 bg-[#00b074]/10 rounded-xl flex items-center justify-center border border-[#00b074]/20">
-                <svg className="w-6 h-6 text-[#00b074]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M12 21a9.004 9.004 0 008.716-6.747M12 21a9.004 9.004 0 01-8.716-6.747M12 21c2.485 0 4.5-4.03 4.5-9S14.485 3 12 3m0 18c-2.485 0-4.5-4.03-4.5-9S9.515 3 12 3m0 0a8.997 8.997 0 0 1 7.843 4.582M12 3a8.997 8.997 0 00-7.843 4.582m15.686 0A11.953 11.953 0 0112 10.5c-2.998 0-5.74-1.1-7.843-2.918m15.686 0A8.959 8.959 0 0121 12c0 .778-.099 1.533-.284 2.253m0 0A17.919 17.919 0 0 1 12 16.5c-3.162 0-6.133-.815-8.716-2.247m0 0A9.015 9.015 0 0 1 3 12c0-.778.099-1.533.284-2.253" />
-                </svg>
+            <div className="animate-levitate bg-white/40 backdrop-blur-md px-8 py-5 rounded-xl border border-[#00b074]/35 flex items-center justify-between gap-6 transition-all duration-300">
+              <div className="flex items-center gap-4">
+                <div className="w-10 h-10 bg-[#00b074]/10 rounded-lg flex items-center justify-center border border-[#00b074]/20 text-[#00b074]">
+                  <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M12 21a9.004 9.004 0 008.716-6.747M12 21a9.004 9.004 0 01-8.716-6.747M12 21c2.485 0 4.5-4.03 4.5-9S14.485 3 12 3m0 18c-2.485 0-4.5-4.03-4.5-9S9.515 3 12 3m0 0a8.997 8.997 0 017.843 4.582M12 3a8.997 8.997 0 00-7.843 4.582m15.686 0A11.953 11.953 0 0112 10.5c-2.998 0-5.74-1.1-7.843-2.918m15.686 0A8.959 8.959 0 0121 12c0 .778-.099 1.533-.284 2.253m0 0A17.919 17.919 0 0112 16.5c-3.162 0-6.133-.815-8.716-2.247m0 0A9.015 9.015 0 013 12c0-.778.099-1.533.284-2.253" />
+                  </svg>
+                </div>
+                <span className="text-sm uppercase tracking-wider font-semibold text-[#003057]">Global Reach</span>
               </div>
-              <h3 className="text-xl font-light text-[#003057] tracking-tight">
-                Global Reach
-              </h3>
-              <p className="text-slate-500 text-sm leading-relaxed font-normal">
-                Supporting operations across 15+ countries.
-              </p>
+              <span className="text-2xl md:text-3xl font-bold text-[#00b074] tracking-tight">15+</span>
             </div>
 
             {/* Pillar 2 */}
-            <div className="bg-white p-10 rounded-2xl border border-[#e2e8f0] transition-all duration-300 hover:shadow-lg space-y-6 text-left">
-              <div className="w-12 h-12 bg-[#00b074]/10 rounded-xl flex items-center justify-center border border-[#00b074]/20">
-                <svg className="w-6 h-6 text-[#00b074]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z" />
-                </svg>
+            <div className="animate-levitate [animation-delay:0.2s] bg-white/40 backdrop-blur-md px-8 py-5 rounded-xl border border-[#00b074]/35 flex items-center justify-between gap-6 transition-all duration-300">
+              <div className="flex items-center gap-4">
+                <div className="w-10 h-10 bg-[#00b074]/10 rounded-lg flex items-center justify-center border border-[#00b074]/20 text-[#00b074]">
+                  <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z" />
+                  </svg>
+                </div>
+                <span className="text-sm uppercase tracking-wider font-semibold text-[#003057]">Ledger Integrity</span>
               </div>
-              <h3 className="text-xl font-light text-[#003057] tracking-tight">
-                Ledger Integrity
-              </h3>
-              <p className="text-slate-500 text-sm leading-relaxed font-normal">
-                Over 10 million secure authentications performed.
-              </p>
+              <span className="text-2xl md:text-3xl font-bold text-[#00b074] tracking-tight">10M+</span>
             </div>
 
             {/* Pillar 3 */}
-            <div className="bg-white p-10 rounded-2xl border border-[#e2e8f0] transition-all duration-300 hover:shadow-lg space-y-6 text-left">
-              <div className="w-12 h-12 bg-[#00b074]/10 rounded-xl flex items-center justify-center border border-[#00b074]/20">
-                <svg className="w-6 h-6 text-[#00b074]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M5.25 14.25h13.5m-13.5 0a3 3 0 01-3-3V7.5a3 3 0 013-3h13.5a3 3 0 013 3v3.75a3 3 0 01-3 3m-13.5 0a3 3 0 00-3 3v3.75a3 3 0 003 3h13.5a3 3 0 003-3v-3.75a3 3 0 00-3-3M6.75 6.75h.008v.008H6.75V6.75zm.008 2.25H6.75v-.008h.008V9zm0 6h-.008v-.008h.008V15zm0 2.25H6.75v-.008h.008V17.25z" />
-                </svg>
+            <div className="animate-levitate [animation-delay:0.4s] bg-white/40 backdrop-blur-md px-8 py-5 rounded-xl border border-[#00b074]/35 flex items-center justify-between gap-6 transition-all duration-300">
+              <div className="flex items-center gap-4">
+                <div className="w-10 h-10 bg-[#00b074]/10 rounded-lg flex items-center justify-center border border-[#00b074]/20 text-[#00b074]">
+                  <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M5.25 14.25h13.5m-13.5 0a3 3 0 01-3-3V7.5a3 3 0 013-3h13.5a3 3 0 013 3v3.75a3 3 0 01-3 3m-13.5 0a3 3 0 00-3 3v3.75a3 3 0 003 3h13.5a3 3 0 003-3v-3.75a3 3 0 00-3-3M6.75 6.75h.008v.008H6.75V6.75zm.008 2.25H6.75v-.008h.008V9zm0 6h-.008v-.008h.008V15zm0 2.25H6.75v-.008h.008V17.25z" />
+                  </svg>
+                </div>
+                <span className="text-sm uppercase tracking-wider font-semibold text-[#003057]">Reliability</span>
               </div>
-              <h3 className="text-xl font-light text-[#003057] tracking-tight">
-                Reliability
-              </h3>
-              <p className="text-slate-500 text-sm leading-relaxed font-normal">
-                99.99% infrastructure uptime commitment.
-              </p>
+              <span className="text-2xl md:text-3xl font-bold text-[#00b074] tracking-tight">99.99%</span>
             </div>
           </div>
         </div>
