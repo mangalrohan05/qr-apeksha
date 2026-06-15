@@ -56,7 +56,7 @@ export default function HomePage({ setCurrentPage }: HomePageProps) {
             Protect Your Brand. <span className="bg-gradient-to-r from-[#00b074] via-[#00e699] to-emerald-300 bg-clip-text text-transparent font-medium">Eliminate Counterfeits Instantly.</span>
           </h1>
           <p className="text-slate-300 text-xs sm:text-sm md:text-base lg:text-lg font-light tracking-wide max-w-4xl mx-auto leading-relaxed">
-            Deploy dynamic cryptographic serialized tracking layers directly onto your physical packaging lines. Verify authenticity in milliseconds and claim your supply chain metrics.
+            Deploy secure verification tags directly onto your product packaging. Verify authenticity in seconds and track your supply chain with ease.
           </p>
           <div className="pt-4">
             <button
@@ -75,7 +75,7 @@ export default function HomePage({ setCurrentPage }: HomePageProps) {
         <div className="space-y-16">
           <div className="text-center space-y-4" data-aos="fade-down" data-aos-duration="800">
             <h2 className="text-3xl font-light text-[#003057] tracking-tight sm:text-4xl">Complete Supply Integrity</h2>
-            <p className="text-slate-500 max-w-2xl mx-auto text-sm sm:text-base font-normal">Robust operational safety metrics built directly onto decentralised ledger architecture.</p>
+            <p className="text-slate-500 max-w-2xl mx-auto text-sm sm:text-base font-normal">Robust security tracking built directly into our secure verification database.</p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-12 text-left">
@@ -87,7 +87,7 @@ export default function HomePage({ setCurrentPage }: HomePageProps) {
               </div>
               <h3 className="text-xl font-medium text-[#003057] tracking-tight">Enterprise Fraud Mitigation</h3>
               <p className="text-slate-500 text-sm leading-relaxed font-normal">
-                Protect market share with real-time cloned-code detection systems. Instantly flags and isolates duplicated serialization queries before fake goods clear retail registers.
+                Protect your brand with real-time copy detection. Instantly flag duplicate scans to stop counterfeits before they reach your customers.
               </p>
             </div>
 
@@ -99,7 +99,7 @@ export default function HomePage({ setCurrentPage }: HomePageProps) {
               </div>
               <h3 className="text-xl font-medium text-[#003057] tracking-tight">Global Compliance Standards</h3>
               <p className="text-slate-500 text-sm leading-relaxed font-normal">
-                Completely aligned with international data protection protocols. Built with fully optimized encryption architecture ensuring complete safety for cross-border logistics distribution networks.
+                Built with secure verification systems to ensure complete safety and privacy across your entire distribution network.
               </p>
             </div>
 
@@ -111,7 +111,7 @@ export default function HomePage({ setCurrentPage }: HomePageProps) {
               </div>
               <h3 className="text-xl font-medium text-[#003057] tracking-tight">Seamless API Infrastructure</h3>
               <p className="text-slate-500 text-sm leading-relaxed font-normal">
-                Plug verification tracking triggers straight into your existing ERP inventory setups, custom apps, or digital billing gateways using secure webhooks.
+                Connect verification checks directly into your sales systems, customer portals, or shipping lines to protect your products effortlessly.
               </p>
             </div>
           </div>
@@ -131,7 +131,7 @@ export default function HomePage({ setCurrentPage }: HomePageProps) {
               <li className="flex items-start gap-3">
                 <span className="text-[#00b074] text-sm mt-0.5">✓</span>
                 <div className="text-sm sm:text-base leading-relaxed font-normal">
-                  <span className="text-[#003057] font-normal">End-to-End Serialization:</span> Secure every unit with a unique cryptographic signature.
+                  <span className="text-[#003057] font-normal">End-to-End Tracking:</span> Secure every single product item with a unique digital code.
                 </div>
               </li>
               <li className="flex items-start gap-3">

@@ -6,7 +6,7 @@ interface AboutPageProps {
 export default function AboutPage({ setCurrentPage }: AboutPageProps) {
   return (
     <div className="w-full bg-white text-slate-800 animate-fadeIn font-sans pb-0">
-      
+
       {/* Section 1: Hero Banner (The Story) */}
       <div data-theme="dark" className="w-full h-screen pt-24 flex items-center justify-center relative overflow-hidden bg-[#003057]">
         {/* Dynamic SVG Network Background (Crisp, High-Resolution, Animated) */}
@@ -167,7 +167,7 @@ export default function AboutPage({ setCurrentPage }: AboutPageProps) {
               </span>
               <blockquote className="space-y-4">
                 <p className="text-xl sm:text-2xl font-light text-slate-100 italic leading-relaxed">
-                  "The greatest vulnerability in global supply chains isn't complexity—it's ambiguity. Authentiq provides definitive proof where there was once only uncertainty."
+                  "The greatest vulnerability in global supply chains isn't complexity, it's ambiguity. Authentiq provides definitive proof where there was once only uncertainty."
                 </p>
                 <footer className="text-slate-400 text-sm font-medium">
                   — The Authentiq Charter
@@ -183,10 +183,11 @@ export default function AboutPage({ setCurrentPage }: AboutPageProps) {
         <div className="max-w-7xl mx-auto px-12 space-y-16">
           <div className="text-center space-y-4">
             <h2 className="text-3xl sm:text-4xl font-light text-[#003057] tracking-tight">
-              The Operational Pillars
+              Trusted by Industry Leaders
             </h2>
             <p className="text-slate-500 max-w-2xl mx-auto text-base font-normal">
-              Designed from the ground up to support modern logistics, high-volume transactions, and persistent reliability.
+              Discover how global enterprises leverage our infrastructure to eliminate ambiguity and secure their supply chain integrity.
+              in about us page
             </p>
           </div>
 
@@ -212,7 +213,7 @@ export default function AboutPage({ setCurrentPage }: AboutPageProps) {
                     <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z" />
                   </svg>
                 </div>
-                <span className="text-sm uppercase tracking-wider font-semibold text-[#003057]">Ledger Integrity</span>
+                <span className="text-sm uppercase tracking-wider font-semibold text-[#003057]">Verified Trust</span>
               </div>
               <span className="text-2xl md:text-3xl font-bold text-[#00b074] tracking-tight">10M+</span>
             </div>
@@ -236,7 +237,7 @@ export default function AboutPage({ setCurrentPage }: AboutPageProps) {
       {/* Section 4: Our Journey Vertical Timeline Section */}
       <div className="w-full bg-[#0f172a] py-28 border-t border-slate-800/50 relative z-20">
         <div className="max-w-7xl mx-auto px-12 grid grid-cols-1 lg:grid-cols-5 gap-16 items-center">
-          
+
           <div className="lg:col-span-2 space-y-6 text-left relative lg:-top-8" data-aos="fade-right" data-aos-duration="1000">
             <span className="text-[#10b981] text-xs font-bold uppercase tracking-[0.25em] block">
               OUR JOURNEY
@@ -248,7 +249,7 @@ export default function AboutPage({ setCurrentPage }: AboutPageProps) {
 
           <div className="lg:col-span-3 relative" data-aos="fade-left" data-aos-duration="1000" data-aos-delay="100">
             <div className="absolute left-4 top-2 bottom-2 w-px bg-[#10b981]/30" />
-            
+
             <div className="space-y-12">
               <div className="relative">
                 <div className="absolute left-1 top-1 w-6 h-6 rounded-full bg-[#0f172a] border-2 border-[#10b981] flex items-center justify-center text-xs font-bold text-[#10b981] shadow-[0_0_8px_rgba(16,185,129,0.3)]">

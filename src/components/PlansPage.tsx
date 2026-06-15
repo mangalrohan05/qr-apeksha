@@ -241,23 +241,23 @@ export default function PlansPage({
 
       {/* Features Comparison Section — card-based modern layout */}
       <div className="max-w-7xl mx-auto px-6 pt-24 pb-8">
-        <div className="text-center space-y-3 mb-14">
-          <span className="text-[11px] font-bold uppercase tracking-widest text-[#00b074] bg-[#00b074]/10 px-3 py-1 rounded-md inline-block border border-[#00b074]/20">Feature Breakdown</span>
-          <h3 className="text-3xl font-light text-[#003057] tracking-tight mt-2">
+        <div className="text-center space-y-4 mb-16">
+          <span className="text-xs sm:text-sm font-bold uppercase tracking-widest text-[#00b074] bg-[#00b074]/10 px-4.5 py-1.5 rounded-full inline-block border border-[#00b074]/20">Feature Breakdown</span>
+          <h3 className="text-4xl sm:text-5xl font-light text-[#003057] tracking-tight mt-2">
             Everything compared, clearly
           </h3>
-          <p className="text-slate-500 text-sm max-w-xl mx-auto">
+          <p className="text-slate-500 text-base sm:text-lg max-w-2xl mx-auto">
             Know exactly what you're getting before you commit. Every feature, every plan.
           </p>
         </div>
 
         {/* Plan header pills */}
-        <div className="grid grid-cols-5 gap-3 mb-4 px-2">
+        <div className="grid grid-cols-5 gap-4 mb-6 px-2">
           <div />
           {[['Free Trial', false], ['Business', false], ['Business Pro', true], ['Enterprise', false]].map(([name, hot]) => (
-            <div key={String(name)} className={`rounded-xl py-2.5 px-2 text-center text-[10px] font-bold uppercase tracking-widest ${hot ? 'bg-blue-600 text-white shadow-md shadow-blue-500/20' : 'bg-slate-100 text-slate-500'
+            <div key={String(name)} className={`rounded-2xl py-4 px-3 text-center text-xs sm:text-sm font-bold uppercase tracking-widest flex flex-col justify-center items-center ${hot ? 'bg-blue-600 text-white shadow-lg shadow-blue-500/25' : 'bg-slate-100 text-slate-500'
               }`}>
-              {hot && <span className="block text-[8px] font-normal tracking-wider opacity-80 mb-0.5">★ Most Popular</span>}
+              {hot && <span className="block text-[9px] font-normal tracking-wider opacity-90 mb-1">★ Most Popular</span>}
               {String(name)}
             </div>
           ))}
@@ -306,30 +306,30 @@ export default function PlansPage({
             ]
           },
         ].map((group) => (
-          <div key={group.category} className="mb-6 bg-white rounded-2xl border border-slate-200/80 overflow-hidden shadow-sm">
+          <div key={group.category} className="mb-8 bg-white rounded-3xl border border-slate-200/80 overflow-hidden shadow-md">
             {/* Category header */}
-            <div className="px-5 py-3 bg-slate-50/80 border-b border-slate-200/60">
-              <span className="text-[11px] font-bold uppercase tracking-wider text-[#003057]">{group.category}</span>
+            <div className="px-6 py-4.5 bg-slate-50/80 border-b border-slate-200/60">
+              <span className="text-xs sm:text-sm font-bold uppercase tracking-wider text-[#003057]">{group.category}</span>
             </div>
             {group.rows.map((row, ri) => (
               <div key={ri} className={`grid grid-cols-5 gap-0 ${ri < group.rows.length - 1 ? 'border-b border-slate-100' : ''
                 } hover:bg-slate-50/60 transition-colors`}>
-                <div className="px-5 py-3.5 text-xs font-medium text-slate-700 flex items-center">{row.feature}</div>
+                <div className="px-6 py-5 text-sm sm:text-base font-medium text-slate-700 flex items-center">{row.feature}</div>
                 {row.vals.map((val, vi) => {
                   const isProCol = vi === 2;
-                  const cellBase = `px-3 py-3.5 text-center text-xs flex items-center justify-center ${isProCol ? 'bg-blue-50/40 border-x border-blue-200/20' : ''
+                  const cellBase = `px-4 py-5 text-center text-sm sm:text-base flex items-center justify-center ${isProCol ? 'bg-blue-50/40 border-x border-blue-200/20' : ''
                     }`;
                   if (val === true) return (
                     <div key={vi} className={cellBase}>
-                      <span className="inline-flex items-center justify-center w-5 h-5 rounded-full bg-emerald-50 border border-emerald-200">
-                        <svg className="w-3 h-3 text-emerald-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}><path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" /></svg>
+                      <span className="inline-flex items-center justify-center w-6 h-6 rounded-full bg-emerald-50 border border-emerald-200">
+                        <svg className="w-3.5 h-3.5 text-emerald-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}><path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" /></svg>
                       </span>
                     </div>
                   );
                   if (val === false) return (
                     <div key={vi} className={cellBase}>
-                      <span className="inline-flex items-center justify-center w-5 h-5 rounded-full bg-slate-100 border border-slate-200">
-                        <svg className="w-3 h-3 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}><path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" /></svg>
+                      <span className="inline-flex items-center justify-center w-6 h-6 rounded-full bg-slate-100 border border-slate-200">
+                        <svg className="w-3.5 h-3.5 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}><path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" /></svg>
                       </span>
                     </div>
                   );
@@ -353,7 +353,7 @@ export default function PlansPage({
               <span className="text-blue-600 font-medium">Ownership Standards</span>
             </h2>
             <p className="text-slate-500 text-sm sm:text-base leading-relaxed font-normal" data-aos="fade-right" data-aos-delay="100">
-              We don't just generate codes; we secure your infrastructure footprint. Our commitment to factory-grade dynamic verification logic ensures that every project meets the highest standards of stability and long-term ledger integrity.
+              We don't just generate codes; we secure your infrastructure footprint. Our commitment to reliable verification checks ensures that every scan is secure, stable, and completely accurate.
             </p>
 
             <div className="space-y-3 pt-2 font-normal" data-aos="fade-right" data-aos-delay="200">

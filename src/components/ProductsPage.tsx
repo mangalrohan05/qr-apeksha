@@ -110,7 +110,7 @@ export default function ProductsPage() {
             <div className="flex-1 text-left space-y-6">
               <h2 className="text-3xl md:text-4xl font-extrabold text-white leading-tight">AI-Powered Authenticity Verdict</h2>
               <p className="text-slate-300 text-base md:text-lg leading-relaxed font-normal">
-                Display ledger-backed authenticity verdicts. The OpenCLIP engine calculates cosine similarity, the pHash duplicate check flags replay attacks, and OCR matches label serials. Verdicts are returned on a themed dial: Green (≥80% Authentic), Yellow (65%-79% Review), or Red (under 65% Counterfeit).
+                Display secure, instant authenticity results. Our smart system cross-checks details, flags suspicious scan patterns, and verifies label text in real time. Verdicts are returned on a clear status dial: Green (Authentic), Yellow (Needs Review), or Red (Counterfeit).
               </p>
             </div>
           </div>
@@ -136,7 +136,7 @@ export default function ProductsPage() {
           {/* 3x2 Grid of sharp command-center style cards */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             
-            {/* Card 1: Immutable Ledger */}
+            {/* Card 1: Tamper-Proof Tracking */}
             <div className="bg-white border border-slate-200/60 p-8 rounded-2xl space-y-6 hover:shadow-md hover:-translate-y-1 transition-all duration-300 group text-left">
               <div className="flex items-center gap-4">
                 <div className="w-12 h-12 flex-shrink-0 flex items-center justify-center rounded bg-[#00b074]/10 border border-[#00b074]/20 text-[#00b074] group-hover:bg-[#00b074] group-hover:text-white transition-colors">
@@ -144,14 +144,14 @@ export default function ProductsPage() {
                     <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z" />
                   </svg>
                 </div>
-                <h3 className="text-lg font-bold text-black tracking-tight">Immutable Ledger</h3>
+                <h3 className="text-lg font-bold text-black tracking-tight">Tamper-Proof Tracking</h3>
               </div>
               <p className="text-black text-sm leading-relaxed font-normal">
-                Every code generated and scan checked is permanently locked on decentralized blocks, creating an unalterable transaction path.
+                Every verification code generated and scanned is recorded securely, making it impossible for counterfeiters to alter your history.
               </p>
             </div>
 
-            {/* Card 2: Real-Time Telemetry */}
+            {/* Card 2: Instant Location Insights */}
             <div className="bg-white border border-slate-200/60 p-8 rounded-2xl space-y-6 hover:shadow-md hover:-translate-y-1 transition-all duration-300 group text-left">
               <div className="flex items-center gap-4">
                 <div className="w-12 h-12 flex-shrink-0 flex items-center justify-center rounded bg-[#00b074]/10 border border-[#00b074]/20 text-[#00b074] group-hover:bg-[#00b074] group-hover:text-white transition-colors">
@@ -159,14 +159,14 @@ export default function ProductsPage() {
                     <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 3v11.25A2.25 2.25 0 006 16.5h2.25M3.75 3h-1.5m1.5 0h1.5m0 0h11.25A2.25 2.25 0 0118 5.25V14.25m-14.25 0h14.25M6 16.5H4.5M6 16.5h12m0 0h1.5m-1.5 0v3m-3.375-3h.008v.008h-.008V16.5zm0-3h.008v.008h-.008v-.008zm0-3h.008v.008h-.008V10.5zm-3 3h.008v.008h-.008v-.008zm0-3h.008v.008h-.008V10.5z" />
                   </svg>
                 </div>
-                <h3 className="text-lg font-bold text-black tracking-tight">Real-Time Telemetry</h3>
+                <h3 className="text-lg font-bold text-black tracking-tight">Instant Location Insights</h3>
               </div>
               <p className="text-black text-sm leading-relaxed font-normal">
-                Instantly map geolocations, IP signatures, and hardware environments on query events, flagging clones within seconds.
+                Real-time scan locations and map charts show you exactly where your products are being checked around the globe.
               </p>
             </div>
 
-            {/* Card 3: Advanced Cryptography */}
+            {/* Card 3: Unique Digital Identity */}
             <div className="bg-white border border-slate-200/60 p-8 rounded-2xl space-y-6 hover:shadow-md hover:-translate-y-1 transition-all duration-300 group text-left">
               <div className="flex items-center gap-4">
                 <div className="w-12 h-12 flex-shrink-0 flex items-center justify-center rounded bg-[#00b074]/10 border border-[#00b074]/20 text-[#00b074] group-hover:bg-[#00b074] group-hover:text-white transition-colors">
@@ -174,29 +174,29 @@ export default function ProductsPage() {
                     <path strokeLinecap="round" strokeLinejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z" />
                   </svg>
                 </div>
-                <h3 className="text-lg font-bold text-black tracking-tight">Advanced Cryptography</h3>
+                <h3 className="text-lg font-bold text-black tracking-tight">Unique Digital Identity</h3>
               </div>
               <p className="text-black text-sm leading-relaxed font-normal">
-                Secured by dynamic serialization algorithms, generating unique cryptographic signature hashes for individual packaging units.
+                Every single item gets a unique, copy-proof digital code that links directly to your product details.
               </p>
             </div>
 
-            {/* Card 4: API & ERP Sync */}
+            {/* Card 4: Simple Analytics & Insights */}
             <div className="bg-white border border-slate-200/60 p-8 rounded-2xl space-y-6 hover:shadow-md hover:-translate-y-1 transition-all duration-300 group text-left">
               <div className="flex items-center gap-4">
                 <div className="w-12 h-12 flex-shrink-0 flex items-center justify-center rounded bg-[#00b074]/10 border border-[#00b074]/20 text-[#00b074] group-hover:bg-[#00b074] group-hover:text-white transition-colors">
                   <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M7.5 21L3 16.5m0 0L7.5 12M3 16.5h13.5m0-13.5L21 7.5m0 0L17.5 12M21 7.5H7.5" />
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M3 13.125C3 12.504 3.504 12 4.125 12h2.25c.621 0 1.125.504 1.125 1.125v5.25c0 .621-.504 1.125-1.125 1.125h-2.25A1.125 1.125 0 013 18.375v-5.25zM9.75 8.625c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v9.75c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125v-9.75zM16.5 4.125c0-.621.504-1.125 1.125-1.125h2.25C20.496 3 21 3.504 21 4.125v14.25c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V4.125z" />
                   </svg>
                 </div>
-                <h3 className="text-lg font-bold text-black tracking-tight">API & ERP Sync</h3>
+                <h3 className="text-lg font-bold text-black tracking-tight">Simple Analytics & Insights</h3>
               </div>
               <p className="text-black text-sm leading-relaxed font-normal">
-                Fully documented REST APIs and secure webhooks connect triggers into SAP, Oracle, and customized inventory warehouses.
+                View beautiful, easy-to-read reports on scan volumes, customer locations, and alert flags to understand product performance.
               </p>
             </div>
 
-            {/* Card 5: AI Anomaly Detection */}
+            {/* Card 5: Smart Fraud Alerts */}
             <div className="bg-white border border-slate-200/60 p-8 rounded-2xl space-y-6 hover:shadow-md hover:-translate-y-1 transition-all duration-300 group text-left">
               <div className="flex items-center gap-4">
                 <div className="w-12 h-12 flex-shrink-0 flex items-center justify-center rounded bg-[#00b074]/10 border border-[#00b074]/20 text-[#00b074] group-hover:bg-[#00b074] group-hover:text-white transition-colors">
@@ -204,25 +204,25 @@ export default function ProductsPage() {
                     <path strokeLinecap="round" strokeLinejoin="round" d="M9.813 15.904L9 21m0 0l-.813-5.096L9 21zm0 0h1m-1 0H8m6.813-5.096L15 21m0 0l-.813-5.096L15 21zm0 0h1m-1 0h-1m-7-5a7 7 0 1114 0c0 1.617-.553 3.096-1.47 4.274l-.441.564A1.996 1.996 0 0015 18H9a1.996 1.996 0 00-1.09-.262l-.441-.564A6.977 6.977 0 017 11z" />
                   </svg>
                 </div>
-                <h3 className="text-lg font-bold text-black tracking-tight">AI Anomaly Detection</h3>
+                <h3 className="text-lg font-bold text-black tracking-tight">Smart Fraud Alerts</h3>
               </div>
               <p className="text-black text-sm leading-relaxed font-normal">
-                Our lightweight ML engine dynamically parses scan behaviors, immediately identifying abnormal high-frequency replay attack patterns.
+                Our system automatically flags abnormal scan behavior, like a single code scanned in two different cities at the same time.
               </p>
             </div>
 
-            {/* Card 6: Global Access Registry */}
+            {/* Card 6: 24/7 Global Availability */}
             <div className="bg-white border border-slate-200/60 p-8 rounded-2xl space-y-6 hover:shadow-md hover:-translate-y-1 transition-all duration-300 group text-left">
               <div className="flex items-center gap-4">
                 <div className="w-12 h-12 flex-shrink-0 flex items-center justify-center rounded bg-[#00b074]/10 border border-[#00b074]/20 text-[#00b074] group-hover:bg-[#00b074] group-hover:text-white transition-colors">
                   <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M12 21a9.004 9.004 0 008.716-6.747M12 21a9.004 9.004 0 01-8.716-6.747M12 21c2.485 0 4.5-4.03 4.5-9S14.485 3 12 3m0 18c-2.485 0-4.5-4.03-4.5-9S9.515 3 12 3m0 0a8.997 8.997 0 0 1 7.843 4.582M12 3a8.997 8.997 0 00-7.843 4.582m15.686 0A11.953 11.953 0 0 1 12 10.5c-2.998 0-5.74-1.1-7.843-2.918m15.686 0A8.959 8.959 0 0 1 21 12c0 .778-.099 1.533-.284 2.253m0 0A17.919 17.919 0 0 1 12 16.5c-3.162 0-6.133-.815-8.716-2.247m0 0A9.015 9.015 0 0 1 3 12c0-.778.099-1.533.284-2.253" />
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M12 21a9.004 9.004 0 008.716-6.747M12 21a9.004 9.004 0 01-8.716-6.747M12 21c2.485 0 4.5-4.03 4.5-9S14.485 3 12 3m0 18c-2.485 0-4.5-4.03-4.5-9S9.515 3 12 3m0 0a8.997 8.997 0 0 1 7.843 4.582M12 3a8.997 8.997 0 0 0-7.843 4.582m15.686 0A11.953 11.953 0 0 1 12 10.5c-2.998 0-5.74-1.1-7.843-2.918m15.686 0A8.959 8.959 0 0 1 21 12c0 .778-.099 1.533-.284 2.253m0 0A17.919 17.919 0 0 1 12 16.5c-3.162 0-6.133-.815-8.716-2.247m0 0A9.015 9.015 0 0 1 3 12c0-.778.099-1.533.284-2.253" />
                   </svg>
                 </div>
-                <h3 className="text-lg font-bold text-black tracking-tight">Global Access Registry</h3>
+                <h3 className="text-lg font-bold text-black tracking-tight">24/7 Global Availability</h3>
               </div>
               <p className="text-black text-sm leading-relaxed font-normal">
-                Redundant global registries ensure your consumers can check item authenticity anywhere in the world with 99.99% uptime.
+                Your customers can securely verify their products anytime, anywhere in the world, with zero downtime.
               </p>
             </div>
 
