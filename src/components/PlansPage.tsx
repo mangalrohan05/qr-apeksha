@@ -33,7 +33,7 @@ export default function PlansPage({
 
         {/* Billed Annually Indicator */}
         <div className="pt-4 flex items-center justify-center">
-          <span className="text-xs font-bold px-4 py-1.5 bg-blue-50 text-blue-600 rounded-full border border-blue-200/60 tracking-wider uppercase">
+          <span className="text-xs font-bold px-4 py-1.5 bg-[#00b074]/10 text-[#00b074] rounded-full border border-[#00b074]/20 tracking-wider uppercase">
             Billed Annually (10% Discount Applied)
           </span>
         </div>
@@ -64,7 +64,7 @@ export default function PlansPage({
           <div className="flex flex-col justify-between p-8 bg-white border border-slate-200/80 rounded-3xl shadow-sm hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
             <div className="space-y-6">
               <div>
-                <span className="text-xs font-semibold uppercase tracking-widest text-blue-600 bg-blue-50 px-3 py-1 rounded-md border border-blue-200/40">
+                <span className="text-xs font-semibold uppercase tracking-widest text-[#00b074] bg-[#00b074]/10 px-3 py-1 rounded-md border border-[#00b074]/20">
                   For Growing Brands
                 </span>
                 <h3 className="text-2xl font-light text-[#003057] mt-4">Business</h3>
@@ -87,7 +87,7 @@ export default function PlansPage({
                     /{isAnnual ? 'yr' : 'mo'}
                   </span>
                 </div>
-                <p className="text-[10px] text-blue-600 font-normal mt-1">
+                <p className="text-[10px] text-[#00b074] font-normal mt-1">
                   +18% GST (regulatory charge)
                 </p>
               </div>
@@ -116,22 +116,22 @@ export default function PlansPage({
 
             <button
               onClick={() => handleSelectPlan('business')}
-              className="mt-8 w-full py-4 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-2xl transition-all duration-200 text-xs tracking-wider uppercase shadow-md cursor-pointer"
+              className="mt-8 w-full py-4 bg-[#00b074] hover:bg-[#009660] text-white font-semibold rounded-2xl transition-all duration-200 text-xs tracking-wider uppercase shadow-md cursor-pointer"
             >
               Select Business
             </button>
           </div>
 
           {/* 2. Business Pro (Highlighted Dark popular card) */}
-          <div className="flex flex-col justify-between p-8 bg-[#0a0f1d] text-white border-2 border-blue-500 rounded-3xl shadow-xl scale-[1.02] relative z-10 transition-all duration-300 hover:scale-[1.04]">
+          <div className="flex flex-col justify-between p-8 bg-[#0a0f1d] text-white border-2 border-[#00b074] rounded-3xl shadow-xl scale-[1.02] relative z-10 transition-all duration-300 hover:scale-[1.04]">
             {/* Popular tag badge */}
-            <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-blue-600 text-white px-4 py-1 rounded-full text-[9px] font-bold tracking-widest uppercase shadow-md border border-blue-400/30">
+            <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-[#00b074] text-white px-4 py-1 rounded-full text-[9px] font-bold tracking-widest uppercase shadow-md border border-[#00b074]/30">
               Most Popular
             </div>
 
             <div className="space-y-6">
               <div>
-                <span className="text-xs font-semibold uppercase tracking-widest text-blue-400 bg-blue-900/40 px-3 py-1 rounded-md border border-blue-500/20">
+                <span className="text-xs font-semibold uppercase tracking-widest text-[#00b074] bg-[#00b074]/15 px-3 py-1 rounded-md border border-[#00b074]/20">
                   Full Supply Protection
                 </span>
                 <h3 className="text-2xl font-light text-white mt-4">Business Pro</h3>
@@ -154,7 +154,7 @@ export default function PlansPage({
                     /{isAnnual ? 'yr' : 'mo'}
                   </span>
                 </div>
-                <p className="text-[10px] text-blue-400 font-normal mt-1">
+                <p className="text-[10px] text-[#00b074] font-normal mt-1">
                   +18% GST (regulatory charge)
                 </p>
               </div>
@@ -192,7 +192,7 @@ export default function PlansPage({
 
             <button
               onClick={() => handleSelectPlan('pro')}
-              className="mt-8 w-full py-4 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-2xl transition-all duration-200 text-xs tracking-wider uppercase shadow-lg shadow-blue-500/20 cursor-pointer border-none"
+              className="mt-8 w-full py-4 bg-[#00b074] hover:bg-[#009660] text-white font-semibold rounded-2xl transition-all duration-200 text-xs tracking-wider uppercase shadow-lg shadow-[#00b074]/20 cursor-pointer border-none"
             >
               Select Business Pro
             </button>
@@ -220,11 +220,11 @@ export default function PlansPage({
               <div className="space-y-3 pt-2">
                 <div className="flex items-center justify-between opacity-75">
                   <span className="text-xs text-slate-400 font-bold uppercase tracking-wider">Users limit</span>
-                  <span className="text-xs font-bold text-blue-600 font-sans">Unlimited</span>
+                  <span className="text-xs font-bold text-[#00b074] font-sans">Unlimited</span>
                 </div>
                 <div className="flex items-center justify-between opacity-75">
                   <span className="text-xs text-slate-400 font-bold uppercase tracking-wider">SKUs limit</span>
-                  <span className="text-xs font-bold text-blue-600 font-sans">Unlimited</span>
+                  <span className="text-xs font-bold text-[#00b074] font-sans">Unlimited</span>
                 </div>
               </div>
             </div>
@@ -242,7 +242,6 @@ export default function PlansPage({
       {/* Features Comparison Section — card-based modern layout */}
       <div className="max-w-7xl mx-auto px-6 pt-24 pb-8">
         <div className="text-center space-y-4 mb-16">
-          <span className="text-xs sm:text-sm font-bold uppercase tracking-widest text-[#00b074] bg-[#00b074]/10 px-4.5 py-1.5 rounded-full inline-block border border-[#00b074]/20">Feature Breakdown</span>
           <h3 className="text-4xl sm:text-5xl font-light text-[#003057] tracking-tight mt-2">
             Everything compared, clearly
           </h3>
@@ -255,7 +254,7 @@ export default function PlansPage({
         <div className="grid grid-cols-5 gap-4 mb-6 px-2">
           <div />
           {[['Free Trial', false], ['Business', false], ['Business Pro', true], ['Enterprise', false]].map(([name, hot]) => (
-            <div key={String(name)} className={`rounded-2xl py-4 px-3 text-center text-xs sm:text-sm font-bold uppercase tracking-widest flex flex-col justify-center items-center ${hot ? 'bg-blue-600 text-white shadow-lg shadow-blue-500/25' : 'bg-slate-100 text-slate-500'
+            <div key={String(name)} className={`rounded-2xl py-4 px-3 text-center text-xs sm:text-sm font-bold uppercase tracking-widest flex flex-col justify-center items-center ${hot ? 'bg-[#00b074] text-white shadow-lg shadow-[#00b074]/25' : 'bg-slate-100 text-slate-500'
               }`}>
               {hot && <span className="block text-[9px] font-normal tracking-wider opacity-90 mb-1">★ Most Popular</span>}
               {String(name)}
@@ -317,7 +316,7 @@ export default function PlansPage({
                 <div className="px-6 py-5 text-sm sm:text-base font-medium text-slate-700 flex items-center">{row.feature}</div>
                 {row.vals.map((val, vi) => {
                   const isProCol = vi === 2;
-                  const cellBase = `px-4 py-5 text-center text-sm sm:text-base flex items-center justify-center ${isProCol ? 'bg-blue-50/40 border-x border-blue-200/20' : ''
+                  const cellBase = `px-4 py-5 text-center text-sm sm:text-base flex items-center justify-center ${isProCol ? 'bg-[#00b074]/5 border-x border-[#00b074]/10' : ''
                     }`;
                   if (val === true) return (
                     <div key={vi} className={cellBase}>
@@ -334,7 +333,7 @@ export default function PlansPage({
                     </div>
                   );
                   return (
-                    <div key={vi} className={`${cellBase} ${isProCol ? 'font-semibold text-blue-700' : 'text-slate-600'
+                    <div key={vi} className={`${cellBase} ${isProCol ? 'font-semibold text-[#009660]' : 'text-slate-600'
                       }`}>{String(val)}</div>
                   );
                 })}
@@ -350,7 +349,7 @@ export default function PlansPage({
           <div className="lg:col-span-6 space-y-6 text-left">
             <h2 className="text-4xl font-light tracking-tight text-[#003057] leading-tight" data-aos="fade-right">
               Professional Tracking <br />
-              <span className="text-blue-600 font-medium">Ownership Standards</span>
+              <span className="text-[#00b074] font-medium">Ownership Standards</span>
             </h2>
             <p className="text-slate-500 text-sm sm:text-base leading-relaxed font-normal" data-aos="fade-right" data-aos-delay="100">
               We don't just generate codes; we secure your infrastructure footprint. Our commitment to reliable verification checks ensures that every scan is secure, stable, and completely accurate.
@@ -358,11 +357,11 @@ export default function PlansPage({
 
             <div className="space-y-3 pt-2 font-normal" data-aos="fade-right" data-aos-delay="200">
               <div className="flex items-center gap-3 text-sm text-[#003057]">
-                <span className="w-5 h-5 rounded-full bg-blue-50 border border-blue-200 flex items-center justify-center text-blue-600 text-xs font-normal">✓</span>
-                Tier-1 Cryptographic QR Generation
+                <span className="w-5 h-5 rounded-full bg-[#00b074]/10 border border-[#00b074]/20 flex items-center justify-center text-[#00b074] text-xs font-normal">✓</span>
+                Cryptographic QR Generation
               </div>
               <div className="flex items-center gap-3 text-sm text-[#003057]">
-                <span className="w-5 h-5 rounded-full bg-blue-50 border border-blue-200 flex items-center justify-center text-blue-600 text-xs font-normal">✓</span>
+                <span className="w-5 h-5 rounded-full bg-[#00b074]/10 border border-[#00b074]/20 flex items-center justify-center text-[#00b074] text-xs font-normal">✓</span>
                 Real-time Performance Metrics Auditing
               </div>
             </div>
@@ -370,7 +369,7 @@ export default function PlansPage({
 
           <div className="lg:col-span-6">
             <div className="w-full h-80 rounded-3xl overflow-hidden bg-cover bg-center border border-slate-200"
-              style={{ backgroundImage: `url('https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?auto=format&fit=crop&q=80&w=1200')` }}
+              style={{ backgroundImage: `url('/verification_confirmed.png')` }}
             />
           </div>
         </div>

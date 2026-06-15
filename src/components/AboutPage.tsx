@@ -8,7 +8,11 @@ export default function AboutPage({ setCurrentPage }: AboutPageProps) {
     <div className="w-full bg-white text-slate-800 animate-fadeIn font-sans pb-0">
 
       {/* Section 1: Hero Banner (The Story) */}
-      <div data-theme="dark" className="w-full h-screen pt-24 flex items-center justify-center relative overflow-hidden bg-[#003057]">
+      <div 
+        data-theme="dark" 
+        className="w-full h-screen pt-24 flex items-center justify-center relative overflow-hidden bg-[#003057] bg-cover bg-center bg-no-repeat"
+        style={{ backgroundImage: "url('/satellite_map_bg.png')" }}
+      >
         {/* Dynamic SVG Network Background (Crisp, High-Resolution, Animated) */}
         <div className="absolute inset-0 z-0 opacity-40">
           <svg className="w-full h-full" xmlns="http://www.w3.org/2000/svg" fill="none">
@@ -131,7 +135,7 @@ export default function AboutPage({ setCurrentPage }: AboutPageProps) {
           <div className="lg:col-span-6">
             <div className="w-full h-96 rounded-2xl overflow-hidden shadow-xl cursor-pointer">
               <img
-                src="https://images.unsplash.com/photo-1507537297725-24a1c029d3ca?auto=format&fit=crop&q=80&w=1200"
+                src="/the_vision_success.png"
                 alt="Secure packaging scanning"
                 className="w-full h-full object-cover transition-all duration-500 ease-out hover:scale-105"
               />
@@ -141,7 +145,7 @@ export default function AboutPage({ setCurrentPage }: AboutPageProps) {
       </div>
 
       {/* Section 2.5: Mission Section (Left: 40%, Right: 60%) */}
-      <div className="w-full bg-[#0f172a] py-28 border-t border-slate-800/50 relative z-20">
+      <div className="w-full bg-[#0f172a] py-12 lg:py-16 border-t border-slate-800/50 relative z-20">
         <div className="max-w-7xl mx-auto px-12 grid grid-cols-1 lg:grid-cols-5 gap-16 items-center">
           {/* Left Column (Mission) - 40% */}
           <div className="lg:col-span-2 space-y-6 text-left" data-aos="fade-right" data-aos-duration="1000">
@@ -191,44 +195,57 @@ export default function AboutPage({ setCurrentPage }: AboutPageProps) {
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {/* Pillar 1 */}
-            <div className="hover-levitate bg-white/40 backdrop-blur-md px-8 py-5 rounded-xl border border-[#00b074]/35 flex items-center justify-between gap-6 cursor-pointer">
-              <div className="flex items-center gap-4">
-                <div className="w-10 h-10 bg-[#00b074]/10 rounded-lg flex items-center justify-center border border-[#00b074]/20 text-[#00b074]">
-                  <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M12 21a9.004 9.004 0 008.716-6.747M12 21a9.004 9.004 0 01-8.716-6.747M12 21c2.485 0 4.5-4.03 4.5-9S14.485 3 12 3m0 18c-2.485 0-4.5-4.03-4.5-9S9.515 3 12 3m0 0a8.997 8.997 0 017.843 4.582M12 3a8.997 8.997 0 00-7.843 4.582m15.686 0A11.953 11.953 0 0112 10.5c-2.998 0-5.74-1.1-7.843-2.918m15.686 0A8.959 8.959 0 0121 12c0 .778-.099 1.533-.284 2.253m0 0A17.919 17.919 0 0112 16.5c-3.162 0-6.133-.815-8.716-2.247m0 0A9.015 9.015 0 013 12c0-.778.099-1.533.284-2.253" />
-                  </svg>
-                </div>
-                <span className="text-sm uppercase tracking-wider font-semibold text-[#003057]">Global Reach</span>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 max-w-7xl mx-auto justify-center">
+            {/* Card 1 - Countries */}
+            <div className="hover-levitate bg-white/40 backdrop-blur-md px-6 py-5 rounded-2xl border border-[#00b074]/35 flex items-center gap-4 cursor-pointer shadow-sm hover:shadow-md transition-all duration-300 w-full">
+              <div className="w-20 h-20 bg-blue-50/80 rounded-xl flex items-center justify-center border border-blue-100 flex-shrink-0">
+                <svg className="w-12 h-12 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M12 21a9.004 9.004 0 008.716-6.747M12 21a9.004 9.004 0 01-8.716-6.747M12 21c2.485 0 4.5-4.03 4.5-9S14.485 3 12 3m0 18c-2.485 0-4.5-4.03-4.5-9S9.515 3 12 3m0 0a8.997 8.997 0 017.843 4.582M12 3a8.997 8.997 0 00-7.843 4.582m15.686 0A11.953 11.953 0 0112 10.5c-2.998 0-5.74-1.1-7.843-2.918m15.686 0A8.959 8.959 0 0121 12c0 .778-.099 1.533-.284 2.253m0 0A17.919 17.919 0 0112 16.5c-3.162 0-6.133-.815-8.716-2.247m0 0A9.015 9.015 0 013 12c0-.778.099-1.533.284-2.253" />
+                </svg>
               </div>
-              <span className="text-2xl md:text-3xl font-bold text-[#00b074] tracking-tight">15+</span>
+              <div className="flex flex-col text-center flex-1">
+                <span className="text-xl md:text-2xl font-bold text-gray-900 tracking-tight leading-none">15+</span>
+                <span className="text-xs text-slate-500 font-normal mt-1.5">COUNTRIES</span>
+              </div>
             </div>
 
-            {/* Pillar 2 */}
-            <div className="hover-levitate bg-white/40 backdrop-blur-md px-8 py-5 rounded-xl border border-[#00b074]/35 flex items-center justify-between gap-6 cursor-pointer">
-              <div className="flex items-center gap-4">
-                <div className="w-10 h-10 bg-[#00b074]/10 rounded-lg flex items-center justify-center border border-[#00b074]/20 text-[#00b074]">
-                  <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z" />
-                  </svg>
-                </div>
-                <span className="text-sm uppercase tracking-wider font-semibold text-[#003057]">Verified Trust</span>
+            {/* Card 2 - Verified Users */}
+            <div className="hover-levitate bg-white/40 backdrop-blur-md px-6 py-5 rounded-2xl border border-[#00b074]/35 flex items-center gap-4 cursor-pointer shadow-sm hover:shadow-md transition-all duration-300 w-full">
+              <div className="w-20 h-20 bg-teal-50/80 rounded-xl flex items-center justify-center border border-teal-100 flex-shrink-0">
+                <svg className="w-12 h-12 text-teal-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12c0 1.268-.63 2.39-1.593 3.068a3.745 3.745 0 01-1.043 3.296 3.745 3.745 0 01-3.296 1.043A3.745 3.745 0 0112 21c-1.268 0-2.39-.63-3.068-1.593a3.746 3.746 0 01-3.296-1.043 3.745 3.745 0 01-1.043-3.296A3.745 3.745 0 013 12c0-1.268.63-2.39 1.593-3.068a3.745 3.745 0 011.043-3.296 3.746 3.746 0 013.296-1.043A3.746 3.746 0 0112 3c1.268 0 2.39.63 3.068 1.593a3.746 3.746 0 013.296 1.043 3.746 3.746 0 011.043 3.296A3.745 3.745 0 0121 12z" />
+                </svg>
               </div>
-              <span className="text-2xl md:text-3xl font-bold text-[#00b074] tracking-tight">10M+</span>
+              <div className="flex flex-col text-center flex-1">
+                <span className="text-xl md:text-2xl font-bold text-gray-900 tracking-tight leading-none">10M+</span>
+                <span className="text-xs text-slate-500 font-normal mt-1.5">VERIFIED USERS</span>
+              </div>
             </div>
 
-            {/* Pillar 3 */}
-            <div className="hover-levitate bg-white/40 backdrop-blur-md px-8 py-5 rounded-xl border border-[#00b074]/35 flex items-center justify-between gap-6 cursor-pointer">
-              <div className="flex items-center gap-4">
-                <div className="w-10 h-10 bg-[#00b074]/10 rounded-lg flex items-center justify-center border border-[#00b074]/20 text-[#00b074]">
-                  <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M5.25 14.25h13.5m-13.5 0a3 3 0 01-3-3V7.5a3 3 0 013-3h13.5a3 3 0 013 3v3.75a3 3 0 01-3 3m-13.5 0a3 3 0 00-3 3v3.75a3 3 0 003 3h13.5a3 3 0 003-3v-3.75a3 3 0 00-3-3M6.75 6.75h.008v.008H6.75V6.75zm.008 2.25H6.75v-.008h.008V9zm0 6h-.008v-.008h.008V15zm0 2.25H6.75v-.008h.008V17.25z" />
-                  </svg>
-                </div>
-                <span className="text-sm uppercase tracking-wider font-semibold text-[#003057]">Reliability</span>
+            {/* Card 3 - Reliability */}
+            <div className="hover-levitate bg-white/40 backdrop-blur-md px-6 py-5 rounded-2xl border border-[#00b074]/35 flex items-center gap-4 cursor-pointer shadow-sm hover:shadow-md transition-all duration-300 w-full">
+              <div className="w-20 h-20 bg-emerald-50/80 rounded-xl flex items-center justify-center border border-emerald-100 flex-shrink-0">
+                <svg className="w-12 h-12 text-emerald-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 13.5l10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75z" />
+                </svg>
               </div>
-              <span className="text-2xl md:text-3xl font-bold text-[#00b074] tracking-tight">99.99%</span>
+              <div className="flex flex-col text-center flex-1">
+                <span className="text-xl md:text-2xl font-bold text-gray-900 tracking-tight leading-none">99.99%</span>
+                <span className="text-xs text-slate-500 font-normal mt-1.5">RELIABILITY</span>
+              </div>
+            </div>
+
+            {/* Card 4 - User Trusted */}
+            <div className="hover-levitate bg-white/40 backdrop-blur-md px-6 py-5 rounded-2xl border border-[#00b074]/35 flex items-center gap-4 cursor-pointer shadow-sm hover:shadow-md transition-all duration-300 w-full">
+              <div className="w-20 h-20 bg-indigo-50/80 rounded-xl flex items-center justify-center border border-indigo-100 flex-shrink-0">
+                <svg className="w-12 h-12 text-indigo-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z" />
+                </svg>
+              </div>
+              <div className="flex flex-col text-center flex-1">
+                <span className="text-xl md:text-2xl font-bold text-gray-900 tracking-tight leading-none">100k+</span>
+                <span className="text-xs text-slate-500 font-normal mt-1.5">USER TRUSTED</span>
+              </div>
             </div>
           </div>
         </div>
@@ -270,7 +287,7 @@ export default function AboutPage({ setCurrentPage }: AboutPageProps) {
                 <div className="pl-12 space-y-2 text-left">
                   <h3 className="text-xl font-bold text-white tracking-tight">Dynamic Verification</h3>
                   <p className="text-[#94a3b8] text-sm sm:text-base leading-relaxed font-normal">
-                    The platform evolved to support real-time telemetry and supply chain synchronization, moving brands from reactive counterfeit detection to data-driven provenance.
+                    The platform evolved to support real-time tracking and supply chain synchronization, moving brands from reactive counterfeit detection to data-driven origin tracking.
                   </p>
                 </div>
               </div>
@@ -282,7 +299,7 @@ export default function AboutPage({ setCurrentPage }: AboutPageProps) {
                 <div className="pl-12 space-y-2 text-left">
                   <h3 className="text-xl font-bold text-white tracking-tight">Trust at Scale</h3>
                   <p className="text-[#94a3b8] text-sm sm:text-base leading-relaxed font-normal">
-                    Ongoing development emphasizes enterprise-grade governance and forensic-level transparency—trusted by global organizations that require accountable, secure verification infrastructure.
+                    Ongoing development emphasizes enterprise-grade governance and forensic-level transparency, trusted by global organizations that require accountable, secure verification infrastructure.
                   </p>
                 </div>
               </div>
