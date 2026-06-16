@@ -145,10 +145,12 @@ export default function AboutPage({ setCurrentPage }: AboutPageProps) {
       </div>
 
       {/* Section 2.5: Mission Section (Left: 40%, Right: 60%) */}
-      <div className="w-full bg-[#0f172a] py-12 lg:py-16 border-t border-slate-800/50 relative z-20">
-        <div className="max-w-7xl mx-auto px-12 grid grid-cols-1 lg:grid-cols-5 gap-16 items-center">
-          {/* Left Column (Mission) - 40% */}
-          <div className="lg:col-span-2 space-y-6 text-left" data-aos="fade-right" data-aos-duration="1000">
+      <div className="w-full bg-[#0f172a] lg:py-5 border-t border-slate-800/50 relative z-20">
+        {/* The inner container now scales 100% horizontally and vertically to the outer borders */}
+        <div className="w-full grid grid-cols-1 lg:grid-cols-6 items-stretch">
+
+          {/* Left Column (Mission) - Added custom padding to keep text safe from screen edges */}
+          <div className="lg:col-span-3 space-y-6 text-left py-12 lg:py-16 px-6 sm:px-12" data-aos="fade-right" data-aos-duration="1000">
             <span className="text-[#10b981] text-xs font-bold uppercase tracking-[0.25em] block">
               OUR MISSION
             </span>
@@ -163,8 +165,9 @@ export default function AboutPage({ setCurrentPage }: AboutPageProps) {
             </p>
           </div>
 
-          {/* Right Column (Principle Box) - 60% */}
-          <div className="lg:col-span-3 text-left" data-aos="fade-left" data-aos-duration="1000" data-aos-delay="100">
+          {/* Right Column (Principle Box) - Replaced outer margin/padding with grid alignment so it fills the screen edge */}
+          <div className="lg:col-span-3 text-left flex" data-aos="fade-left" data-aos-duration="1000" data-aos-delay="100">
+            {/* Box now handles the layout padding directly, removing the blank space gap */}
             <div className="bg-[#1e293b]/25 backdrop-blur-md p-10 rounded-2xl rounded-l-none border border-slate-800/60 border-l-4 border-l-[#10b981] shadow-2xl space-y-6">
               <span className="text-[#10b981] text-xs font-bold uppercase tracking-[0.20em] block">
                 Founding Principle
@@ -179,6 +182,7 @@ export default function AboutPage({ setCurrentPage }: AboutPageProps) {
               </blockquote>
             </div>
           </div>
+
         </div>
       </div>
 
