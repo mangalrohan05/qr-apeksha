@@ -36,13 +36,13 @@ export default function HomePage({ setCurrentPage }: HomePageProps) {
 
   return (
     <div className="animate-fadeIn space-y-36 pb-32 bg-white text-slate-800">
-      
+
       {/* HERO SECTION */}
       <div
         data-theme="dark"
         className="w-full flex flex-col justify-center items-center text-center h-screen pt-24 px-4 relative overflow-hidden shadow-2xl bg-[#050b14]"
       >
-        <div 
+        <div
           className="absolute inset-0 z-0 bg-cover bg-center scale-[1.03]"
           style={{
             backgroundImage: `linear-gradient(135deg, rgba(0, 15, 30, 0.2) 0%, rgba(0, 5, 20, 0.5) 100%), url('/saas_royal_bg.png')`
@@ -70,7 +70,7 @@ export default function HomePage({ setCurrentPage }: HomePageProps) {
       </div>
 
       <div data-theme="light" className="max-w-7xl mx-auto px-6 space-y-36">
-        
+
         {/* PILLARS SECTION */}
         <div className="space-y-16">
           <div className="text-center space-y-4" data-aos="fade-down" data-aos-duration="800">
@@ -121,7 +121,7 @@ export default function HomePage({ setCurrentPage }: HomePageProps) {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center py-8 overflow-hidden">
           <div className="space-y-6 text-left">
             <h2 data-aos="fade-right" className="text-3xl sm:text-4xl font-light text-[#003057] tracking-tight">
-              Unrivaled Supply Chain Visibility
+              Complete Supply Chain Visibility
             </h2>
             <p data-aos="fade-right" data-aos-delay="100" className="text-slate-500 text-sm sm:text-base leading-relaxed font-normal">
               Go beyond simple tracking. Authentiq maps every stage of your product journey, providing end-to-end transparency from the factory floor to the end consumer.
@@ -174,9 +174,8 @@ export default function HomePage({ setCurrentPage }: HomePageProps) {
                     {faq.q}
                   </h4>
                   <svg
-                    className={`w-3.5 h-3.5 text-slate-400 transition-transform duration-350 flex-shrink-0 ${
-                      openFaqIndex === idx ? 'transform rotate-180 text-[#00b074]' : ''
-                    }`}
+                    className={`w-3.5 h-3.5 text-slate-400 transition-transform duration-350 flex-shrink-0 ${openFaqIndex === idx ? 'transform rotate-180 text-[#00b074]' : ''
+                      }`}
                     fill="none"
                     viewBox="0 0 24 24"
                     stroke="currentColor"
@@ -186,9 +185,8 @@ export default function HomePage({ setCurrentPage }: HomePageProps) {
                 </button>
 
                 <div
-                  className={`transition-all duration-300 ease-in-out overflow-hidden ${
-                    openFaqIndex === idx ? 'max-h-40' : 'max-h-0'
-                  }`}
+                  className={`transition-all duration-300 ease-in-out overflow-hidden ${openFaqIndex === idx ? 'max-h-40' : 'max-h-0'
+                    }`}
                 >
                   <p className="pl-9 pr-5 pb-3.5 text-slate-500 text-[11px] sm:text-xs leading-relaxed font-normal bg-transparent">
                     {faq.a}

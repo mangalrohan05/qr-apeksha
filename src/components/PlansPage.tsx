@@ -33,7 +33,7 @@ export default function PlansPage({
 
         {/* Billed Annually Indicator */}
         <div className="pt-4 flex items-center justify-center">
-          <span className="text-xs font-bold px-4 py-1.5 bg-[#00b074]/10 text-[#00b074] rounded-full border border-[#00b074]/20 tracking-wider uppercase">
+          <span className="text-xs font-bold px-4 py-1.5 bg-white text-black rounded-lg border border-slate-200 tracking-wider uppercase">
             Billed Annually (10% Discount Applied)
           </span>
         </div>

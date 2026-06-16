@@ -2,7 +2,7 @@
 export default function ProductsPage() {
   return (
     <>
-      <section id="products" className="relative bg-[#090d16] pt-40 pb-0">
+      <section id="products" className="relative bg-[#090d16] pt-40 pb-12">
         <div className="max-w-7xl mx-auto px-6 lg:px-8">
           
           {/* Platform Title */}
@@ -94,7 +94,7 @@ export default function ProductsPage() {
             data-aos="fade-up" 
             data-aos-duration="1000" 
             data-aos-delay="200"
-            className="sticky top-40 mb-32 bg-[#0f172a]/95 backdrop-blur-md p-10 md:p-12 rounded-[2rem] border border-[#10b981]/50 shadow-2xl flex flex-col lg:flex-row-reverse items-center gap-12 z-40 min-h-[480px] lg:min-h-[520px]"
+            className="relative mb-4 bg-[#0f172a]/95 backdrop-blur-md p-10 md:p-12 rounded-[2rem] border border-[#10b981]/50 shadow-2xl flex flex-col lg:flex-row-reverse items-center gap-12 z-40 min-h-[480px] lg:min-h-[520px]"
           >
             <div className="w-full lg:w-1/2 bg-[#0b0f19] p-4 rounded-2xl border border-slate-700/50 flex items-center justify-center">
               <div className="w-full aspect-[16/10] bg-[#0c0e17] p-2.5 rounded-[1.5rem] shadow-2xl border-4 border-slate-800/80">

@@ -1,11 +1,12 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, lazy, Suspense } from 'react';
 import Navbar from './components/Navbar';
 import HomePage from './components/HomePage';
-import PlansPage from './components/PlansPage';
-import ProductsPage from './components/ProductsPage';
-import AboutPage from './components/AboutPage';
-import ContactPage from './components/ContactPage';
-import BillingPage from './components/BillingPage';
+
+const PlansPage = lazy(() => import('./components/PlansPage'));
+const ProductsPage = lazy(() => import('./components/ProductsPage'));
+const AboutPage = lazy(() => import('./components/AboutPage'));
+const ContactPage = lazy(() => import('./components/ContactPage'));
+const BillingPage = lazy(() => import('./components/BillingPage'));
 
 type Page = 'home' | 'plans' | 'products' | 'about' | 'contact' | 'billing';
 
@@ -380,7 +381,18 @@ export default function App() {
         logoTheme={logoTheme}
       />
       <main className="w-full">
-        {renderPage()}
+        <Suspense fallback={
+          <div className="min-h-screen flex flex-col items-center justify-center bg-white text-slate-800">
+            <div className="flex flex-col items-center space-y-4">
+              <div className="w-10 h-10 border-4 border-[#00b074] border-t-transparent rounded-full animate-spin"></div>
+              <p className="text-xs font-semibold text-slate-400 uppercase tracking-widest animate-pulse">
+                Loading Secure Module...
+              </p>
+            </div>
+          </div>
+        }>
+          {renderPage()}
+        </Suspense>
       </main>
     </div>
   );

@@ -311,9 +311,6 @@ export default function BillingPage({
           <div className="border-b border-slate-150 pb-8">
             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6">
               <div>
-                <span className="text-xs font-bold uppercase tracking-wider text-blue-600 bg-blue-50 px-3 py-1 rounded-md border border-blue-200/40">
-                  SaaS Registration Gate
-                </span>
                 <h2 className="text-3xl font-light text-[#003057] mt-3">Account Verification Setup</h2>
                 <p className="text-xs text-slate-500 mt-1 font-normal">Complete compliance details to sync your brand credentials.</p>
               </div>
@@ -325,7 +322,7 @@ export default function BillingPage({
             <div className="relative flex items-center justify-between w-full mt-8">
               <div className="absolute left-0 right-0 top-1/2 -translate-y-1/2 h-0.5 bg-slate-200 z-0" />
               <div
-                className="absolute left-0 top-1/2 -translate-y-1/2 h-0.5 bg-blue-600 z-0 transition-all duration-500"
+                className="absolute left-0 top-1/2 -translate-y-1/2 h-0.5 bg-[#00b074] z-0 transition-all duration-500"
                 style={{ width: `${((checkoutStep - 1) / (totalSteps - 1)) * 100}%` }}
               />
 
@@ -351,15 +348,15 @@ export default function BillingPage({
                         }
                       }}
                       className={`w-9 h-9 rounded-full flex items-center justify-center font-bold text-xs border-2 transition-all duration-300 cursor-pointer ${isCurrent
-                        ? 'bg-blue-600 border-blue-600 text-white shadow-lg shadow-blue-500/20 scale-110'
+                        ? 'bg-[#00b074] border-[#00b074] text-white shadow-lg shadow-[#00b074]/20 scale-110'
                         : isActive
-                          ? 'bg-blue-50 border-blue-600 text-blue-600'
+                          ? 'bg-[#00b074]/10 border-[#00b074] text-[#00b074]'
                           : 'bg-white border-slate-300 text-slate-400'
                         }`}
                     >
                       {isActive && checkoutStep > stepItem.s ? '✓' : stepItem.s}
                     </button>
-                    <span className={`text-[10px] mt-2 font-bold uppercase tracking-wider hidden sm:block ${isCurrent ? 'text-blue-600' : isActive ? 'text-slate-700' : 'text-slate-450'
+                    <span className={`text-[10px] mt-2 font-bold uppercase tracking-wider hidden sm:block ${isCurrent ? 'text-[#00b074]' : isActive ? 'text-slate-700' : 'text-slate-450'
                       }`}>
                       {stepItem.label}
                     </span>
@@ -380,7 +377,7 @@ export default function BillingPage({
                     value={legalName}
                     onChange={(e) => setLegalName(e.target.value)}
                     placeholder="Acme Brands Pvt Ltd"
-                    className={`w-full bg-slate-50/50 border rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-blue-600 text-slate-800 font-normal transition-colors placeholder-slate-400 ${errors.legalName ? 'border-red-500 ring-1 ring-red-500' : 'border-slate-200'}`}
+                    className={`w-full bg-slate-50/50 border rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-[#00b074] text-slate-800 font-normal transition-colors placeholder-slate-400 ${errors.legalName ? 'border-red-500 ring-1 ring-red-500' : 'border-slate-200'}`}
                   />
                   {errors.legalName && <p className="text-[10px] text-red-500 font-medium">{errors.legalName}</p>}
                 </div>
@@ -390,7 +387,7 @@ export default function BillingPage({
                   <select
                     value={companyType}
                     onChange={(e) => setCompanyType(e.target.value)}
-                    className={`w-full bg-slate-50/50 border rounded-xl px-4 py-3.5 text-sm focus:outline-none focus:border-blue-600 text-slate-800 font-sans transition-colors cursor-pointer ${errors.companyType ? 'border-red-500 ring-1 ring-red-500' : 'border-slate-200'}`}
+                    className={`w-full bg-slate-50/50 border rounded-xl px-4 py-3.5 text-sm focus:outline-none focus:border-[#00b074] text-slate-800 font-sans transition-colors cursor-pointer ${errors.companyType ? 'border-red-500 ring-1 ring-red-500' : 'border-slate-200'}`}
                   >
                     <option value="">Select Structure</option>
                     <option value="Proprietorship">Proprietorship</option>
@@ -412,7 +409,7 @@ export default function BillingPage({
                     onChange={(e) => setGstin(e.target.value.toUpperCase())}
                     placeholder="27AAAAA1111A1Z1"
                     maxLength={15}
-                    className={`w-full bg-slate-50/50 border rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-blue-600 text-slate-800 font-normal transition-colors placeholder-slate-400 ${errors.gstin ? 'border-red-500 ring-1 ring-red-500' : 'border-slate-200'}`}
+                    className={`w-full bg-slate-50/50 border rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-[#00b074] text-slate-800 font-normal transition-colors placeholder-slate-400 ${errors.gstin ? 'border-red-500 ring-1 ring-red-500' : 'border-slate-200'}`}
                   />
                   {errors.gstin && <p className="text-[10px] text-red-500 font-medium">{errors.gstin}</p>}
                 </div>
@@ -425,7 +422,7 @@ export default function BillingPage({
                     onChange={(e) => setPan(e.target.value.toUpperCase())}
                     placeholder="AAAAA1111A"
                     maxLength={10}
-                    className={`w-full bg-slate-50/50 border rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-blue-600 text-slate-800 font-normal transition-colors placeholder-slate-400 ${errors.pan ? 'border-red-500 ring-1 ring-red-500' : 'border-slate-200'}`}
+                    className={`w-full bg-slate-50/50 border rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-[#00b074] text-slate-800 font-normal transition-colors placeholder-slate-400 ${errors.pan ? 'border-red-500 ring-1 ring-red-500' : 'border-slate-200'}`}
                   />
                   {errors.pan && <p className="text-[10px] text-red-500 font-medium">{errors.pan}</p>}
                 </div>
@@ -438,7 +435,7 @@ export default function BillingPage({
                     onChange={(e) => setCin(e.target.value.toUpperCase())}
                     placeholder="U11111MH2021PTC111111"
                     maxLength={21}
-                    className="w-full bg-slate-50/50 border border-slate-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-blue-600 text-slate-800 font-normal transition-colors placeholder-slate-400"
+                    className="w-full bg-slate-50/50 border border-slate-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-[#00b074] text-slate-800 font-normal transition-colors placeholder-slate-400"
                   />
                 </div>
               </div>
@@ -454,7 +451,7 @@ export default function BillingPage({
                       value={addressLine1}
                       onChange={(e) => setAddressLine1(e.target.value)}
                       placeholder="Building name, street, locality"
-                      className={`w-full bg-slate-50/50 border rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-blue-600 text-slate-800 font-normal transition-colors placeholder-slate-400 ${errors.addressLine1 ? 'border-red-500 ring-1 ring-red-500' : 'border-slate-200'}`}
+                      className={`w-full bg-slate-50/50 border rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-[#00b074] text-slate-800 font-normal transition-colors placeholder-slate-400 ${errors.addressLine1 ? 'border-red-500 ring-1 ring-red-500' : 'border-slate-200'}`}
                     />
                     {errors.addressLine1 && <p className="text-[10px] text-red-500 font-medium">{errors.addressLine1}</p>}
                   </div>
@@ -465,7 +462,7 @@ export default function BillingPage({
                       value={addressLine2}
                       onChange={(e) => setAddressLine2(e.target.value)}
                       placeholder="Floor, suite, landmark (optional)"
-                      className="w-full bg-slate-50/50 border border-slate-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-blue-600 text-slate-800 font-normal transition-colors placeholder-slate-400"
+                      className="w-full bg-slate-50/50 border border-slate-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-[#00b074] text-slate-800 font-normal transition-colors placeholder-slate-400"
                     />
                   </div>
                 </div>
@@ -500,7 +497,7 @@ export default function BillingPage({
                         { timeout: 8000 }
                       );
                     }}
-                    className="flex items-center gap-1.5 text-[10px] font-semibold text-blue-600 hover:text-blue-700 bg-blue-50 hover:bg-blue-100 border border-blue-200/60 px-3 py-1 rounded-lg transition-colors cursor-pointer"
+                    className="flex items-center gap-1.5 text-[10px] font-semibold text-[#00b074] hover:text-[#009660] bg-[#00b074]/10 hover:bg-[#00b074]/20 border border-[#00b074]/30 px-3 py-1 rounded-lg transition-colors cursor-pointer"
                   >
                     {isGeolocating ? 'Detecting...' : 'Auto-detect Location'}
                   </button>
@@ -513,7 +510,7 @@ export default function BillingPage({
                       value={selectedCountry}
                       onChange={(e) => setSelectedCountry(e.target.value)}
                       disabled={isLoadingCountries}
-                      className="w-full bg-slate-50/50 border border-slate-200 rounded-xl px-4 py-3.5 text-sm focus:outline-none focus:border-blue-600 text-slate-800 transition-colors"
+                      className="w-full bg-slate-50/50 border border-slate-200 rounded-xl px-4 py-3.5 text-sm focus:outline-none focus:border-[#00b074] text-slate-800 transition-colors"
                     >
                       {isLoadingCountries ? <option>Loading countries...</option> : (
                         <>
@@ -531,7 +528,7 @@ export default function BillingPage({
                       onChange={(e) => setPinCode(e.target.value)}
                       placeholder={selectedCountry === 'India' ? '400001' : 'Postal / ZIP code'}
                       maxLength={10}
-                      className={`w-full bg-slate-50/50 border rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-blue-600 text-slate-800 font-normal transition-colors ${errors.pinCode ? 'border-red-500' : 'border-slate-200'}`}
+                      className={`w-full bg-slate-50/50 border rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-[#00b074] text-slate-800 font-normal transition-colors ${errors.pinCode ? 'border-red-500' : 'border-slate-200'}`}
                     />
                     {errors.pinCode && <p className="text-[10px] text-red-500">{errors.pinCode}</p>}
                   </div>
@@ -544,7 +541,7 @@ export default function BillingPage({
                       value={stateName}
                       onChange={(e) => setStateName(e.target.value)}
                       disabled={isLoadingStates || statesList.length === 0}
-                      className={`w-full bg-slate-50/50 border rounded-xl px-4 py-3.5 text-sm focus:outline-none focus:border-blue-600 text-slate-800 ${errors.stateName ? 'border-red-500' : 'border-slate-200'}`}
+                      className={`w-full bg-slate-50/50 border rounded-xl px-4 py-3.5 text-sm focus:outline-none focus:border-[#00b074] text-slate-800 ${errors.stateName ? 'border-red-500' : 'border-slate-200'}`}
                     >
                       {isLoadingStates ? <option>Loading states...</option> : (
                         <>
@@ -561,7 +558,7 @@ export default function BillingPage({
                       <select
                         value={city}
                         onChange={(e) => setCity(e.target.value)}
-                        className={`w-full bg-slate-50/50 border rounded-xl px-4 py-3.5 text-sm focus:outline-none focus:border-blue-600 text-slate-800 ${errors.city ? 'border-red-500' : 'border-slate-200'}`}
+                        className={`w-full bg-slate-50/50 border rounded-xl px-4 py-3.5 text-sm focus:outline-none focus:border-[#00b074] text-slate-800 ${errors.city ? 'border-red-500' : 'border-slate-200'}`}
                       >
                         <option value="">Select City</option>
                         {citiesList.map(c => <option key={c} value={c}>{c}</option>)}
@@ -572,7 +569,7 @@ export default function BillingPage({
                         value={city}
                         onChange={(e) => setCity(e.target.value)}
                         placeholder="Enter city name"
-                        className={`w-full bg-slate-50/50 border rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-blue-600 text-slate-800 ${errors.city ? 'border-red-500' : 'border-slate-200'}`}
+                        className={`w-full bg-slate-50/50 border rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-[#00b074] text-slate-800 ${errors.city ? 'border-red-500' : 'border-slate-200'}`}
                       />
                     )}
                     {errors.city && <p className="text-[10px] text-red-500">{errors.city}</p>}
@@ -586,7 +583,7 @@ export default function BillingPage({
                   <select
                     value={industry}
                     onChange={(e) => setIndustry(e.target.value)}
-                    className={`w-full bg-slate-50/50 border rounded-xl px-4 py-3.5 text-sm focus:outline-none focus:border-blue-600 text-slate-800 ${errors.industry ? 'border-red-500' : 'border-slate-200'}`}
+                    className={`w-full bg-slate-50/50 border rounded-xl px-4 py-3.5 text-sm focus:outline-none focus:border-[#00b074] text-slate-800 ${errors.industry ? 'border-red-500' : 'border-slate-200'}`}
                   >
                     <option value="">Select Sector</option>
                     <option value="FMCG">FMCG / Food / Retail</option>
@@ -606,7 +603,7 @@ export default function BillingPage({
                     value={website}
                     onChange={(e) => setWebsite(e.target.value)}
                     placeholder="https://www.acmebrands.com"
-                    className="w-full bg-slate-50/50 border border-slate-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-blue-600 text-slate-800"
+                    className="w-full bg-slate-50/50 border border-slate-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-[#00b074] text-slate-800"
                   />
                 </div>
               </div>
@@ -622,7 +619,7 @@ export default function BillingPage({
                   value={fullName}
                   onChange={(e) => setFullName(e.target.value)}
                   placeholder="John Doe" 
-                  className={`w-full bg-slate-50/50 border rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-blue-600 text-slate-800 ${errors.fullName ? 'border-red-500' : 'border-slate-200'}`}
+                  className={`w-full bg-slate-50/50 border rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-[#00b074] text-slate-800 ${errors.fullName ? 'border-red-500' : 'border-slate-200'}`}
                 />
                 {errors.fullName && <p className="text-[10px] text-red-500">{errors.fullName}</p>}
               </div>
@@ -638,7 +635,7 @@ export default function BillingPage({
                       setIsEmailOtpVerified(false);
                     }}
                     placeholder="john@acmebrands.com" 
-                    className={`flex-1 bg-slate-50/50 border rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-blue-600 text-slate-800 ${errors.email ? 'border-red-500' : 'border-slate-200'}`}
+                    className={`flex-1 bg-slate-50/50 border rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-[#00b074] text-slate-800 ${errors.email ? 'border-red-500' : 'border-slate-200'}`}
                   />
                   <div className="w-40 flex-shrink-0">
                     {isEmailOtpVerified ? (
@@ -658,7 +655,7 @@ export default function BillingPage({
                           setIsEmailOtpSent(true);
                           setShowEmailOtpPopup(true);
                         }}
-                        className="w-full h-full bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-xl text-xs uppercase tracking-wider py-3"
+                        className="w-full h-full bg-[#00b074] hover:bg-[#009660] text-white font-bold rounded-xl text-xs uppercase tracking-wider py-3"
                       >
                         {isEmailOtpSent ? 'Resend OTP' : 'Verify Email'}
                       </button>
@@ -685,7 +682,7 @@ export default function BillingPage({
                       }}
                       placeholder="9876543210"
                       maxLength={10}
-                      className={`flex-1 bg-slate-50/50 border rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-blue-600 text-slate-800 ${errors.phone ? 'border-red-500' : 'border-slate-200'}`}
+                      className={`flex-1 bg-slate-50/50 border rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-[#00b074] text-slate-800 ${errors.phone ? 'border-red-500' : 'border-slate-200'}`}
                     />
                   </div>
                   <div className="w-40 flex-shrink-0">
@@ -705,7 +702,7 @@ export default function BillingPage({
                           setIsOtpSent(true);
                           setShowOtpPopup(true);
                         }}
-                        className="w-full h-full bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-xl text-xs uppercase tracking-wider py-3"
+                        className="w-full h-full bg-[#00b074] hover:bg-[#009660] text-white font-bold rounded-xl text-xs uppercase tracking-wider py-3"
                       >
                         {isOtpSent ? 'Resend OTP' : 'Verify Mobile'}
                       </button>
@@ -722,7 +719,7 @@ export default function BillingPage({
                   value={designation}
                   onChange={(e) => setDesignation(e.target.value)}
                   placeholder="Director / Brand Manager / Operations Manager" 
-                  className={`w-full bg-slate-50/50 border rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-blue-600 text-slate-800 ${errors.designation ? 'border-red-500' : 'border-slate-200'}`}
+                  className={`w-full bg-slate-50/50 border rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-[#00b074] text-slate-800 ${errors.designation ? 'border-red-500' : 'border-slate-200'}`}
                 />
                 {errors.designation && <p className="text-[10px] text-red-500">{errors.designation}</p>}
               </div>
@@ -734,7 +731,7 @@ export default function BillingPage({
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="••••••••" 
-                  className={`w-full bg-slate-50/50 border rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-blue-600 text-slate-800 ${errors.password ? 'border-red-500' : 'border-slate-200'}`}
+                  className={`w-full bg-slate-50/50 border rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-[#00b074] text-slate-800 ${errors.password ? 'border-red-500' : 'border-slate-200'}`}
                 />
                 {errors.password && <p className="text-[10px] text-red-500">{errors.password}</p>}
               </div>
@@ -746,7 +743,7 @@ export default function BillingPage({
                   value={confirmPassword}
                   onChange={(e) => setConfirmPassword(e.target.value)}
                   placeholder="••••••••" 
-                  className={`w-full bg-slate-50/50 border rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-blue-600 text-slate-800 ${errors.confirmPassword ? 'border-red-500' : 'border-slate-200'}`}
+                  className={`w-full bg-slate-50/50 border rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-[#00b074] text-slate-800 ${errors.confirmPassword ? 'border-red-500' : 'border-slate-200'}`}
                 />
                 {errors.confirmPassword && <p className="text-[10px] text-red-500">{errors.confirmPassword}</p>}
               </div>
@@ -769,7 +766,7 @@ export default function BillingPage({
                         <p className="text-xs text-slate-500 mt-0.5">5 users included. Add in blocks of 5 users (+₹5,000/yr per block).</p>
                       </div>
                       {businessUsers > 5 && (
-                        <span className="text-xs font-bold text-blue-600 bg-blue-50 px-2 py-1 rounded border border-blue-100">
+                        <span className="text-xs font-bold text-[#00b074] bg-[#00b074]/10 px-2 py-1 rounded border border-[#00b074]/20">
                           +₹{(((businessUsers - 5) / 5) * 5000).toLocaleString('en-IN')}/yr
                         </span>
                       )}
@@ -801,7 +798,7 @@ export default function BillingPage({
                         <p className="text-xs text-slate-500 mt-0.5">25 SKUs included. Expand your product catalog limits.</p>
                       </div>
                       {businessSKUs > 25 && (
-                        <span className="text-xs font-bold text-blue-600 bg-blue-50 px-2 py-1 rounded border border-blue-100">
+                        <span className="text-xs font-bold text-[#00b074] bg-[#00b074]/10 px-2 py-1 rounded border border-[#00b074]/20">
                           +₹{(businessSKUs === 35 ? 10000 : 45000).toLocaleString('en-IN')}/yr
                         </span>
                       )}
@@ -830,7 +827,7 @@ export default function BillingPage({
                         <p className="text-xs text-slate-500 mt-0.5">50 users included. Add in blocks of 5 users (+₹5,000/yr per block).</p>
                       </div>
                       {proUsers > 50 && (
-                        <span className="text-xs font-bold text-blue-600 bg-blue-50 px-2 py-1 rounded border border-blue-100">
+                        <span className="text-xs font-bold text-[#00b074] bg-[#00b074]/10 px-2 py-1 rounded border border-[#00b074]/20">
                           +₹{(((proUsers - 50) / 5) * 5000).toLocaleString('en-IN')}/yr
                         </span>
                       )}
@@ -862,7 +859,7 @@ export default function BillingPage({
                         <p className="text-xs text-slate-500 mt-0.5">500 SKUs included. Expand your product catalog limits.</p>
                       </div>
                       {proSKUs > 500 && (
-                        <span className="text-xs font-bold text-blue-600 bg-blue-50 px-2 py-1 rounded border border-blue-100">
+                        <span className="text-xs font-bold text-[#00b074] bg-[#00b074]/10 px-2 py-1 rounded border border-[#00b074]/20">
                           +₹{(proSKUs === 510 ? 10000 : 45000).toLocaleString('en-IN')}/yr
                         </span>
                       )}
@@ -887,7 +884,7 @@ export default function BillingPage({
                         <p className="text-xs text-slate-500 mt-0.5">5 brands included. Add extra brands (+₹10,000/yr per brand).</p>
                       </div>
                       {proBrands > 5 && (
-                        <span className="text-xs font-bold text-blue-600 bg-blue-50 px-2 py-1 rounded border border-blue-100">
+                        <span className="text-xs font-bold text-[#00b074] bg-[#00b074]/10 px-2 py-1 rounded border border-[#00b074]/20">
                           +₹{((proBrands - 5) * 10000).toLocaleString('en-IN')}/yr
                         </span>
                       )}
@@ -1021,7 +1018,7 @@ export default function BillingPage({
 
               {(industry === 'Pharma' || industry === 'FMCG' || industry === 'Liquor') && (
                 <div className="border-t border-slate-150 pt-6 space-y-6 animate-fadeIn">
-                  <div className="bg-blue-50/50 border border-blue-200/50 rounded-2xl p-5 flex items-start gap-4">
+                  <div className="bg-[#00b074]/5 border border-[#00b074]/25 rounded-2xl p-5 flex items-start gap-4">
                     <span className="text-xl">🛡️</span>
                     <div>
                       <h4 className="text-sm font-semibold text-[#003057] uppercase tracking-wide">Sector Compliance Check ({industry})</h4>
@@ -1188,7 +1185,7 @@ export default function BillingPage({
                     setCheckoutStep(checkoutStep + 1);
                   }
                 }}
-                className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3.5 px-8 rounded-xl text-xs uppercase tracking-wider transition-all duration-200 cursor-pointer shadow-md"
+                className="bg-[#00b074] hover:bg-[#009660] text-white font-bold py-3.5 px-8 rounded-xl text-xs uppercase tracking-wider transition-all duration-200 cursor-pointer shadow-md"
               >
                 Next Step →
               </button>
@@ -1269,7 +1266,7 @@ export default function BillingPage({
             <div className="bg-white rounded-2xl p-5 border border-slate-150 space-y-4 shadow-sm">
               <div className="flex justify-between items-center pb-2.5 border-b border-slate-150">
                 <span className="text-slate-400 text-[10px] font-bold uppercase tracking-wider">Tier Name</span>
-                <span className="text-blue-600 font-bold text-xs px-2.5 py-0.5 bg-blue-50 border border-blue-200/50 rounded-md">
+                <span className="text-[#00b074] font-bold text-xs px-2.5 py-0.5 bg-[#00b074]/10 border border-[#00b074]/20 rounded-md">
                   {selectedPlan.name}
                 </span>
               </div>
@@ -1306,7 +1303,7 @@ export default function BillingPage({
               </div>
 
               <div className="flex justify-between items-center pt-3 border-t border-slate-150">
-                <span className="text-blue-600 font-extrabold text-xs uppercase tracking-wider">Gross Total</span>
+                <span className="text-[#00b074] font-extrabold text-xs uppercase tracking-wider">Gross Total</span>
                 <div className="text-right">
                   <span className="text-xl font-black text-[#003057]">₹{totalAmount.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
                   <span className="text-slate-450 text-[10px] font-normal block">
@@ -1338,9 +1335,9 @@ export default function BillingPage({
               </p>
             </div>
 
-            <div className="bg-blue-50 border border-blue-200 rounded-xl p-3.5 text-left text-xs text-blue-700 space-y-1">
+            <div className="bg-[#00b074]/10 border border-[#00b074]/20 rounded-xl p-3.5 text-left text-xs text-[#00b074] space-y-1">
               <span className="font-bold">⚠️ Test Simulator Hint:</span>
-              <p className="font-normal">Enter code <span className="font-black underline tracking-widest text-blue-900 font-sans">1234</span> to successfully complete OTP validation.</p>
+              <p className="font-normal">Enter code <span className="font-black underline tracking-widest text-[#003057] font-sans">1234</span> to successfully complete OTP validation.</p>
             </div>
 
             <div className="space-y-1.5">
@@ -1351,7 +1348,7 @@ export default function BillingPage({
                 value={otpInput}
                 onChange={(e) => setOtpInput(e.target.value.replace(/\D/g, ''))}
                 placeholder="0 0 0 0"
-                className="w-full text-center text-xl font-bold tracking-[0.75em] bg-slate-50 border border-slate-200 rounded-xl py-3.5 focus:outline-none focus:border-blue-600 font-mono text-slate-800"
+                className="w-full text-center text-xl font-bold tracking-[0.75em] bg-slate-50 border border-slate-200 rounded-xl py-3.5 focus:outline-none focus:border-[#00b074] font-mono text-slate-800"
               />
               {errors.otp && <p className="text-[10px] text-red-500 font-semibold">{errors.otp}</p>}
             </div>
@@ -1401,9 +1398,9 @@ export default function BillingPage({
               </p>
             </div>
             
-            <div className="bg-blue-50 border border-blue-200 rounded-xl p-3.5 text-left text-xs text-blue-700 space-y-1">
+            <div className="bg-[#00b074]/10 border border-[#00b074]/20 rounded-xl p-3.5 text-left text-xs text-[#00b074] space-y-1">
               <span className="font-bold">⚠️ Test Simulator Hint:</span>
-              <p className="font-normal">Enter code <span className="font-black underline tracking-widest text-blue-900 font-sans">1234</span> to successfully complete email verification.</p>
+              <p className="font-normal">Enter code <span className="font-black underline tracking-widest text-[#003057] font-sans">1234</span> to successfully complete email verification.</p>
             </div>
 
             <div className="space-y-1.5">
@@ -1414,7 +1411,7 @@ export default function BillingPage({
                 value={emailOtpInput}
                 onChange={(e) => setEmailOtpInput(e.target.value.replace(/\D/g, ''))}
                 placeholder="0 0 0 0" 
-                className="w-full text-center text-xl font-bold tracking-[0.75em] bg-slate-50 border border-slate-200 rounded-xl py-3.5 focus:outline-none focus:border-blue-600 font-mono text-slate-800"
+                className="w-full text-center text-xl font-bold tracking-[0.75em] bg-slate-50 border border-slate-200 rounded-xl py-3.5 focus:outline-none focus:border-[#00b074] font-mono text-slate-800"
               />
               {errors.emailOtp && <p className="text-[10px] text-red-500 font-semibold">{errors.emailOtp}</p>}
             </div>
