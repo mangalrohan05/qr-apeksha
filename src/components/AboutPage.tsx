@@ -10,7 +10,7 @@ export default function AboutPage({ setCurrentPage }: AboutPageProps) {
       {/* Section 1: Hero Banner (The Story) */}
       <div 
         data-theme="dark" 
-        className="w-full h-screen pt-24 flex items-center justify-center relative overflow-hidden bg-[#003057] bg-cover bg-center bg-no-repeat"
+        className="w-full h-screen pt-24 flex items-center justify-center relative overflow-hidden bg-black bg-contain bg-center bg-no-repeat"
         style={{ backgroundImage: "url('/satellite_map_bg.png')" }}
       >
         {/* Dynamic SVG Network Background (Crisp, High-Resolution, Animated) */}
@@ -27,52 +27,52 @@ export default function AboutPage({ setCurrentPage }: AboutPageProps) {
             {/* Connecting Lines */}
             <path
               d="M 200 450 Q 450 150 700 350"
-              stroke="url(#gradient-green)"
+              stroke="url(#gradient-white)"
               strokeWidth="2"
               strokeDasharray="8 6"
               className="animate-dash"
             />
             <path
               d="M 700 350 Q 850 100 1100 250"
-              stroke="#00b074"
+              stroke="#ffffff"
               strokeWidth="1.5"
               opacity="0.6"
             />
             <path
               d="M 200 450 Q 600 200 1100 250"
-              stroke="url(#gradient-green)"
+              stroke="url(#gradient-white)"
               strokeWidth="2"
               strokeDasharray="12 8"
               className="animate-dash-reverse"
             />
             <path
               d="M 500 650 Q 600 500 700 350"
-              stroke="#00b074"
+              stroke="#ffffff"
               strokeWidth="1"
               opacity="0.4"
             />
 
             {/* Gradients */}
             <defs>
-              <linearGradient id="gradient-green" x1="0%" y1="0%" x2="100%" y2="100%">
-                <stop offset="0%" stopColor="#00b074" stopOpacity="0.2" />
-                <stop offset="50%" stopColor="#00b074" stopOpacity="1" />
-                <stop offset="100%" stopColor="#00b074" stopOpacity="0.2" />
+              <linearGradient id="gradient-white" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stopColor="#ffffff" stopOpacity="0.2" />
+                <stop offset="50%" stopColor="#ffffff" stopOpacity="1" />
+                <stop offset="100%" stopColor="#ffffff" stopOpacity="0.2" />
               </linearGradient>
             </defs>
 
             {/* Hubs */}
             <g className="animate-pulse-slow">
-              <circle cx="200" cy="450" r="6" fill="#00b074" />
-              <circle cx="200" cy="450" r="15" stroke="#00b074" strokeWidth="1" opacity="0.4" className="animate-ping" style={{ transformOrigin: '200px 450px' }} />
+              <circle cx="200" cy="450" r="6" fill="#ffffff" />
+              <circle cx="200" cy="450" r="15" stroke="#ffffff" strokeWidth="1" opacity="0.4" className="animate-ping" style={{ transformOrigin: '200px 450px' }} />
             </g>
             <g>
-              <circle cx="700" cy="350" r="6" fill="#00b074" />
-              <circle cx="700" cy="350" r="15" stroke="#00b074" strokeWidth="1" opacity="0.4" className="animate-ping" style={{ transformOrigin: '700px 350px' }} />
+              <circle cx="700" cy="350" r="6" fill="#ffffff" />
+              <circle cx="700" cy="350" r="15" stroke="#ffffff" strokeWidth="1" opacity="0.4" className="animate-ping" style={{ transformOrigin: '700px 350px' }} />
             </g>
             <g className="animate-pulse-slow">
-              <circle cx="1100" cy="250" r="6" fill="#00b074" />
-              <circle cx="1100" cy="250" r="15" stroke="#00b074" strokeWidth="1" opacity="0.4" className="animate-ping" style={{ transformOrigin: '1100px 250px' }} />
+              <circle cx="1100" cy="250" r="6" fill="#ffffff" />
+              <circle cx="1100" cy="250" r="15" stroke="#ffffff" strokeWidth="1" opacity="0.4" className="animate-ping" style={{ transformOrigin: '1100px 250px' }} />
             </g>
           </svg>
         </div>
@@ -80,17 +80,17 @@ export default function AboutPage({ setCurrentPage }: AboutPageProps) {
         {/* Floating Supply Chain Elements (Plane/Ship/QR nodes) */}
         <div className="absolute inset-0 pointer-events-none z-10">
           <div className="absolute top-[20%] left-[30%] animate-float-airplane opacity-60">
-            <svg className="w-8 h-8 text-[#00b074]" fill="currentColor" viewBox="0 0 24 24">
+            <svg className="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 24 24">
               <path d="M21 16v-2l-8-5V3.5c0-.83-.67-1.5-1.5-1.5S10 2.67 10 3.5V9l-8 5v2l8-2.5V19l-2 1.5V22l3.5-1 3.5 1v-1.5L13 19v-5.5L21 16z" />
             </svg>
           </div>
           <div className="absolute bottom-[25%] right-[25%] animate-float-ship opacity-50">
-            <svg className="w-8 h-8 text-[#00b074]" fill="currentColor" viewBox="0 0 24 24">
+            <svg className="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 24 24">
               <path d="M20 21c-1.39 0-2.78-.47-4-1.32-2.44 1.71-5.56 1.71-8 0C6.78 20.53 5.39 21 4 21H2v2h2c1.91 0 3.63-.57 5-1.56 1.37.99 3.09 1.56 5 1.56s3.63-.57 5-1.56c1.37.99 3.09 1.56 5 1.56h2v-2h-2zM4 19h16v-5l-2-2h-3V9H9v3H6l-2 2v5z" />
             </svg>
           </div>
           <div className="absolute top-[40%] right-[15%] animate-bounce-slow opacity-40">
-            <svg className="w-10 h-10 text-[#00b074]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.5">
+            <svg className="w-10 h-10 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.5">
               <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 4.875c0-.621.504-1.125 1.125-1.125h4.5c.621 0 1.125.504 1.125 1.125v4.5c0 .621-.504 1.125-1.125 1.125h-4.5A1.125 1.125 0 013.75 9.375v-4.5zM3.75 14.625c0-.621.504-1.125 1.125-1.125h4.5c.621 0 1.125.504 1.125 1.125v4.5c0 .621-.504 1.125-1.125 1.125h-4.5a1.125 1.125 0 01-1.125-1.125v-4.5zM13.5 4.875c0-.621.504-1.125 1.125-1.125h4.5c.621 0 1.125.504 1.125 1.125v4.5c0 .621-.504 1.125-1.125 1.125h-4.5A1.125 1.125 0 0113.5 9.375v-4.5zM15 15h.008v.008H15V15zm0 2.25h.008v.008H15v-.008zM17.25 15h.008v.008h-.008V15zM17.25 17.25h.008v.008h-.008v-.008zM15 19.5h.008v.008H15v-.008zm2.25 0h.008v.008h-.008v-.008zm2.25-4.5h.008v.008H19.5V15zm0 2.25h.008v.008H19.5v-.008zm0 2.25h.008v.008H19.5v-.008z" />
             </svg>
           </div>
