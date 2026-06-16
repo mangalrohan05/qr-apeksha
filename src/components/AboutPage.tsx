@@ -8,8 +8,8 @@ export default function AboutPage({ setCurrentPage }: AboutPageProps) {
     <div className="w-full bg-white text-slate-800 animate-fadeIn font-sans pb-0">
 
       {/* Section 1: Hero Banner (The Story) */}
-      <div 
-        data-theme="dark" 
+      <div
+        data-theme="dark"
         className="w-full h-screen pt-24 flex items-center justify-center relative overflow-hidden bg-black bg-contain bg-center bg-no-repeat"
         style={{ backgroundImage: "url('/satellite_map_bg.png')" }}
       >
@@ -218,7 +218,7 @@ export default function AboutPage({ setCurrentPage }: AboutPageProps) {
               </div>
               <div className="flex flex-col text-center flex-1">
                 <span className="text-xl md:text-2xl font-bold text-gray-900 tracking-tight leading-none">10M+</span>
-                <span className="text-xs text-slate-500 font-normal mt-1.5">VERIFIED USERS</span>
+                <span className="text-xs text-slate-500 font-normal mt-1.5">VERIFIED SCANS</span>
               </div>
             </div>
 
@@ -244,7 +244,7 @@ export default function AboutPage({ setCurrentPage }: AboutPageProps) {
               </div>
               <div className="flex flex-col text-center flex-1">
                 <span className="text-xl md:text-2xl font-bold text-gray-900 tracking-tight leading-none">100k+</span>
-                <span className="text-xs text-slate-500 font-normal mt-1.5">USER TRUSTED</span>
+                <span className="text-xs text-slate-500 font-normal mt-1.5">TRUSTED USERS</span>
               </div>
             </div>
           </div>
