@@ -195,7 +195,7 @@ export default function AboutPage({ setCurrentPage }: AboutPageProps) {
             </h2>
             <p className="text-slate-500 max-w-2xl mx-auto text-base font-normal">
               Discover how global enterprises leverage our infrastructure to eliminate ambiguity and secure their supply chain integrity.
-              in about us page
+
             </p>
           </div>
 
