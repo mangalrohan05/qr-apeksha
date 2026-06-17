@@ -1,14 +1,17 @@
 import { useState, useEffect, lazy, Suspense } from 'react';
 import Navbar from './components/Navbar';
 import HomePage from './components/HomePage';
+import Footer from './components/Footer';
 
 const PlansPage = lazy(() => import('./components/PlansPage'));
 const ProductsPage = lazy(() => import('./components/ProductsPage'));
 const AboutPage = lazy(() => import('./components/AboutPage'));
 const ContactPage = lazy(() => import('./components/ContactPage'));
 const BillingPage = lazy(() => import('./components/BillingPage'));
+const TermsPage = lazy(() => import('./components/TermsPage'));
+const PrivacyPage = lazy(() => import('./components/PrivacyPage'));
 
-type Page = 'home' | 'plans' | 'products' | 'about' | 'contact' | 'billing';
+type Page = 'home' | 'plans' | 'products' | 'about' | 'contact' | 'billing' | 'terms' | 'privacy';
 
 interface SelectedPlanInfo {
   name: string;
@@ -77,6 +80,52 @@ export default function App() {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
+  // Sync state with URL Hash (Browser Back/Forward buttons)
+  useEffect(() => {
+    if ('scrollRestoration' in window.history) {
+      window.history.scrollRestoration = 'manual';
+    }
+
+    const handleHashChange = () => {
+      const hash = window.location.hash.replace('#', '');
+      const trackedPages: Page[] = ['terms', 'privacy'];
+      if (trackedPages.includes(hash as Page)) {
+        setCurrentPage(hash as Page);
+      } else {
+        setCurrentPage('home');
+      }
+    };
+
+    window.addEventListener('hashchange', handleHashChange);
+
+    // Initial routing setup (Enables back button to go home even on direct subpage land/reload)
+    const initialHash = window.location.hash.replace('#', '');
+    const trackedPages: Page[] = ['terms', 'privacy'];
+    if (trackedPages.includes(initialHash as Page)) {
+      window.history.replaceState({ page: 'home' }, '', '#');
+      window.history.pushState({ page: initialHash }, '', '#' + initialHash);
+      setCurrentPage(initialHash as Page);
+    } else {
+      setCurrentPage('home');
+    }
+
+    return () => window.removeEventListener('hashchange', handleHashChange);
+  }, []);
+
+  useEffect(() => {
+    const currentHash = window.location.hash.replace('#', '');
+    const trackedPages: Page[] = ['terms', 'privacy'];
+    if (trackedPages.includes(currentPage)) {
+      if (currentHash !== currentPage) {
+        window.location.hash = currentPage;
+      }
+    } else {
+      if (currentHash !== '') {
+        window.history.replaceState(null, '', window.location.pathname + window.location.search);
+      }
+    }
+  }, [currentPage]);
+
   // Initialize AOS (Animate On Scroll) dynamic scripts/stylesheets
   useEffect(() => {
     // 1. Inject AOS CSS
@@ -116,7 +165,12 @@ export default function App() {
 
   // Scroll to top of the page when the page changes
   useEffect(() => {
-    window.scrollTo(0, 0);
+    const timer = setTimeout(() => {
+      window.scrollTo({ top: 0, behavior: 'instant' as any });
+      document.documentElement.scrollTop = 0;
+      document.body.scrollTop = 0;
+    }, 50);
+    return () => clearTimeout(timer);
   }, [currentPage]);
 
   useEffect(() => {
@@ -367,6 +421,10 @@ export default function App() {
             setProBrands={setProBrands}
           />
         );
+      case 'terms':
+        return <TermsPage />;
+      case 'privacy':
+        return <PrivacyPage />;
       default:
         return <HomePage setCurrentPage={setCurrentPage} />;
     }
@@ -394,6 +452,7 @@ export default function App() {
           {renderPage()}
         </Suspense>
       </main>
+      <Footer setCurrentPage={setCurrentPage} />
     </div>
   );
 }

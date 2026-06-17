@@ -5,7 +5,7 @@ interface AboutPageProps {
 
 export default function AboutPage({ setCurrentPage }: AboutPageProps) {
   return (
-    <div className="w-full bg-white text-slate-800 animate-fadeIn font-sans pb-0">
+    <div className="w-full bg-white text-slate-800 animate-fadeIn font-sans pb-0 overflow-x-hidden">
 
       {/* Section 1: Hero Banner (The Story) */}
       <div
