@@ -30,6 +30,54 @@ interface BillingPageProps {
   setProBrands: (b: number) => void;
 }
 
+function generateStrongPassword() {
+  const lowercase = 'abcdefghijklmnopqrstuvwxyz';
+  const uppercase = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+  const numbers = '0123456789';
+  const special = '!@#$%^&*';
+  
+  let result = '';
+  result += lowercase.charAt(Math.floor(Math.random() * lowercase.length));
+  result += uppercase.charAt(Math.floor(Math.random() * uppercase.length));
+  result += numbers.charAt(Math.floor(Math.random() * numbers.length));
+  result += special.charAt(Math.floor(Math.random() * special.length));
+  
+  const all = lowercase + uppercase + numbers + special;
+  for (let i = 0; i < 8; i++) {
+    result += all.charAt(Math.floor(Math.random() * all.length));
+  }
+  
+  return result.split('').sort(() => 0.5 - Math.random()).join('');
+}
+
+function getPasswordStrength(pwd: string) {
+  if (!pwd) return { score: 0, label: 'Empty', color: 'bg-slate-200', text: 'text-slate-400', percent: 0 };
+  
+  let score = 0;
+  if (pwd.length >= 8) score += 1;
+  if (pwd.length >= 12) score += 1;
+  if (/[a-z]/.test(pwd) && /[A-Z]/.test(pwd)) score += 1;
+  if (/\d/.test(pwd)) score += 1;
+  if (/[^a-zA-Z0-9]/.test(pwd)) score += 1;
+  
+  const scoreCapped = Math.min(score, 4);
+  
+  switch (scoreCapped) {
+    case 0:
+      return { score: 0, label: 'Very Weak', color: 'bg-red-500', text: 'text-red-500', percent: 10 };
+    case 1:
+      return { score: 1, label: 'Weak', color: 'bg-orange-500', text: 'text-orange-500', percent: 25 };
+    case 2:
+      return { score: 2, label: 'Medium', color: 'bg-yellow-500', text: 'text-yellow-600', percent: 50 };
+    case 3:
+      return { score: 3, label: 'Strong', color: 'bg-lime-500', text: 'text-lime-650', percent: 75 };
+    case 4:
+      return { score: 4, label: 'Very Strong', color: 'bg-[#00b074]', text: 'text-[#00b074]', percent: 100 };
+    default:
+      return { score: 0, label: 'Empty', color: 'bg-slate-200', text: 'text-slate-400', percent: 0 };
+  }
+}
+
 export default function BillingPage({
   selectedPlan,
   businessUsers,
@@ -45,6 +93,8 @@ export default function BillingPage({
 }: BillingPageProps) {
   const [checkoutStep, setCheckoutStep] = useState<number>(1);
   const [errors, setErrors] = useState<Record<string, string>>({});
+  const [recommendedPassword, setRecommendedPassword] = useState<string>('');
+  const [showPassword, setShowPassword] = useState<boolean>(false);
 
   // Step 1: Company Details
   const [legalName, setLegalName] = useState<string>('');
@@ -109,6 +159,14 @@ export default function BillingPage({
   const [isLoadingStates, setIsLoadingStates] = useState<boolean>(false);
   const [isLoadingCities, setIsLoadingCities] = useState<boolean>(false);
 
+  // Initialize suggested strong password once on mount
+  useEffect(() => {
+    const pwd = generateStrongPassword();
+    setRecommendedPassword(pwd);
+    setPassword(pwd);
+    setConfirmPassword(pwd);
+  }, []);
+
   // Fetch all countries once on mount
   useEffect(() => {
     setIsLoadingCountries(true);
@@ -169,48 +227,14 @@ export default function BillingPage({
       .finally(() => setIsLoadingCities(false));
   }, [stateName]);
 
-  const validateStep = (stepId: 'company' | 'contact' | 'addons' | 'compliance' | 'payment'): boolean => {
+  const validateStep = (stepId: 'user_info' | 'payment'): boolean => {
     const newErrors: Record<string, string> = {};
 
-    if (stepId === 'company') {
-      if (!legalName.trim()) newErrors.legalName = 'Legal company name is required';
+    if (stepId === 'user_info') {
+      if (!legalName.trim()) newErrors.legalName = 'Company name is required';
       if (!companyType) newErrors.companyType = 'Company type is required';
-
-      if (!gstin.trim()) {
-        newErrors.gstin = 'GSTIN is required';
-      } else {
-        const gstinRegex = /^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[1-9A-Z]{1}Z[0-9A-Z]{1}$/;
-        if (!gstinRegex.test(gstin.trim().toUpperCase())) {
-          newErrors.gstin = 'Invalid GSTIN format (e.g. 27AAAAA1111A1Z1)';
-        }
-      }
-
-      if (!pan.trim()) {
-        newErrors.pan = 'PAN is required';
-      } else {
-        const panRegex = /^[A-Z]{5}[0-9]{4}[A-Z]{1}$/;
-        if (!panRegex.test(pan.trim().toUpperCase())) {
-          newErrors.pan = 'Invalid PAN format (e.g. ABCDE1234F)';
-        }
-      }
-
-      if (!addressLine1.trim()) newErrors.addressLine1 = 'Registered address line 1 is required';
-      if (!city.trim()) newErrors.city = 'City is required';
-      if (!stateName) newErrors.stateName = 'State is required';
-
-      if (!pinCode.trim()) {
-        newErrors.pinCode = 'PIN code is required';
-      } else {
-        const pinRegex = /^[1-9][0-9]{5}$/;
-        if (!pinRegex.test(pinCode.trim())) {
-          newErrors.pinCode = 'Invalid 6-digit PIN code';
-        }
-      }
-
       if (!industry) newErrors.industry = 'Industry/sector is required';
-    }
 
-    if (stepId === 'contact') {
       if (!fullName.trim()) newErrors.fullName = 'Full name is required';
 
       if (!email.trim()) {
@@ -241,31 +265,28 @@ export default function BillingPage({
 
       if (!designation.trim()) newErrors.designation = 'Designation/role is required';
 
-      if (!password.trim()) {
+      if (!password) {
         newErrors.password = 'Account password is required';
-      } else if (password.trim().length < 6) {
-        newErrors.password = 'Password must be at least 6 characters long';
+      } else {
+        const pwdErrors = [];
+        if (password.length < 8) {
+          pwdErrors.push("at least 8 characters");
+        }
+        if (!/[A-Za-z]/.test(password)) {
+          pwdErrors.push("at least one letter");
+        }
+        if (!/\d/.test(password)) {
+          pwdErrors.push("at least one number");
+        }
+        if (pwdErrors.length > 0) {
+          newErrors.password = `Password must include ${pwdErrors.join(", ")}.`;
+        }
       }
 
-      if (!confirmPassword.trim()) {
+      if (!confirmPassword) {
         newErrors.confirmPassword = 'Confirm password is required';
-      } else if (password.trim() !== confirmPassword.trim()) {
+      } else if (password !== confirmPassword) {
         newErrors.confirmPassword = 'Passwords do not match';
-      }
-    }
-
-    if (stepId === 'compliance') {
-      if (!gstCertFile) newErrors.gstCertFile = 'GST Certificate is required';
-      if (!incDocFile) newErrors.incDocFile = 'Incorporation document is required';
-
-      if (industry === 'Pharma') {
-        if (!pharmaDrugLicense.trim()) newErrors.pharmaDrugLicense = 'Drug license number is required';
-        if (!pharmaDrugLicenseFile) newErrors.pharmaDrugLicenseFile = 'Drug license file is required';
-      } else if (industry === 'FMCG') {
-        if (!fssaiLicense.trim()) newErrors.fssaiLicense = 'FSSAI license number is required';
-        if (!fssaiLicenseFile) newErrors.fssaiLicenseFile = 'FSSAI license file is required';
-      } else if (industry === 'Liquor') {
-        if (!exciseLicenseFile) newErrors.exciseLicenseFile = 'Excise license file is required';
       }
     }
 
@@ -280,27 +301,17 @@ export default function BillingPage({
   };
 
   const taxRate = 0.18;
-  const calculatedTax = selectedPlan.price * taxRate;
-  const totalAmount = selectedPlan.price + calculatedTax;
+  const calculatedTax = selectedPlan.basePrice * taxRate;
+  const totalAmount = selectedPlan.basePrice + calculatedTax;
 
-  const hasAddOns = selectedPlan.name === 'Business' || selectedPlan.name === 'Business Pro';
-
-  const stepItems = hasAddOns ? [
-    { s: 1, label: 'Company', id: 'company' },
-    { s: 2, label: 'Account', id: 'contact' },
-    { s: 3, label: 'Add-Ons', id: 'addons' },
-    { s: 4, label: 'Compliance', id: 'compliance' },
-    { s: 5, label: 'Payment', id: 'payment' }
-  ] : [
-    { s: 1, label: 'Company', id: 'company' },
-    { s: 2, label: 'Account', id: 'contact' },
-    { s: 3, label: 'Compliance', id: 'compliance' },
-    { s: 4, label: 'Payment', id: 'payment' }
+  const stepItems = [
+    { s: 1, label: 'User Info', id: 'user_info' },
+    { s: 2, label: 'Payment', id: 'payment' }
   ];
 
   const totalSteps = stepItems.length;
   const currentStepItem = stepItems[checkoutStep - 1];
-  const currentStepId = (currentStepItem ? currentStepItem.id : 'company') as 'company' | 'contact' | 'addons' | 'compliance' | 'payment';
+  const currentStepId = (currentStepItem ? currentStepItem.id : 'user_info') as 'user_info' | 'payment';
 
   return (
     <div data-theme="light" className="min-h-screen bg-slate-50 pt-36 pb-24 px-4 sm:px-6 lg:px-8 text-slate-800 animate-fadeIn relative font-sans">
@@ -311,63 +322,18 @@ export default function BillingPage({
           <div className="border-b border-slate-150 pb-8">
             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6">
               <div>
-                <h2 className="text-3xl font-light text-[#003057] mt-3">Account Verification Setup</h2>
-                <p className="text-xs text-slate-500 mt-1 font-normal">Complete compliance details to sync your brand credentials.</p>
+                <h2 className="text-3xl font-light text-[#003057] mt-3">Account Registration</h2>
+                <p className="text-xs text-slate-500 mt-1 font-normal">Create your initial vendor shell to proceed to payment.</p>
               </div>
               <div className="bg-[#003057] text-white px-4.5 py-1.5 rounded-full text-xs font-semibold tracking-wider">
                 Step {checkoutStep} of {totalSteps}
               </div>
             </div>
 
-            <div className="relative flex items-center justify-between w-full mt-8">
-              <div className="absolute left-0 right-0 top-1/2 -translate-y-1/2 h-0.5 bg-slate-200 z-0" />
-              <div
-                className="absolute left-0 top-1/2 -translate-y-1/2 h-0.5 bg-[#00b074] z-0 transition-all duration-500"
-                style={{ width: `${((checkoutStep - 1) / (totalSteps - 1)) * 100}%` }}
-              />
-
-              {stepItems.map((stepItem) => {
-                const isActive = checkoutStep >= stepItem.s;
-                const isCurrent = checkoutStep === stepItem.s;
-                return (
-                  <div key={stepItem.s} className="flex flex-col items-center z-10 relative">
-                    <button
-                      type="button"
-                      onClick={() => {
-                        let valid = true;
-                        for (let i = 0; i < stepItem.s - 1; i++) {
-                          const prevStepId = stepItems[i].id as 'company' | 'contact' | 'addons' | 'compliance' | 'payment';
-                          if (!validateStep(prevStepId)) {
-                            valid = false;
-                            break;
-                          }
-                        }
-                        if (valid || stepItem.s < checkoutStep) {
-                          setCheckoutStep(stepItem.s);
-                          setErrors({});
-                        }
-                      }}
-                      className={`w-9 h-9 rounded-full flex items-center justify-center font-bold text-xs border-2 transition-all duration-300 cursor-pointer ${isCurrent
-                        ? 'bg-[#00b074] border-[#00b074] text-white shadow-lg shadow-[#00b074]/20 scale-110'
-                        : isActive
-                          ? 'bg-[#00b074]/10 border-[#00b074] text-[#00b074]'
-                          : 'bg-white border-slate-300 text-slate-400'
-                        }`}
-                    >
-                      {isActive && checkoutStep > stepItem.s ? '✓' : stepItem.s}
-                    </button>
-                    <span className={`text-[10px] mt-2 font-bold uppercase tracking-wider hidden sm:block ${isCurrent ? 'text-[#00b074]' : isActive ? 'text-slate-700' : 'text-slate-450'
-                      }`}>
-                      {stepItem.label}
-                    </span>
-                  </div>
-                );
-              })}
-            </div>
           </div>
 
           {/* Form Step Contents */}
-          {currentStepId === 'company' && (
+          {currentStepId === 'user_info' && (
             <div className="space-y-6 animate-fadeIn">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="space-y-1.5">
@@ -400,184 +366,7 @@ export default function BillingPage({
                 </div>
               </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6 border-t border-slate-150 pt-6">
-                <div className="space-y-1.5">
-                  <label className="block text-xs font-bold uppercase tracking-wider text-slate-500">GSTIN *</label>
-                  <input
-                    type="text"
-                    value={gstin}
-                    onChange={(e) => setGstin(e.target.value.toUpperCase())}
-                    placeholder="27AAAAA1111A1Z1"
-                    maxLength={15}
-                    className={`w-full bg-slate-50/50 border rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-[#00b074] text-slate-800 font-normal transition-colors placeholder-slate-400 ${errors.gstin ? 'border-red-500 ring-1 ring-red-500' : 'border-slate-200'}`}
-                  />
-                  {errors.gstin && <p className="text-[10px] text-red-500 font-medium">{errors.gstin}</p>}
-                </div>
-
-                <div className="space-y-1.5">
-                  <label className="block text-xs font-bold uppercase tracking-wider text-slate-500">Company PAN *</label>
-                  <input
-                    type="text"
-                    value={pan}
-                    onChange={(e) => setPan(e.target.value.toUpperCase())}
-                    placeholder="AAAAA1111A"
-                    maxLength={10}
-                    className={`w-full bg-slate-50/50 border rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-[#00b074] text-slate-800 font-normal transition-colors placeholder-slate-400 ${errors.pan ? 'border-red-500 ring-1 ring-red-500' : 'border-slate-200'}`}
-                  />
-                  {errors.pan && <p className="text-[10px] text-red-500 font-medium">{errors.pan}</p>}
-                </div>
-
-                <div className="space-y-1.5">
-                  <label className="block text-xs font-bold uppercase tracking-wider text-slate-500">Corporate ID Number (CIN)</label>
-                  <input
-                    type="text"
-                    value={cin}
-                    onChange={(e) => setCin(e.target.value.toUpperCase())}
-                    placeholder="U11111MH2021PTC111111"
-                    maxLength={21}
-                    className="w-full bg-slate-50/50 border border-slate-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-[#00b074] text-slate-800 font-normal transition-colors placeholder-slate-400"
-                  />
-                </div>
-              </div>
-
-              <div className="border-t border-slate-150 pt-6 space-y-4">
-                <h3 className="text-sm font-semibold text-[#003057] uppercase tracking-wider">Registered Address</h3>
-                
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div className="space-y-1.5">
-                    <label className="block text-[10px] font-bold uppercase tracking-wider text-slate-400">Address Line 1 *</label>
-                    <input
-                      type="text"
-                      value={addressLine1}
-                      onChange={(e) => setAddressLine1(e.target.value)}
-                      placeholder="Building name, street, locality"
-                      className={`w-full bg-slate-50/50 border rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-[#00b074] text-slate-800 font-normal transition-colors placeholder-slate-400 ${errors.addressLine1 ? 'border-red-500 ring-1 ring-red-500' : 'border-slate-200'}`}
-                    />
-                    {errors.addressLine1 && <p className="text-[10px] text-red-500 font-medium">{errors.addressLine1}</p>}
-                  </div>
-                  <div className="space-y-1.5">
-                    <label className="block text-[10px] font-bold uppercase tracking-wider text-slate-400">Address Line 2</label>
-                    <input
-                      type="text"
-                      value={addressLine2}
-                      onChange={(e) => setAddressLine2(e.target.value)}
-                      placeholder="Floor, suite, landmark (optional)"
-                      className="w-full bg-slate-50/50 border border-slate-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-[#00b074] text-slate-800 font-normal transition-colors placeholder-slate-400"
-                    />
-                  </div>
-                </div>
-
-                <div className="flex justify-between items-center gap-4 pt-2">
-                  <div />
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setIsGeolocating(true);
-                      navigator.geolocation.getCurrentPosition(
-                        async (position) => {
-                          const { latitude, longitude } = position.coords;
-                          try {
-                            const res = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}&zoom=18&addressdetails=1`);
-                            if (res.ok) {
-                              const d = await res.json();
-                              const addr = d.address || {};
-                              setAddressLine1([addr.road, addr.suburb, addr.neighbourhood].filter(Boolean).join(', ') || addressLine1);
-                              setPinCode(addr.postcode || pinCode);
-                              if (addr.country) {
-                                setSelectedCountry(addr.country);
-                              }
-                            }
-                          } catch (e) {
-                            console.error(e);
-                          } finally {
-                            setIsGeolocating(false);
-                          }
-                        },
-                        () => setIsGeolocating(false),
-                        { timeout: 8000 }
-                      );
-                    }}
-                    className="flex items-center gap-1.5 text-[10px] font-semibold text-[#00b074] hover:text-[#009660] bg-[#00b074]/10 hover:bg-[#00b074]/20 border border-[#00b074]/30 px-3 py-1 rounded-lg transition-colors cursor-pointer"
-                  >
-                    {isGeolocating ? 'Detecting...' : 'Auto-detect Location'}
-                  </button>
-                </div>
-
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-1">
-                  <div className="space-y-1.5">
-                    <label className="block text-[10px] font-semibold uppercase tracking-wider text-slate-400">Country *</label>
-                    <select
-                      value={selectedCountry}
-                      onChange={(e) => setSelectedCountry(e.target.value)}
-                      disabled={isLoadingCountries}
-                      className="w-full bg-slate-50/50 border border-slate-200 rounded-xl px-4 py-3.5 text-sm focus:outline-none focus:border-[#00b074] text-slate-800 transition-colors"
-                    >
-                      {isLoadingCountries ? <option>Loading countries...</option> : (
-                        <>
-                          <option value="">Select Country</option>
-                          {countriesList.map(c => <option key={c} value={c}>{c}</option>)}
-                        </>
-                      )}
-                    </select>
-                  </div>
-                  <div className="space-y-1.5">
-                    <label className="block text-[10px] font-semibold uppercase tracking-wider text-slate-400">PIN / ZIP Code *</label>
-                    <input
-                      type="text"
-                      value={pinCode}
-                      onChange={(e) => setPinCode(e.target.value)}
-                      placeholder={selectedCountry === 'India' ? '400001' : 'Postal / ZIP code'}
-                      maxLength={10}
-                      className={`w-full bg-slate-50/50 border rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-[#00b074] text-slate-800 font-normal transition-colors ${errors.pinCode ? 'border-red-500' : 'border-slate-200'}`}
-                    />
-                    {errors.pinCode && <p className="text-[10px] text-red-500">{errors.pinCode}</p>}
-                  </div>
-                </div>
-
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div className="space-y-1.5">
-                    <label className="block text-[10px] font-semibold uppercase tracking-wider text-slate-400">State / Province *</label>
-                    <select
-                      value={stateName}
-                      onChange={(e) => setStateName(e.target.value)}
-                      disabled={isLoadingStates || statesList.length === 0}
-                      className={`w-full bg-slate-50/50 border rounded-xl px-4 py-3.5 text-sm focus:outline-none focus:border-[#00b074] text-slate-800 ${errors.stateName ? 'border-red-500' : 'border-slate-200'}`}
-                    >
-                      {isLoadingStates ? <option>Loading states...</option> : (
-                        <>
-                          <option value="">Select State</option>
-                          {statesList.map(s => <option key={s} value={s}>{s}</option>)}
-                        </>
-                      )}
-                    </select>
-                    {errors.stateName && <p className="text-[10px] text-red-500">{errors.stateName}</p>}
-                  </div>
-                  <div className="space-y-1.5">
-                    <label className="block text-[10px] font-semibold uppercase tracking-wider text-slate-400">City *</label>
-                    {citiesList.length > 0 && !isLoadingCities ? (
-                      <select
-                        value={city}
-                        onChange={(e) => setCity(e.target.value)}
-                        className={`w-full bg-slate-50/50 border rounded-xl px-4 py-3.5 text-sm focus:outline-none focus:border-[#00b074] text-slate-800 ${errors.city ? 'border-red-500' : 'border-slate-200'}`}
-                      >
-                        <option value="">Select City</option>
-                        {citiesList.map(c => <option key={c} value={c}>{c}</option>)}
-                      </select>
-                    ) : (
-                      <input
-                        type="text"
-                        value={city}
-                        onChange={(e) => setCity(e.target.value)}
-                        placeholder="Enter city name"
-                        className={`w-full bg-slate-50/50 border rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-[#00b074] text-slate-800 ${errors.city ? 'border-red-500' : 'border-slate-200'}`}
-                      />
-                    )}
-                    {errors.city && <p className="text-[10px] text-red-500">{errors.city}</p>}
-                  </div>
-                </div>
-              </div>
-
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 border-t border-slate-150 pt-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-4 border-t border-slate-150">
                 <div className="space-y-1.5">
                   <label className="block text-xs font-bold uppercase tracking-wider text-slate-500">Industry / Sector *</label>
                   <select
@@ -597,7 +386,7 @@ export default function BillingPage({
                   {errors.industry && <p className="text-[10px] text-red-500">{errors.industry}</p>}
                 </div>
                 <div className="space-y-1.5">
-                  <label className="block text-xs font-bold uppercase tracking-wider text-slate-500">Company Website</label>
+                  <label className="block text-xs font-bold uppercase tracking-wider text-slate-550">Company Website</label>
                   <input
                     type="url"
                     value={website}
@@ -607,505 +396,238 @@ export default function BillingPage({
                   />
                 </div>
               </div>
-            </div>
-          )}
 
-          {currentStepId === 'contact' && (
-            <div className="space-y-6 animate-fadeIn">
-              <div className="space-y-1.5">
-                <label className="block text-xs font-bold uppercase tracking-wider text-slate-500">Full Name *</label>
-                <input 
-                  type="text" 
-                  value={fullName}
-                  onChange={(e) => setFullName(e.target.value)}
-                  placeholder="John Doe" 
-                  className={`w-full bg-slate-50/50 border rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-[#00b074] text-slate-800 ${errors.fullName ? 'border-red-500' : 'border-slate-200'}`}
-                />
-                {errors.fullName && <p className="text-[10px] text-red-500">{errors.fullName}</p>}
-              </div>
+              <div className="pt-6 border-t border-slate-150 space-y-6">
+                <h3 className="text-sm font-semibold text-[#003057] uppercase tracking-wider">Account Credentials</h3>
 
-              <div className="space-y-1.5">
-                <label className="block text-xs font-bold uppercase tracking-wider text-slate-500">Work Email *</label>
-                <div className="flex gap-2">
+                <div className="space-y-1.5">
+                  <label className="block text-xs font-bold uppercase tracking-wider text-slate-500">Full Name *</label>
                   <input 
-                    type="email" 
-                    value={email}
-                    onChange={(e) => {
-                      setEmail(e.target.value);
-                      setIsEmailOtpVerified(false);
-                    }}
-                    placeholder="john@acmebrands.com" 
-                    className={`flex-1 bg-slate-50/50 border rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-[#00b074] text-slate-800 ${errors.email ? 'border-red-500' : 'border-slate-200'}`}
+                    type="text" 
+                    value={fullName}
+                    onChange={(e) => setFullName(e.target.value)}
+                    placeholder="John Doe" 
+                    className={`w-full bg-slate-50/50 border rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-[#00b074] text-slate-800 ${errors.fullName ? 'border-red-500' : 'border-slate-200'}`}
                   />
-                  <div className="w-40 flex-shrink-0">
-                    {isEmailOtpVerified ? (
-                      <div className="w-full h-full flex items-center justify-center gap-2 bg-emerald-50 border border-emerald-200 text-emerald-600 rounded-xl font-bold text-xs uppercase tracking-wider py-3">
-                        <span>Verified ✓</span>
-                      </div>
-                    ) : (
-                      <button 
-                        type="button"
-                        onClick={() => {
-                          const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-                          if (!email || !emailRegex.test(email.trim())) {
-                            setErrors({ ...errors, email: 'Enter a valid work email first' });
-                            return;
-                          }
-                          setErrors({});
-                          setIsEmailOtpSent(true);
-                          setShowEmailOtpPopup(true);
-                        }}
-                        className="w-full h-full bg-[#00b074] hover:bg-[#009660] text-white font-bold rounded-xl text-xs uppercase tracking-wider py-3"
-                      >
-                        {isEmailOtpSent ? 'Resend OTP' : 'Verify Email'}
-                      </button>
-                    )}
-                  </div>
+                  {errors.fullName && <p className="text-[10px] text-red-500">{errors.fullName}</p>}
                 </div>
-                {errors.email && <p className="text-[10px] text-red-500">{errors.email}</p>}
-              </div>
 
-              <div className="space-y-1.5">
-                <label className="block text-xs font-bold uppercase tracking-wider text-slate-500">Mobile Number *</label>
-                <div className="flex gap-2">
-                  <div className="flex gap-2 flex-1">
-                    <span className="flex items-center bg-slate-100 border border-slate-200 rounded-xl px-3 text-slate-500 font-sans text-sm font-semibold select-none">
-                      +91
-                    </span>
-                    <input
-                      type="tel"
-                      value={phone}
+                <div className="space-y-1.5">
+                  <label className="block text-xs font-bold uppercase tracking-wider text-slate-500">Work Email *</label>
+                  <div className="flex gap-2">
+                    <input 
+                      type="email" 
+                      value={email}
                       onChange={(e) => {
-                        const v = e.target.value.replace(/\D/g, '');
-                        setPhone(v);
-                        setIsOtpVerified(false);
+                        setEmail(e.target.value);
+                        setIsEmailOtpVerified(false);
                       }}
-                      placeholder="9876543210"
-                      maxLength={10}
-                      className={`flex-1 bg-slate-50/50 border rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-[#00b074] text-slate-800 ${errors.phone ? 'border-red-500' : 'border-slate-200'}`}
+                      placeholder="john@acmebrands.com" 
+                      className={`flex-1 bg-slate-50/50 border rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-[#00b074] text-slate-800 ${errors.email ? 'border-red-500' : 'border-slate-200'}`}
                     />
+                    <div className="w-40 flex-shrink-0">
+                      {isEmailOtpVerified ? (
+                        <div className="w-full h-full flex items-center justify-center gap-2 bg-emerald-50 border border-emerald-200 text-emerald-600 rounded-xl font-bold text-xs uppercase tracking-wider py-3">
+                          <span>Verified ✓</span>
+                        </div>
+                      ) : (
+                        <button 
+                          type="button"
+                          onClick={() => {
+                            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                            if (!email || !emailRegex.test(email.trim())) {
+                              setErrors({ ...errors, email: 'Enter a valid work email first' });
+                              return;
+                            }
+                            setErrors({});
+                            setIsEmailOtpSent(true);
+                            setShowEmailOtpPopup(true);
+                          }}
+                          className="w-full h-full bg-[#00b074] hover:bg-[#009660] text-white font-bold rounded-xl text-xs uppercase tracking-wider py-3 cursor-pointer"
+                        >
+                          {isEmailOtpSent ? 'Resend OTP' : 'Verify Email'}
+                        </button>
+                      )}
+                    </div>
                   </div>
-                  <div className="w-40 flex-shrink-0">
-                    {isOtpVerified ? (
-                      <div className="w-full h-full flex items-center justify-center gap-2 bg-emerald-50 border border-emerald-200 text-emerald-600 rounded-xl font-bold text-xs uppercase tracking-wider py-3">
-                        <span>Verified ✓</span>
-                      </div>
-                    ) : (
-                      <button 
+                  {errors.email && <p className="text-[10px] text-red-500">{errors.email}</p>}
+                </div>
+
+                <div className="space-y-1.5">
+                  <label className="block text-xs font-bold uppercase tracking-wider text-slate-500">Mobile Number *</label>
+                  <div className="flex gap-2">
+                    <div className="flex gap-2 flex-1">
+                      <span className="flex items-center bg-slate-100 border border-slate-200 rounded-xl px-3 text-slate-500 font-sans text-sm font-semibold select-none">
+                        +91
+                      </span>
+                      <input
+                        type="tel"
+                        value={phone}
+                        onChange={(e) => {
+                          const v = e.target.value.replace(/\D/g, '');
+                          setPhone(v);
+                          setIsOtpVerified(false);
+                        }}
+                        placeholder="9876543210"
+                        maxLength={10}
+                        className={`flex-1 bg-slate-50/50 border rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-[#00b074] text-slate-800 ${errors.phone ? 'border-red-500' : 'border-slate-200'}`}
+                      />
+                    </div>
+                    <div className="w-40 flex-shrink-0">
+                      {isOtpVerified ? (
+                        <div className="w-full h-full flex items-center justify-center gap-2 bg-emerald-50 border border-emerald-200 text-emerald-600 rounded-xl font-bold text-xs uppercase tracking-wider py-3">
+                          <span>Verified ✓</span>
+                        </div>
+                      ) : (
+                        <button 
+                          type="button"
+                          onClick={() => {
+                            if (!phone || phone.trim().length !== 10) {
+                              setErrors({ ...errors, phone: 'Enter a valid 10-digit mobile number' });
+                              return;
+                            }
+                            setErrors({});
+                            setIsOtpSent(true);
+                            setShowOtpPopup(true);
+                          }}
+                          className="w-full h-full bg-[#00b074] hover:bg-[#009660] text-white font-bold rounded-xl text-xs uppercase tracking-wider py-3 cursor-pointer"
+                        >
+                          {isOtpSent ? 'Resend OTP' : 'Verify Mobile'}
+                        </button>
+                      )}
+                    </div>
+                  </div>
+                  {errors.phone && <p className="text-[10px] text-red-500">{errors.phone}</p>}
+                </div>
+
+                <div className="space-y-1.5">
+                  <label className="block text-xs font-bold uppercase tracking-wider text-slate-500">Designation / Role *</label>
+                  <input 
+                    type="text" 
+                    value={designation}
+                    onChange={(e) => setDesignation(e.target.value)}
+                    placeholder="Director / Brand Manager / Operations Manager" 
+                    className={`w-full bg-slate-50/50 border rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-[#00b074] text-slate-800 ${errors.designation ? 'border-red-500' : 'border-slate-200'}`}
+                  />
+                  {errors.designation && <p className="text-[10px] text-red-500">{errors.designation}</p>}
+                </div>
+
+                {/* Recommended password suggestion banner */}
+                {recommendedPassword && (
+                  <div className="text-xs font-semibold text-slate-700 bg-slate-50 border border-slate-200 rounded-xl px-4.5 py-3 animate-fadeIn text-left col-span-1 md:col-span-2">
+                    <span>
+                      Recommended Strong Password: <span className="font-mono bg-emerald-50 px-2 py-0.5 border border-emerald-200/50 rounded text-emerald-800 font-bold select-all select-text cursor-text">{recommendedPassword}</span>
+                    </span>
+                  </div>
+                )}
+
+                <div className="space-y-1.5 relative">
+                  <div className="flex justify-between items-center">
+                    <label className="block text-xs font-bold uppercase tracking-wider text-slate-500">Create Account Password *</label>
+                    {recommendedPassword && (
+                      <button
                         type="button"
                         onClick={() => {
-                          if (!phone || phone.trim().length !== 10) {
-                            setErrors({ ...errors, phone: 'Enter a valid 10-digit mobile number' });
-                            return;
-                          }
-                          setErrors({});
-                          setIsOtpSent(true);
-                          setShowOtpPopup(true);
+                          setPassword(recommendedPassword);
+                          setConfirmPassword(recommendedPassword);
+                          setErrors(prev => {
+                            const copy = { ...prev };
+                            delete copy.password;
+                            delete copy.confirmPassword;
+                            return copy;
+                          });
                         }}
-                        className="w-full h-full bg-[#00b074] hover:bg-[#009660] text-white font-bold rounded-xl text-xs uppercase tracking-wider py-3"
+                        className="text-[9px] text-[#00b074] hover:underline font-bold flex items-center gap-1 cursor-pointer select-none"
                       >
-                        {isOtpSent ? 'Resend OTP' : 'Verify Mobile'}
+                        🔄 Use Suggested Strong Password
                       </button>
                     )}
                   </div>
+                  <div className="relative">
+                    <input 
+                       type={showPassword ? "text" : "password"} 
+                       value={password}
+                       onChange={(e) => setPassword(e.target.value)}
+                       placeholder="••••••••" 
+                       maxLength={12}
+                       className={`w-full bg-slate-50/50 border rounded-xl pl-4 pr-12 py-3 text-sm focus:outline-none focus:border-[#00b074] text-slate-800 ${errors.password ? 'border-red-500' : 'border-slate-200'}`}
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setShowPassword(!showPassword)}
+                      className="absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-450 hover:text-slate-700 text-[10px] font-bold uppercase tracking-wider select-none cursor-pointer"
+                    >
+                      {showPassword ? "Hide" : "Show"}
+                    </button>
+                  </div>
+
+                  {/* Password Complexity UI */}
+                  {password && (
+                    <div className="bg-slate-50 border border-slate-200/60 rounded-xl p-3.5 mt-2.5 space-y-2.5 animate-fadeIn">
+                      <div className="flex justify-between items-center text-[10px] font-bold">
+                        <span className="text-slate-500 uppercase tracking-wider">Complexity Strength:</span>
+                        <span className={`${getPasswordStrength(password).text} uppercase tracking-wider`}>
+                          {getPasswordStrength(password).label}
+                        </span>
+                      </div>
+                      <div className="w-full bg-slate-200 h-1.5 rounded-full overflow-hidden">
+                        <div 
+                          className={`h-full transition-all duration-500 ${getPasswordStrength(password).color}`}
+                          style={{ width: `${getPasswordStrength(password).percent}%` }}
+                        />
+                      </div>
+                      
+                      {/* Checklist constraints */}
+                      <div className="grid grid-cols-2 gap-x-4 gap-y-1 text-[9px] font-semibold text-slate-500 pt-0.5">
+                        <div className="flex items-center gap-1.5">
+                          <span className={password.length >= 8 ? "text-emerald-500 font-bold" : "text-slate-350"}>
+                            {password.length >= 8 ? "✓" : "•"}
+                          </span>
+                          <span className={password.length >= 8 ? "text-slate-800" : "text-slate-450"}>Min 8 characters</span>
+                        </div>
+                        <div className="flex items-center gap-1.5">
+                          <span className={/[A-Za-z]/.test(password) ? "text-emerald-500 font-bold" : "text-slate-350"}>
+                            {/[A-Za-z]/.test(password) ? "✓" : "•"}
+                          </span>
+                          <span className={/[A-Za-z]/.test(password) ? "text-slate-800" : "text-slate-450"}>Contains a letter</span>
+                        </div>
+                        <div className="flex items-center gap-1.5">
+                          <span className={/\d/.test(password) ? "text-emerald-500 font-bold" : "text-slate-350"}>
+                            {/\d/.test(password) ? "✓" : "•"}
+                          </span>
+                          <span className={/\d/.test(password) ? "text-slate-800" : "text-slate-450"}>Contains a number</span>
+                        </div>
+                        <div className="flex items-center gap-1.5">
+                          <span className={( /[A-Z]/.test(password) && /[a-z]/.test(password) ) ? "text-emerald-500 font-bold" : "text-slate-350"}>
+                            {( /[A-Z]/.test(password) && /[a-z]/.test(password) ) ? "✓" : "•"}
+                          </span>
+                          <span className={( /[A-Z]/.test(password) && /[a-z]/.test(password) ) ? "text-slate-800" : "text-slate-450"}>Mixed case letters</span>
+                        </div>
+                        <div className="flex items-center gap-1.5 col-span-2">
+                          <span className={/[^a-zA-Z0-9]/.test(password) ? "text-emerald-500 font-bold" : "text-slate-350"}>
+                            {/[^a-zA-Z0-9]/.test(password) ? "✓" : "•"}
+                          </span>
+                          <span className={/[^a-zA-Z0-9]/.test(password) ? "text-slate-800" : "text-slate-450"}>Special character (e.g. !@#$%)</span>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+                  {errors.password && <p className="text-[10px] text-red-500 font-semibold">{errors.password}</p>}
                 </div>
-                {errors.phone && <p className="text-[10px] text-red-500">{errors.phone}</p>}
-              </div>
 
-              <div className="space-y-1.5">
-                <label className="block text-xs font-bold uppercase tracking-wider text-slate-500">Designation / Role *</label>
-                <input 
-                  type="text" 
-                  value={designation}
-                  onChange={(e) => setDesignation(e.target.value)}
-                  placeholder="Director / Brand Manager / Operations Manager" 
-                  className={`w-full bg-slate-50/50 border rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-[#00b074] text-slate-800 ${errors.designation ? 'border-red-500' : 'border-slate-200'}`}
-                />
-                {errors.designation && <p className="text-[10px] text-red-500">{errors.designation}</p>}
-              </div>
-
-              <div className="space-y-1.5">
-                <label className="block text-xs font-bold uppercase tracking-wider text-slate-500">Create Account Password *</label>
-                <input 
-                  type="password" 
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  placeholder="••••••••" 
-                  className={`w-full bg-slate-50/50 border rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-[#00b074] text-slate-800 ${errors.password ? 'border-red-500' : 'border-slate-200'}`}
-                />
-                {errors.password && <p className="text-[10px] text-red-500">{errors.password}</p>}
-              </div>
-
-              <div className="space-y-1.5">
-                <label className="block text-xs font-bold uppercase tracking-wider text-slate-500">Confirm Account Password *</label>
-                <input 
-                  type="password" 
-                  value={confirmPassword}
-                  onChange={(e) => setConfirmPassword(e.target.value)}
-                  placeholder="••••••••" 
-                  className={`w-full bg-slate-50/50 border rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-[#00b074] text-slate-800 ${errors.confirmPassword ? 'border-red-500' : 'border-slate-200'}`}
-                />
-                {errors.confirmPassword && <p className="text-[10px] text-red-500">{errors.confirmPassword}</p>}
-              </div>
-            </div>
-          )}
-
-          {currentStepId === 'addons' && (
-            <div className="space-y-6 animate-fadeIn">
-              <div>
-                <h3 className="text-lg font-medium text-[#003057]">Customize Plan Add-Ons</h3>
-                <p className="text-xs text-slate-500 mt-1">Configure additional capacities for your subscription.</p>
-              </div>
-
-              {selectedPlan.name === 'Business' && (
-                <>
-                  <div className="space-y-2 p-5 bg-slate-50 border border-slate-200 rounded-2xl">
-                    <div className="flex justify-between items-start">
-                      <div>
-                        <h4 className="text-sm font-semibold text-[#003057]">Team Members</h4>
-                        <p className="text-xs text-slate-500 mt-0.5">5 users included. Add in blocks of 5 users (+₹5,000/yr per block).</p>
-                      </div>
-                      {businessUsers > 5 && (
-                        <span className="text-xs font-bold text-[#00b074] bg-[#00b074]/10 px-2 py-1 rounded border border-[#00b074]/20">
-                          +₹{(((businessUsers - 5) / 5) * 5000).toLocaleString('en-IN')}/yr
-                        </span>
-                      )}
-                    </div>
-                    <div className="flex items-center bg-white border border-slate-200 rounded-xl p-2.5 justify-between max-w-xs mt-3">
-                      <button
-                        type="button"
-                        onClick={() => setBusinessUsers(Math.max(5, businessUsers - 5))}
-                        className="w-9 h-9 rounded-lg bg-slate-105 hover:bg-slate-200 flex items-center justify-center font-bold text-slate-700 active:scale-95 disabled:opacity-50 cursor-pointer border-none"
-                        disabled={businessUsers <= 5}
-                      >
-                        –
-                      </button>
-                      <span className="text-sm font-semibold text-slate-800 font-sans">{businessUsers} users</span>
-                      <button
-                        type="button"
-                        onClick={() => setBusinessUsers(businessUsers + 5)}
-                        className="w-9 h-9 rounded-lg bg-slate-105 hover:bg-slate-200 flex items-center justify-center font-bold text-slate-700 active:scale-95 cursor-pointer border-none"
-                      >
-                        +
-                      </button>
-                    </div>
-                  </div>
-
-                  <div className="space-y-2 p-5 bg-slate-50 border border-slate-200 rounded-2xl">
-                    <div className="flex justify-between items-start">
-                      <div>
-                        <h4 className="text-sm font-semibold text-[#003057]">SKUs Count Limits</h4>
-                        <p className="text-xs text-slate-500 mt-0.5">25 SKUs included. Expand your product catalog limits.</p>
-                      </div>
-                      {businessSKUs > 25 && (
-                        <span className="text-xs font-bold text-[#00b074] bg-[#00b074]/10 px-2 py-1 rounded border border-[#00b074]/20">
-                          +₹{(businessSKUs === 35 ? 10000 : 45000).toLocaleString('en-IN')}/yr
-                        </span>
-                      )}
-                    </div>
-                    <div className="max-w-xs mt-3">
-                      <select
-                        value={businessSKUs}
-                        onChange={(e) => setBusinessSKUs(Number(e.target.value))}
-                        className="w-full bg-white text-slate-800 border border-slate-200 rounded-xl p-3.5 text-xs font-sans focus:outline-none"
-                      >
-                        <option value={25}>25 SKUs (included)</option>
-                        <option value={35}>35 SKUs (+₹10,000/yr)</option>
-                        <option value={75}>75 SKUs (+₹45,000/yr)</option>
-                      </select>
-                    </div>
-                  </div>
-                </>
-              )}
-
-              {selectedPlan.name === 'Business Pro' && (
-                <>
-                  <div className="space-y-2 p-5 bg-slate-50 border border-slate-200 rounded-2xl">
-                    <div className="flex justify-between items-start">
-                      <div>
-                        <h4 className="text-sm font-semibold text-[#003057]">Team Members</h4>
-                        <p className="text-xs text-slate-500 mt-0.5">50 users included. Add in blocks of 5 users (+₹5,000/yr per block).</p>
-                      </div>
-                      {proUsers > 50 && (
-                        <span className="text-xs font-bold text-[#00b074] bg-[#00b074]/10 px-2 py-1 rounded border border-[#00b074]/20">
-                          +₹{(((proUsers - 50) / 5) * 5000).toLocaleString('en-IN')}/yr
-                        </span>
-                      )}
-                    </div>
-                    <div className="flex items-center bg-white border border-slate-200 rounded-xl p-2.5 justify-between max-w-xs mt-3">
-                      <button
-                        type="button"
-                        onClick={() => setProUsers(Math.max(50, proUsers - 5))}
-                        className="w-9 h-9 rounded-lg bg-slate-105 hover:bg-slate-200 flex items-center justify-center font-bold text-slate-700 active:scale-95 disabled:opacity-50 cursor-pointer border-none"
-                        disabled={proUsers <= 50}
-                      >
-                        –
-                      </button>
-                      <span className="text-sm font-semibold text-slate-800 font-sans">{proUsers} users</span>
-                      <button
-                        type="button"
-                        onClick={() => setProUsers(proUsers + 5)}
-                        className="w-9 h-9 rounded-lg bg-slate-105 hover:bg-slate-200 flex items-center justify-center font-bold text-slate-700 active:scale-95 cursor-pointer border-none"
-                      >
-                        +
-                      </button>
-                    </div>
-                  </div>
-
-                  <div className="space-y-2 p-5 bg-slate-50 border border-slate-200 rounded-2xl">
-                    <div className="flex justify-between items-start">
-                      <div>
-                        <h4 className="text-sm font-semibold text-[#003057]">SKUs Count Limits</h4>
-                        <p className="text-xs text-slate-500 mt-0.5">500 SKUs included. Expand your product catalog limits.</p>
-                      </div>
-                      {proSKUs > 500 && (
-                        <span className="text-xs font-bold text-[#00b074] bg-[#00b074]/10 px-2 py-1 rounded border border-[#00b074]/20">
-                          +₹{(proSKUs === 510 ? 10000 : 45000).toLocaleString('en-IN')}/yr
-                        </span>
-                      )}
-                    </div>
-                    <div className="max-w-xs mt-3">
-                      <select
-                        value={proSKUs}
-                        onChange={(e) => setProSKUs(Number(e.target.value))}
-                        className="w-full bg-white text-slate-800 border border-slate-200 rounded-xl p-3.5 text-xs font-sans focus:outline-none"
-                      >
-                        <option value={500}>500 SKUs (included)</option>
-                        <option value={510}>510 SKUs (+₹10,000/yr)</option>
-                        <option value={550}>550 SKUs (+₹45,000/yr)</option>
-                      </select>
-                    </div>
-                  </div>
-
-                  <div className="space-y-2 p-5 bg-slate-50 border border-slate-200 rounded-2xl">
-                    <div className="flex justify-between items-start">
-                      <div>
-                        <h4 className="text-sm font-semibold text-[#003057]">Brands Registry</h4>
-                        <p className="text-xs text-slate-500 mt-0.5">5 brands included. Add extra brands (+₹10,000/yr per brand).</p>
-                      </div>
-                      {proBrands > 5 && (
-                        <span className="text-xs font-bold text-[#00b074] bg-[#00b074]/10 px-2 py-1 rounded border border-[#00b074]/20">
-                          +₹{((proBrands - 5) * 10000).toLocaleString('en-IN')}/yr
-                        </span>
-                      )}
-                    </div>
-                    <div className="flex items-center bg-white border border-slate-200 rounded-xl p-2.5 justify-between max-w-xs mt-3">
-                      <button
-                        type="button"
-                        onClick={() => setProBrands(Math.max(5, proBrands - 1))}
-                        className="w-9 h-9 rounded-lg bg-slate-105 hover:bg-slate-200 flex items-center justify-center font-bold text-slate-700 active:scale-95 disabled:opacity-50 cursor-pointer border-none"
-                        disabled={proBrands <= 5}
-                      >
-                        –
-                      </button>
-                      <span className="text-sm font-semibold text-slate-800 font-sans">{proBrands} brands</span>
-                      <button
-                        type="button"
-                        onClick={() => setProBrands(proBrands + 1)}
-                        className="w-9 h-9 rounded-lg bg-slate-105 hover:bg-slate-200 flex items-center justify-center font-bold text-slate-700 active:scale-95 cursor-pointer border-none"
-                      >
-                        +
-                      </button>
-                    </div>
-                  </div>
-                </>
-              )}
-            </div>
-          )}
-
-          {currentStepId === 'compliance' && (
-            <div className="space-y-6 animate-fadeIn">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="space-y-1.5">
-                  <label className="block text-xs font-bold uppercase tracking-wider text-slate-550">Trademark Registry Status</label>
-                  <select
-                    value={tmStatus}
-                    onChange={(e) => setTmStatus(e.target.value)}
-                    className="w-full bg-slate-50/50 border border-slate-200 rounded-xl px-4 py-3.5 text-sm focus:outline-none text-slate-800"
-                  >
-                    <option value="">Select Status</option>
-                    <option value="Registered">Registered</option>
-                    <option value="Applied">Applied & Awaiting</option>
-                    <option value="Pending">Pending Litigation</option>
-                    <option value="Not Applied">Not Applied</option>
-                    <option value="Other">Other</option>
-                  </select>
-                </div>
-                <div className="space-y-1.5">
-                  <label className="block text-xs font-bold uppercase tracking-wider text-slate-555">TM Application Number</label>
-                  <input
-                    type="text"
-                    value={tmNumber}
-                    onChange={(e) => setTmNumber(e.target.value)}
-                    placeholder="TM-987654321"
-                    className="w-full bg-slate-50/50 border border-slate-200 rounded-xl px-4 py-3 text-sm focus:outline-none text-slate-800"
+                  <label className="block text-xs font-bold uppercase tracking-wider text-slate-500">Confirm Account Password *</label>
+                  <input 
+                    type={showPassword ? "text" : "password"} 
+                    value={confirmPassword}
+                    onChange={(e) => setConfirmPassword(e.target.value)}
+                    placeholder="••••••••" 
+                    maxLength={12}
+                    className={`w-full bg-slate-50/50 border rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-[#00b074] text-slate-800 ${errors.confirmPassword ? 'border-red-500' : 'border-slate-200'}`}
                   />
+                  {errors.confirmPassword && <p className="text-[10px] text-red-500 font-semibold">{errors.confirmPassword}</p>}
                 </div>
               </div>
-
-              <div className="border-t border-slate-150 pt-6 space-y-5">
-                <h3 className="text-sm font-semibold text-[#003057] uppercase tracking-wider">Required Verification Certificates</h3>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                  <div className="space-y-2">
-                    <label className="block text-[11px] font-bold text-slate-400 uppercase tracking-wider">GST Certificate PDF *</label>
-                    <div
-                      className={`border-2 border-dashed rounded-2xl p-5 flex flex-col items-center justify-center text-center cursor-pointer transition-all hover:bg-slate-50/50 ${gstCertFile ? 'border-emerald-500 bg-emerald-50/10' : errors.gstCertFile ? 'border-red-500 bg-red-50/5' : 'border-slate-200'}`}
-                      onClick={() => {
-                        setGstCertFile(`gst_certificate_${legalName.toLowerCase().replace(/\s+/g, '_') || 'company'}.pdf`);
-                        setErrors({ ...errors, gstCertFile: '' });
-                      }}
-                    >
-                      <span className="text-xl mb-1.5">{gstCertFile ? '📄' : '📁'}</span>
-                      <span className="text-xs font-semibold text-slate-700">{gstCertFile ? gstCertFile : 'GST_Registration.pdf'}</span>
-                      <span className="text-[10px] text-slate-400 mt-1">{gstCertFile ? 'Ready to upload ✓' : 'Click to simulate PDF attachment'}</span>
-                    </div>
-                    {errors.gstCertFile && <p className="text-[10px] text-red-500">{errors.gstCertFile}</p>}
-                  </div>
-
-                  <div className="space-y-2">
-                    <label className="block text-[11px] font-bold text-slate-400 uppercase tracking-wider">Certificate of Incorporation PDF *</label>
-                    <div
-                      className={`border-2 border-dashed rounded-2xl p-5 flex flex-col items-center justify-center text-center cursor-pointer transition-all hover:bg-slate-50/50 ${incDocFile ? 'border-emerald-500 bg-emerald-50/10' : errors.incDocFile ? 'border-red-500 bg-red-50/5' : 'border-slate-200'}`}
-                      onClick={() => {
-                        setIncDocFile(`certificate_of_incorporation_${legalName.toLowerCase().replace(/\s+/g, '_') || 'company'}.pdf`);
-                        setErrors({ ...errors, incDocFile: '' });
-                      }}
-                    >
-                      <span className="text-xl mb-1.5">{incDocFile ? '📄' : '📁'}</span>
-                      <span className="text-xs font-semibold text-slate-700">{incDocFile ? incDocFile : 'Incorporation_Document.pdf'}</span>
-                      <span className="text-[10px] text-slate-400 mt-1">{incDocFile ? 'Ready to upload ✓' : 'Click to simulate PDF attachment'}</span>
-                    </div>
-                    {errors.incDocFile && <p className="text-[10px] text-red-500">{errors.incDocFile}</p>}
-                  </div>
-                </div>
-              </div>
-
-              <div className="border-t border-slate-150 pt-6 space-y-5">
-                <h3 className="text-sm font-semibold text-slate-450 uppercase tracking-wider">Additional Supporting Records (Optional)</h3>
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                  <div className="space-y-1">
-                    <label className="block text-[10px] font-bold text-slate-400 uppercase tracking-wider">TM Application PDF</label>
-                    <div
-                      onClick={() => setTmAppFile('trademark_application.pdf')}
-                      className={`border rounded-xl p-3 text-center cursor-pointer text-xs border-slate-200 hover:bg-slate-50 flex items-center justify-center gap-2 ${tmAppFile ? 'bg-slate-105' : ''}`}
-                    >
-                      <span>📎</span>
-                      <span className="truncate max-w-[120px]">{tmAppFile ? tmAppFile : 'Attach File'}</span>
-                    </div>
-                  </div>
-                  <div className="space-y-1">
-                    <label className="block text-[10px] font-bold text-slate-400 uppercase tracking-wider">TM Certificate PDF</label>
-                    <div
-                      onClick={() => setTmCertFile('trademark_certificate.pdf')}
-                      className={`border rounded-xl p-3 text-center cursor-pointer text-xs border-slate-200 hover:bg-slate-50 flex items-center justify-center gap-2 ${tmCertFile ? 'bg-slate-105' : ''}`}
-                    >
-                      <span>📎</span>
-                      <span className="truncate max-w-[120px]">{tmCertFile ? tmCertFile : 'Attach File'}</span>
-                    </div>
-                  </div>
-                  <div className="space-y-1">
-                    <label className="block text-[10px] font-bold text-slate-400 uppercase tracking-wider">Brand Auth Letter</label>
-                    <div
-                      onClick={() => setBrandAuthFile('brand_authorization.pdf')}
-                      className={`border rounded-xl p-3 text-center cursor-pointer text-xs border-slate-200 hover:bg-slate-50 flex items-center justify-center gap-2 ${brandAuthFile ? 'bg-slate-105' : ''}`}
-                    >
-                      <span>📎</span>
-                      <span className="truncate max-w-[120px]">{brandAuthFile ? brandAuthFile : 'Attach File'}</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              {(industry === 'Pharma' || industry === 'FMCG' || industry === 'Liquor') && (
-                <div className="border-t border-slate-150 pt-6 space-y-6 animate-fadeIn">
-                  <div className="bg-[#00b074]/5 border border-[#00b074]/25 rounded-2xl p-5 flex items-start gap-4">
-                    <span className="text-xl">🛡️</span>
-                    <div>
-                      <h4 className="text-sm font-semibold text-[#003057] uppercase tracking-wide">Sector Compliance Check ({industry})</h4>
-                      <p className="text-xs text-slate-500 mt-0.5">Your industry sector requires mandatory documentation compliance checks to proceed.</p>
-                    </div>
-                  </div>
-
-                  {industry === 'Pharma' && (
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-end">
-                      <div className="space-y-1.5">
-                        <label className="block text-xs font-bold uppercase tracking-wider text-slate-555">Drug License Number *</label>
-                        <input
-                          type="text"
-                          value={pharmaDrugLicense}
-                          onChange={(e) => setPharmaDrugLicense(e.target.value)}
-                          placeholder="DL-1234567890"
-                          className={`w-full bg-slate-50/50 border rounded-xl px-4 py-3 text-sm focus:outline-none text-slate-800 ${errors.pharmaDrugLicense ? 'border-red-500' : 'border-slate-200'}`}
-                        />
-                        {errors.pharmaDrugLicense && <p className="text-[10px] text-red-500">{errors.pharmaDrugLicense}</p>}
-                      </div>
-                      <div className="space-y-1.5">
-                        <label className="block text-xs font-bold uppercase tracking-wider text-slate-400">Drug License Copy PDF *</label>
-                        <div
-                          onClick={() => {
-                            setPharmaDrugLicenseFile('pharma_drug_license.pdf');
-                            setErrors({ ...errors, pharmaDrugLicenseFile: '' });
-                          }}
-                          className={`border-2 border-dashed rounded-2xl p-4.5 flex flex-col items-center justify-center text-center cursor-pointer transition-all hover:bg-slate-50/50 ${pharmaDrugLicenseFile ? 'border-emerald-500 bg-emerald-50/10' : errors.pharmaDrugLicenseFile ? 'border-red-500' : 'border-slate-200'}`}
-                        >
-                          <span className="text-xs font-semibold text-slate-700 truncate max-w-[150px]">{pharmaDrugLicenseFile ? pharmaDrugLicenseFile : 'Attach Drug License PDF'}</span>
-                          <span className="text-[9px] text-slate-400 mt-0.5">Click to simulate</span>
-                        </div>
-                        {errors.pharmaDrugLicenseFile && <p className="text-[10px] text-red-500">{errors.pharmaDrugLicenseFile}</p>}
-                      </div>
-                    </div>
-                  )}
-
-                  {industry === 'FMCG' && (
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-end">
-                      <div className="space-y-1.5">
-                        <label className="block text-xs font-bold uppercase tracking-wider text-slate-555">FSSAI License Number *</label>
-                        <input
-                          type="text"
-                          value={fssaiLicense}
-                          onChange={(e) => setFssaiLicense(e.target.value)}
-                          placeholder="FSSAI-14-Digit-Code"
-                          className={`w-full bg-slate-50/50 border rounded-xl px-4 py-3 text-sm focus:outline-none text-slate-800 ${errors.fssaiLicense ? 'border-red-500' : 'border-slate-200'}`}
-                        />
-                        {errors.fssaiLicense && <p className="text-[10px] text-red-500">{errors.fssaiLicense}</p>}
-                      </div>
-                      <div className="space-y-1.5">
-                        <label className="block text-xs font-bold uppercase tracking-wider text-slate-400">FSSAI Certificate PDF *</label>
-                        <div
-                          onClick={() => {
-                            setFssaiLicenseFile('fssai_compliance_certificate.pdf');
-                            setErrors({ ...errors, fssaiLicenseFile: '' });
-                          }}
-                          className={`border-2 border-dashed rounded-2xl p-4.5 flex flex-col items-center justify-center text-center cursor-pointer transition-all hover:bg-slate-50/50 ${fssaiLicenseFile ? 'border-emerald-500 bg-emerald-50/10' : errors.fssaiLicenseFile ? 'border-red-500' : 'border-slate-200'}`}
-                        >
-                          <span className="text-xs font-semibold text-slate-700 truncate max-w-[150px]">{fssaiLicenseFile ? fssaiLicenseFile : 'Attach FSSAI PDF'}</span>
-                          <span className="text-[9px] text-slate-400 mt-0.5">Click to simulate</span>
-                        </div>
-                        {errors.fssaiLicenseFile && <p className="text-[10px] text-red-500">{errors.fssaiLicenseFile}</p>}
-                      </div>
-                    </div>
-                  )}
-
-                  {industry === 'Liquor' && (
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-end">
-                      <div className="space-y-1.5">
-                        <label className="block text-xs font-bold uppercase tracking-wider text-slate-400">State Excise License Copy PDF *</label>
-                        <div
-                          onClick={() => {
-                            setExciseLicenseFile('state_excise_compliance.pdf');
-                            setErrors({ ...errors, exciseLicenseFile: '' });
-                          }}
-                          className={`border-2 border-dashed rounded-2xl p-4.5 flex flex-col items-center justify-center text-center cursor-pointer transition-all hover:bg-slate-50/50 ${exciseLicenseFile ? 'border-emerald-500 bg-emerald-50/10' : errors.exciseLicenseFile ? 'border-red-500' : 'border-slate-200'}`}
-                        >
-                          <span className="text-xs font-semibold text-slate-700 truncate max-w-[150px]">{exciseLicenseFile ? exciseLicenseFile : 'Attach Excise License PDF'}</span>
-                          <span className="text-[9px] text-slate-400 mt-0.5">Click to simulate</span>
-                        </div>
-                        {errors.exciseLicenseFile && <p className="text-[10px] text-red-500">{errors.exciseLicenseFile}</p>}
-                      </div>
-                    </div>
-                  )}
-                </div>
-              )}
             </div>
           )}
 
@@ -1199,15 +721,6 @@ export default function BillingPage({
                     const payload = {
                       legalName,
                       companyType,
-                      gstin,
-                      pan,
-                      cin: cin || null,
-                      addressLine1,
-                      addressLine2: addressLine2 || null,
-                      city,
-                      stateName,
-                      pinCode,
-                      selectedCountry,
                       industry,
                       website: website || null,
                       fullName,
@@ -1216,9 +729,9 @@ export default function BillingPage({
                       designation,
                       password,
                       planName: selectedPlan.name,
-                      extraUsers: selectedPlan.extraUsers,
-                      extraSKUs: selectedPlan.extraSKUs,
-                      extraBrands: selectedPlan.extraBrands,
+                      extraUsers: 0,
+                      extraSKUs: 0,
+                      extraBrands: 0,
                       totalUsers: selectedPlan.totalUsers,
                       totalSKUs: selectedPlan.totalSKUs,
                       totalBrands: selectedPlan.totalBrands
@@ -1275,27 +788,6 @@ export default function BillingPage({
                 <span className="text-slate-500">Base Plan Charge</span>
                 <span className="text-slate-800 font-bold">₹{selectedPlan.basePrice.toLocaleString('en-IN')}</span>
               </div>
-
-              {selectedPlan.extraUsersCost > 0 && (
-                <div className="flex justify-between items-center text-xs font-normal">
-                  <span className="text-slate-500">Extra Team Seats (+{selectedPlan.extraUsers} users)</span>
-                  <span className="text-slate-800 font-bold">₹{selectedPlan.extraUsersCost.toLocaleString('en-IN')}</span>
-                </div>
-              )}
-
-              {selectedPlan.extraSKUsCost > 0 && (
-                <div className="flex justify-between items-center text-xs font-normal">
-                  <span className="text-slate-500">Extra SKUs Capacity</span>
-                  <span className="text-slate-800 font-bold">₹{selectedPlan.extraSKUsCost.toLocaleString('en-IN')}</span>
-                </div>
-              )}
-
-              {selectedPlan.extraBrandsCost > 0 && (
-                <div className="flex justify-between items-center text-xs font-normal">
-                  <span className="text-slate-500">Extra Brands Registry (+{selectedPlan.extraBrands} brands)</span>
-                  <span className="text-slate-800 font-bold">₹{selectedPlan.extraBrandsCost.toLocaleString('en-IN')}</span>
-                </div>
-              )}
 
               <div className="flex justify-between items-center text-xs font-normal">
                 <span className="text-slate-500">Tax Levy (18% GST)</span>

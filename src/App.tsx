@@ -216,62 +216,35 @@ export default function App() {
   useEffect(() => {
     if (selectedPlan.name === 'Business') {
       const baseCost = isAnnual ? 55000 : 5000;
-      const extraUsersCount = businessUsers - 5;
-      const extraUsersC = (extraUsersCount / 5) * (isAnnual ? 5000 : 450);
-
-      let extraSKUsC = 0;
-      if (businessSKUs === 35) {
-        extraSKUsC = isAnnual ? 10000 : 900;
-      } else if (businessSKUs === 75) {
-        extraSKUsC = isAnnual ? 45000 : 4000;
-      }
-
-      const totalCost = baseCost + extraUsersC + extraSKUsC;
-
       setSelectedPlan(prev => ({
         ...prev,
-        price: totalCost,
+        price: baseCost,
         basePrice: baseCost,
-        extraUsers: extraUsersCount,
-        extraUsersCost: extraUsersC,
-        extraSKUs: businessSKUs - 25,
-        extraSKUsCost: extraSKUsC,
-        totalUsers: businessUsers,
-        totalSKUs: businessSKUs,
+        extraUsers: 0,
+        extraUsersCost: 0,
+        extraSKUs: 0,
+        extraSKUsCost: 0,
+        totalUsers: 5,
+        totalSKUs: 25,
       }));
     } else if (selectedPlan.name === 'Business Pro') {
       const baseCost = isAnnual ? 245000 : 22500;
-      const extraUsersCount = proUsers - 50;
-      const extraUsersC = (extraUsersCount / 5) * (isAnnual ? 5000 : 450);
-
-      let extraSKUsC = 0;
-      if (proSKUs === 510) {
-        extraSKUsC = isAnnual ? 10000 : 900;
-      } else if (proSKUs === 550) {
-        extraSKUsC = isAnnual ? 45000 : 4000;
-      }
-
-      const extraBrandsCount = proBrands - 5;
-      const extraBrandsC = extraBrandsCount * (isAnnual ? 10000 : 900);
-
-      const totalCost = baseCost + extraUsersC + extraSKUsC + extraBrandsC;
-
       setSelectedPlan(prev => ({
         ...prev,
-        price: totalCost,
+        price: baseCost,
         basePrice: baseCost,
-        extraUsers: extraUsersCount,
-        extraUsersCost: extraUsersC,
-        extraSKUs: proSKUs - 500,
-        extraSKUsCost: extraSKUsC,
-        extraBrands: extraBrandsCount,
-        extraBrandsCost: extraBrandsC,
-        totalUsers: proUsers,
-        totalSKUs: proSKUs,
-        totalBrands: proBrands
+        extraUsers: 0,
+        extraUsersCost: 0,
+        extraSKUs: 0,
+        extraSKUsCost: 0,
+        extraBrands: 0,
+        extraBrandsCost: 0,
+        totalUsers: 50,
+        totalSKUs: 500,
+        totalBrands: 5
       }));
     }
-  }, [selectedPlan.name, businessUsers, businessSKUs, proUsers, proSKUs, proBrands, isAnnual]);
+  }, [selectedPlan.name, isAnnual]);
 
   const handleSelectPlan = (planType: 'free' | 'business' | 'pro' | 'enterprise') => {
     resetCheckout();
