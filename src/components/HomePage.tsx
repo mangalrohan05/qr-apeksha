@@ -45,7 +45,7 @@ export default function HomePage({ setCurrentPage }: HomePageProps) {
         <div
           className="absolute inset-0 z-0 bg-cover bg-center scale-[1.03]"
           style={{
-            backgroundImage: `linear-gradient(135deg, rgba(0, 15, 30, 0.2) 0%, rgba(0, 5, 20, 0.5) 100%), url('/saas_royal_bg.png')`
+            backgroundImage: `linear-gradient(135deg, rgba(0, 15, 30, 0.2) 0%, rgba(0, 5, 20, 0.5) 100%), url('/home_bg.png')`
           }}
         />
         <div className="max-w-7xl mx-auto px-6 w-full flex flex-col justify-center items-center text-center space-y-8 sm:space-y-10 relative z-10">

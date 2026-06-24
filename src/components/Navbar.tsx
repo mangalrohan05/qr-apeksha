@@ -18,17 +18,10 @@ export default function Navbar({
         {/* Logo Frame */}
         <div className="flex items-center cursor-pointer" onClick={() => setCurrentPage('home')}>
           <div className="logo-container relative">
-            {/* Light Logo (white text, for dark backgrounds) */}
             <img
-              src="/authentiq_logo_light.svg"
-              alt="Authentiq Logo Light"
-              className={`logo absolute inset-0 transition-opacity duration-200 ${logoTheme === 'dark' ? 'opacity-100' : 'opacity-0'}`}
-            />
-            {/* Dark Logo (dark text, for light backgrounds) */}
-            <img
-              src="/authentiq_logo_dark.svg"
-              alt="Authentiq Logo Dark"
-              className={`logo absolute inset-0 transition-opacity duration-200 ${logoTheme === 'light' ? 'opacity-100' : 'opacity-0'}`}
+              src="/authentiq_logo.png"
+              alt="Authentiq Logo"
+              className="logo"
             />
           </div>
         </div>

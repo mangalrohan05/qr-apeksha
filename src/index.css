@@ -198,12 +198,12 @@
 
 /* Define theme variables */
 :root {
-  --nav-logo: url('/authentiq_logo_dark.svg');
+  --nav-logo: url('/authentiq_logo.png');
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --nav-logo: url('/authentiq_logo_light.svg');
+    --nav-logo: url('/authentiq_logo.png');
   }
 }
 
