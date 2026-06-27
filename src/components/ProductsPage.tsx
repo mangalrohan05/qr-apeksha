@@ -2,7 +2,7 @@
 export default function ProductsPage() {
   return (
     <>
-      <section id="products" className="relative bg-[#090d16] pt-40 pb-12">
+      <section id="products" className="relative bg-[#090d16] pt-40 pb-0">
         <div className="max-w-7xl mx-auto px-6 lg:px-8">
           
           {/* Platform Title */}
@@ -22,20 +22,20 @@ export default function ProductsPage() {
           <div 
             data-aos="fade-up" 
             data-aos-duration="1000" 
-            className="sticky top-28 mb-16 bg-[#0f172a]/95 backdrop-blur-md p-10 md:p-12 rounded-[2rem] border border-[#10b981]/20 shadow-2xl flex flex-col lg:flex-row items-center gap-12 z-10 min-h-[480px] lg:min-h-[520px]"
+            className="sticky top-20 sm:top-24 md:top-28 mb-16 bg-[#0f172a]/95 backdrop-blur-md p-5 sm:p-8 md:p-12 rounded-[2rem] border border-[#10b981]/20 shadow-2xl flex flex-col lg:flex-row items-center gap-6 sm:gap-8 md:gap-12 z-10 min-h-[380px] lg:min-h-[520px]"
           >
-            <div className="w-full lg:w-1/2 bg-[#0b0f19] p-4 rounded-2xl border border-slate-700/50 flex items-center justify-center">
-              <div className="w-full aspect-[16/10] bg-[#0c0e17] p-2.5 rounded-[1.5rem] shadow-2xl border-4 border-slate-800/80">
+            <div className="w-full lg:w-1/2 bg-[#0b0f19] p-1.5 sm:p-4 rounded-2xl border border-slate-700/50 flex items-center justify-center">
+              <div className="w-full aspect-[16/10] bg-[#0c0e17] p-1 sm:p-2.5 rounded-[1rem] sm:rounded-[1.5rem] shadow-2xl border-2 sm:border-4 border-slate-800/80">
                 <img 
                   src="/Dashboard.png" 
                   alt="Vendor Control Panel Dashboard" 
-                  className="rounded-xl w-full h-full object-contain transition-transform duration-500 hover:scale-[1.02]" 
+                  className="rounded-lg sm:rounded-xl w-full h-full object-contain transition-transform duration-500 hover:scale-[1.02]" 
                 />
               </div>
             </div>
-            <div className="flex-1 text-left space-y-6">
-              <h2 className="text-3xl md:text-4xl font-extrabold text-white leading-tight">Centralized Vendor Control Panel</h2>
-              <p className="text-slate-300 text-base md:text-lg leading-relaxed font-normal">
+            <div className="flex-1 text-left space-y-4 md:space-y-6">
+              <h2 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-extrabold text-white leading-tight">Centralized Vendor Control Panel</h2>
+              <p className="text-slate-300 text-xs sm:text-sm md:text-base lg:text-lg leading-relaxed font-normal">
                 Track registered templates, total system scans, and suspicious entries in real time via live WebSockets. The dashboard activity stream features a 60-second sliding-window client IP deduplicator to prevent duplicate event logs.
               </p>
             </div>
@@ -46,20 +46,20 @@ export default function ProductsPage() {
             data-aos="fade-up" 
             data-aos-duration="1000" 
             data-aos-delay="100"
-            className="sticky top-32 mb-16 bg-[#0f172a]/95 backdrop-blur-md p-10 md:p-12 rounded-[2rem] border border-[#10b981]/30 shadow-2xl flex flex-col lg:flex-row-reverse items-center gap-12 z-20 min-h-[480px] lg:min-h-[520px]"
+            className="sticky top-20 sm:top-24 md:top-28 mb-16 bg-[#0f172a]/95 backdrop-blur-md p-5 sm:p-8 md:p-12 rounded-[2rem] border border-[#10b981]/30 shadow-2xl flex flex-col lg:flex-row-reverse items-center gap-6 sm:gap-8 md:gap-12 z-20 min-h-[380px] lg:min-h-[520px]"
           >
-            <div className="w-full lg:w-1/2 bg-[#0b0f19] p-4 rounded-2xl border border-slate-700/50 flex items-center justify-center">
-              <div className="w-full aspect-[16/10] bg-[#0c0e17] p-2.5 rounded-[1.5rem] shadow-2xl border-4 border-slate-800/80">
+            <div className="w-full lg:w-1/2 bg-[#0b0f19] p-1.5 sm:p-4 rounded-2xl border border-slate-700/50 flex items-center justify-center">
+              <div className="w-full aspect-[16/10] bg-[#0c0e17] p-1 sm:p-2.5 rounded-[1rem] sm:rounded-[1.5rem] shadow-2xl border-2 sm:border-4 border-slate-800/80">
                 <img 
                   src="/custom_qr_modal.png" 
                   alt="Product QR Code Generation" 
-                  className="rounded-xl w-full h-full object-cover transition-transform duration-500 hover:scale-[1.02]" 
+                  className="rounded-lg sm:rounded-xl w-full h-full object-cover transition-transform duration-500 hover:scale-[1.02]" 
                 />
               </div>
             </div>
-            <div className="flex-1 text-left space-y-6">
-              <h2 className="text-3xl md:text-4xl font-extrabold text-white leading-tight">Dynamic Product QR Code Registry</h2>
-              <p className="text-slate-300 text-base md:text-lg leading-relaxed font-normal">
+            <div className="flex-1 text-left space-y-4 md:space-y-6">
+              <h2 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-extrabold text-white leading-tight">Dynamic Product QR Code Registry</h2>
+              <p className="text-slate-300 text-xs sm:text-sm md:text-base lg:text-lg leading-relaxed font-normal">
                 Connect registered templates to generate cryptographically secure QR code identifiers. Vendors can copy direct verification links or export high-resolution SVGs for packaging and hangtags.
               </p>
             </div>
@@ -70,20 +70,20 @@ export default function ProductsPage() {
             data-aos="fade-up" 
             data-aos-duration="1000" 
             data-aos-delay="150"
-            className="sticky top-36 mb-16 bg-[#0f172a]/95 backdrop-blur-md p-10 md:p-12 rounded-[2rem] border border-[#10b981]/40 shadow-2xl flex flex-col lg:flex-row items-center gap-12 z-30 min-h-[480px] lg:min-h-[520px]"
+            className="sticky top-20 sm:top-24 md:top-28 mb-16 bg-[#0f172a]/95 backdrop-blur-md p-5 sm:p-8 md:p-12 rounded-[2rem] border border-[#10b981]/40 shadow-2xl flex flex-col lg:flex-row items-center gap-6 sm:gap-8 md:gap-12 z-30 min-h-[380px] lg:min-h-[520px]"
           >
-            <div className="w-full lg:w-1/2 bg-[#0b0f19] p-4 rounded-2xl border border-slate-700/50 flex items-center justify-center">
-              <div className="w-full aspect-[16/10] bg-[#0c0e17] p-2.5 rounded-[1.5rem] shadow-2xl border-4 border-slate-800/80">
+            <div className="w-full lg:w-1/2 bg-[#0b0f19] p-1.5 sm:p-4 rounded-2xl border border-slate-700/50 flex items-center justify-center">
+              <div className="w-full aspect-[16/10] bg-[#0c0e17] p-1 sm:p-2.5 rounded-[1rem] sm:rounded-[1.5rem] shadow-2xl border-2 sm:border-4 border-slate-800/80">
                 <img 
                   src="/Image.png" 
                   alt="Capture Product Details" 
-                  className="rounded-xl w-full h-full object-cover transition-transform duration-500 hover:scale-[1.02]" 
+                  className="rounded-lg sm:rounded-xl w-full h-full object-cover transition-transform duration-500 hover:scale-[1.02]" 
                 />
               </div>
             </div>
-            <div className="flex-1 text-left space-y-6">
-              <h2 className="text-3xl md:text-4xl font-extrabold text-white leading-tight">Multi-Angle Image Quality Gate</h2>
-              <p className="text-slate-300 text-base md:text-lg leading-relaxed font-normal">
+            <div className="flex-1 text-left space-y-4 md:space-y-6">
+              <h2 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-extrabold text-white leading-tight">Multi-Angle Image Quality Gate</h2>
+              <p className="text-slate-300 text-xs sm:text-sm md:text-base lg:text-lg leading-relaxed font-normal">
                 Upload three compulsory views—Front, Back, and Label—and an optional Purchase Receipt. The system utilizes mobile-optimized uploads (`capture="environment"`) to immediately run inputs through brightness, focus, and blur quality gates.
               </p>
             </div>
@@ -94,10 +94,10 @@ export default function ProductsPage() {
             data-aos="fade-up" 
             data-aos-duration="1000" 
             data-aos-delay="200"
-            className="relative mb-4 bg-[#0f172a]/95 backdrop-blur-md p-10 md:p-12 rounded-[2rem] border border-[#10b981]/50 shadow-2xl flex flex-col lg:flex-row-reverse items-center gap-12 z-40 min-h-[480px] lg:min-h-[520px]"
+            className="sticky top-20 sm:top-24 md:top-28 mb-4 bg-[#0f172a]/95 backdrop-blur-md p-5 sm:p-8 md:p-12 rounded-[2rem] border border-[#10b981]/50 shadow-2xl flex flex-col lg:flex-row-reverse items-center gap-6 sm:gap-8 md:gap-12 z-40 min-h-[380px] lg:min-h-[520px]"
           >
-            <div className="w-full lg:w-1/2 bg-[#0b0f19] p-4 rounded-2xl border border-slate-700/50 flex items-center justify-center">
-              <div className="w-full aspect-[16/10] bg-[#0c0e17] p-2.5 rounded-[1.5rem] shadow-2xl border-4 border-slate-800/80">
+            <div className="w-full lg:w-1/2 bg-[#0b0f19] p-1.5 sm:p-4 rounded-2xl border border-slate-700/50 flex items-center justify-center">
+              <div className="w-full aspect-[16/10] bg-[#0c0e17] p-1 sm:p-2.5 rounded-[1rem] sm:rounded-[1.5rem] shadow-2xl border-2 sm:border-4 border-slate-800/80">
                 <div className="w-full h-full rounded-xl overflow-hidden relative">
                   <img 
                     src="/Verify-Success.png" 
@@ -107,9 +107,9 @@ export default function ProductsPage() {
                 </div>
               </div>
             </div>
-            <div className="flex-1 text-left space-y-6">
-              <h2 className="text-3xl md:text-4xl font-extrabold text-white leading-tight">AI-Powered Authenticity Verdict</h2>
-              <p className="text-slate-300 text-base md:text-lg leading-relaxed font-normal">
+            <div className="flex-1 text-left space-y-4 md:space-y-6">
+              <h2 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-extrabold text-white leading-tight">AI-Powered Authenticity Verdict</h2>
+              <p className="text-slate-300 text-xs sm:text-sm md:text-base lg:text-lg leading-relaxed font-normal">
                 Display secure, instant authenticity results. Our smart system cross-checks details, flags suspicious scan patterns, and verifies label text in real time. Verdicts are returned on a clear status dial: Green (Authentic), Yellow (Needs Review), or Red (Counterfeit).
               </p>
             </div>
@@ -119,7 +119,7 @@ export default function ProductsPage() {
       </section>
 
       {/* Capabilities Grid Section */}
-      <div className="relative z-50 bg-white border-t border-slate-200 py-24" data-aos="fade-up" data-aos-duration="1000">
+      <div className="relative z-50 bg-white border-t border-slate-200 pt-24 pb-16 md:pb-20" data-aos="fade-up" data-aos-duration="1000">
         <div className="max-w-7xl mx-auto px-6 lg:px-8">
           <div className="text-center mb-16 flex flex-col items-center px-4">
             <span className="text-[#10b981] text-xs font-bold uppercase tracking-[0.25em] mb-8">

@@ -1,7 +1,7 @@
 
 export default function ContactPage() {
   return (
-    <div data-theme="light" className="w-full min-h-screen bg-slate-50 pt-40 pb-16 px-6 sm:px-12 animate-fadeIn">
+    <div data-theme="light" className="w-full min-h-screen bg-slate-50 pt-40 pb-16 md:pb-20 px-6 sm:px-12 animate-fadeIn">
       <div className="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-12 items-start text-left">
 
         {/* Left Column: Get in touch & Info details */}

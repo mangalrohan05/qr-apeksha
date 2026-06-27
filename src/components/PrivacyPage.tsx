@@ -1,6 +1,6 @@
 export default function PrivacyPage() {
   return (
-    <div data-theme="light" className="w-full min-h-screen bg-slate-50 pt-40 pb-16 px-6 sm:px-12 animate-fadeIn">
+    <div data-theme="light" className="w-full min-h-screen bg-slate-50 pt-40 pb-16 md:pb-20 px-6 sm:px-12 animate-fadeIn">
       <div className="max-w-4xl mx-auto bg-white border border-slate-200 rounded-2xl shadow-xl p-8 md:p-12 text-left">
 
         {/* Header */}

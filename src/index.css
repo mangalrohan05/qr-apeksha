@@ -126,12 +126,12 @@
   top: 0;
   left: 0;
   right: 0;
-  height: 6rem;
-  padding: 0 5%;
+  height: 5rem;
+  padding: 0 1rem;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background: rgba(255, 255, 255, 0.75); /* Light transparent background with blur */
+  background: rgba(255, 255, 255, 0.75);
   -webkit-backdrop-filter: blur(15px);
   backdrop-filter: blur(15px);
   border-bottom: 1px solid rgba(226, 232, 240, 0.8);
@@ -139,9 +139,49 @@
   transition: height 0.3s ease, padding 0.3s ease;
 }
 
+@media (min-width: 640px) {
+  .navbar {
+    padding: 0 1.5rem;
+    height: 5.5rem;
+  }
+}
+
+@media (min-width: 768px) {
+  .navbar {
+    padding: 0 3rem;
+    height: 6rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .navbar {
+    padding: 0 5%;
+  }
+}
+
 .navbar.nav-scrolled {
-  height: 4.5rem;
-  padding: 0 3%;
+  height: 4rem;
+  padding: 0 1rem;
+}
+
+@media (min-width: 640px) {
+  .navbar.nav-scrolled {
+    padding: 0 1.5rem;
+    height: 4.25rem;
+  }
+}
+
+@media (min-width: 768px) {
+  .navbar.nav-scrolled {
+    padding: 0 2rem;
+    height: 4.5rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .navbar.nav-scrolled {
+    padding: 0 3%;
+  }
 }
 
 /* Brand styling */
@@ -209,11 +249,26 @@
 
 .logo-container {
   position: relative;
-  width: 180px;
-  height: 45px;
+  width: 140px;
+  height: 35px;
   display: flex;
   align-items: center;
 }
+
+@media (min-width: 640px) {
+  .logo-container {
+    width: 160px;
+    height: 40px;
+  }
+}
+
+@media (min-width: 768px) {
+  .logo-container {
+    width: 180px;
+    height: 45px;
+  }
+}
+
 .logo {
   filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2));
   height: 100%;

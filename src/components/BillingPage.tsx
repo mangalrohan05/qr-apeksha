@@ -314,10 +314,10 @@ export default function BillingPage({
   const currentStepId = (currentStepItem ? currentStepItem.id : 'user_info') as 'user_info' | 'payment';
 
   return (
-    <div data-theme="light" className="min-h-screen bg-slate-50 pt-36 pb-24 px-4 sm:px-6 lg:px-8 text-slate-800 animate-fadeIn relative font-sans">
-      <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-10 items-start">
+    <div data-theme="light" className="min-h-screen bg-slate-50 pt-32 sm:pt-36 pb-16 md:pb-20 px-3 sm:px-6 lg:px-8 text-slate-800 animate-fadeIn relative font-sans">
+      <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 items-start">
         {/* Left Column: Form & Stepper */}
-        <div className="lg:col-span-8 bg-white border border-slate-200/80 rounded-3xl shadow-xl p-8 sm:p-10 space-y-8 text-left">
+        <div className="lg:col-span-8 bg-white border border-slate-200/80 rounded-2xl sm:rounded-3xl shadow-xl p-5 sm:p-8 lg:p-10 space-y-8 text-left">
           
           <div className="border-b border-slate-150 pb-8">
             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6">
@@ -423,12 +423,12 @@ export default function BillingPage({
                         setIsEmailOtpVerified(false);
                       }}
                       placeholder="john@acmebrands.com" 
-                      className={`flex-1 bg-slate-50/50 border rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-[#00b074] text-slate-800 ${errors.email ? 'border-red-500' : 'border-slate-200'}`}
+                      className={`flex-1 min-w-0 bg-slate-50/50 border rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-[#00b074] text-slate-800 ${errors.email ? 'border-red-500' : 'border-slate-200'}`}
                     />
-                    <div className="w-40 flex-shrink-0">
+                    <div className="flex-shrink-0">
                       {isEmailOtpVerified ? (
-                        <div className="w-full h-full flex items-center justify-center gap-2 bg-emerald-50 border border-emerald-200 text-emerald-600 rounded-xl font-bold text-xs uppercase tracking-wider py-3">
-                          <span>Verified ✓</span>
+                        <div className="h-full flex items-center justify-center gap-1.5 bg-emerald-50 border border-emerald-200 text-emerald-600 rounded-xl font-bold text-[10px] sm:text-xs uppercase tracking-wider py-3 px-3 sm:px-4 whitespace-nowrap">
+                          <span>✓ Verified</span>
                         </div>
                       ) : (
                         <button 
@@ -443,9 +443,9 @@ export default function BillingPage({
                             setIsEmailOtpSent(true);
                             setShowEmailOtpPopup(true);
                           }}
-                          className="w-full h-full bg-[#00b074] hover:bg-[#009660] text-white font-bold rounded-xl text-xs uppercase tracking-wider py-3 cursor-pointer"
+                          className="h-full bg-[#00b074] hover:bg-[#009660] text-white font-bold rounded-xl text-[10px] sm:text-xs uppercase tracking-wider py-3 px-3 sm:px-4 cursor-pointer whitespace-nowrap"
                         >
-                          {isEmailOtpSent ? 'Resend OTP' : 'Verify Email'}
+                          {isEmailOtpSent ? 'Resend' : 'Verify Email'}
                         </button>
                       )}
                     </div>
@@ -456,8 +456,8 @@ export default function BillingPage({
                 <div className="space-y-1.5">
                   <label className="block text-xs font-bold uppercase tracking-wider text-slate-500">Mobile Number *</label>
                   <div className="flex gap-2">
-                    <div className="flex gap-2 flex-1">
-                      <span className="flex items-center bg-slate-100 border border-slate-200 rounded-xl px-3 text-slate-500 font-sans text-sm font-semibold select-none">
+                    <div className="flex gap-2 flex-1 min-w-0">
+                      <span className="flex items-center bg-slate-100 border border-slate-200 rounded-xl px-3 text-slate-500 font-sans text-sm font-semibold select-none flex-shrink-0">
                         +91
                       </span>
                       <input
@@ -470,13 +470,13 @@ export default function BillingPage({
                         }}
                         placeholder="9876543210"
                         maxLength={10}
-                        className={`flex-1 bg-slate-50/50 border rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-[#00b074] text-slate-800 ${errors.phone ? 'border-red-500' : 'border-slate-200'}`}
+                        className={`flex-1 min-w-0 bg-slate-50/50 border rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-[#00b074] text-slate-800 ${errors.phone ? 'border-red-500' : 'border-slate-200'}`}
                       />
                     </div>
-                    <div className="w-40 flex-shrink-0">
+                    <div className="flex-shrink-0">
                       {isOtpVerified ? (
-                        <div className="w-full h-full flex items-center justify-center gap-2 bg-emerald-50 border border-emerald-200 text-emerald-600 rounded-xl font-bold text-xs uppercase tracking-wider py-3">
-                          <span>Verified ✓</span>
+                        <div className="h-full flex items-center justify-center gap-1.5 bg-emerald-50 border border-emerald-200 text-emerald-600 rounded-xl font-bold text-[10px] sm:text-xs uppercase tracking-wider py-3 px-3 sm:px-4 whitespace-nowrap">
+                          <span>✓ Verified</span>
                         </div>
                       ) : (
                         <button 
@@ -490,9 +490,9 @@ export default function BillingPage({
                             setIsOtpSent(true);
                             setShowOtpPopup(true);
                           }}
-                          className="w-full h-full bg-[#00b074] hover:bg-[#009660] text-white font-bold rounded-xl text-xs uppercase tracking-wider py-3 cursor-pointer"
+                          className="h-full bg-[#00b074] hover:bg-[#009660] text-white font-bold rounded-xl text-[10px] sm:text-xs uppercase tracking-wider py-3 px-3 sm:px-4 cursor-pointer whitespace-nowrap"
                         >
-                          {isOtpSent ? 'Resend OTP' : 'Verify Mobile'}
+                          {isOtpSent ? 'Resend' : 'Verify Mobile'}
                         </button>
                       )}
                     </div>
@@ -685,7 +685,7 @@ export default function BillingPage({
           )}
 
           {/* Navigation Buttons inside BillingPage */}
-          <div className="flex justify-between items-center border-t border-slate-150 pt-6">
+          <div className="flex flex-wrap justify-between items-center gap-3 border-t border-slate-150 pt-6">
             {checkoutStep > 1 ? (
               <button
                 type="button"
@@ -769,7 +769,7 @@ export default function BillingPage({
         </div>
 
         {/* Right Column: Invoice Summary Card */}
-        <div className="lg:col-span-4 bg-slate-50 border border-slate-200 rounded-3xl shadow-lg overflow-hidden lg:sticky lg:top-28 text-left animate-fadeIn">
+        <div className="lg:col-span-4 bg-slate-50 border border-slate-200 rounded-2xl sm:rounded-3xl shadow-lg overflow-hidden lg:sticky lg:top-28 text-left animate-fadeIn">
           <div className="bg-[#003057] p-5.5 text-white text-center border-b border-[#001e36]">
             <h2 className="text-lg font-light tracking-tight">Invoice Summary</h2>
             <p className="text-slate-300 text-[10px] font-normal uppercase tracking-wider mt-0.5">Plan Allocation Metrics</p>

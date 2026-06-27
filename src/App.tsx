@@ -2,6 +2,7 @@ import { useState, useEffect, lazy, Suspense } from 'react';
 import Navbar from './components/Navbar';
 import HomePage from './components/HomePage';
 import Footer from './components/Footer';
+import SideDrawer from './components/SideDrawer';
 
 const PlansPage = lazy(() => import('./components/PlansPage'));
 const ProductsPage = lazy(() => import('./components/ProductsPage'));
@@ -38,6 +39,9 @@ export default function App() {
 
   // Free Trial side drawer toggle state
   const [isFreeTrialDrawerOpen, setIsFreeTrialDrawerOpen] = useState<boolean>(false);
+
+  // Mobile navigation drawer state
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState<boolean>(false);
 
   // Interactive plan sizing states (Business)
   const [businessUsers, setBusinessUsers] = useState<number>(5);
@@ -410,6 +414,14 @@ export default function App() {
         setCurrentPage={setCurrentPage}
         isNavScrolled={isNavScrolled}
         logoTheme={logoTheme}
+        isMobileMenuOpen={isMobileMenuOpen}
+        setIsMobileMenuOpen={setIsMobileMenuOpen}
+      />
+      <SideDrawer
+        isOpen={isMobileMenuOpen}
+        onClose={() => setIsMobileMenuOpen(false)}
+        currentPage={currentPage}
+        setCurrentPage={setCurrentPage}
       />
       <main className="w-full">
         <Suspense fallback={
