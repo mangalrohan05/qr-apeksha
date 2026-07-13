@@ -1,8 +1,8 @@
 @import "tailwindcss";
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
 
 @theme {
-  --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
+  --font-sans: 'Manrope', system-ui, -apple-system, sans-serif;
+  --font-display: 'Sora', system-ui, -apple-system, sans-serif;
 }
 
 @keyframes marquee {
@@ -20,6 +20,20 @@
 
 .animate-marquee:hover {
   animation-play-state: paused;
+}
+
+@keyframes aq-rise {
+  from { opacity: 0; transform: translateY(22px); }
+  to { opacity: 1; transform: none; }
+}
+@keyframes aq-scan {
+  0% { top: 14%; }
+  50% { top: 78%; }
+  100% { top: 14%; }
+}
+@keyframes aq-pulse {
+  0%, 100% { opacity: .5; transform: scale(1); }
+  50% { opacity: 1; transform: scale(1.06); }
 }
 
 /* Supply chain animations */

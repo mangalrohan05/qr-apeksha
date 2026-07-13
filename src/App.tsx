@@ -4,15 +4,14 @@ import HomePage from './components/HomePage';
 import Footer from './components/Footer';
 import SideDrawer from './components/SideDrawer';
 
-const PlansPage = lazy(() => import('./components/PlansPage'));
-const ProductsPage = lazy(() => import('./components/ProductsPage'));
-const AboutPage = lazy(() => import('./components/AboutPage'));
-const ContactPage = lazy(() => import('./components/ContactPage'));
 const BillingPage = lazy(() => import('./components/BillingPage'));
 const TermsPage = lazy(() => import('./components/TermsPage'));
 const PrivacyPage = lazy(() => import('./components/PrivacyPage'));
+const ContactPage = lazy(() => import('./components/ContactPage'));
 
-type Page = 'home' | 'plans' | 'products' | 'about' | 'contact' | 'billing' | 'terms' | 'privacy';
+type Page = 'home' | 'billing' | 'terms' | 'privacy' | 'contact';
+
+const anchorHashes = ['home', 'how', 'features', 'pricing', 'faq'];
 
 interface SelectedPlanInfo {
   name: string;
@@ -92,10 +91,10 @@ export default function App() {
 
     const handleHashChange = () => {
       const hash = window.location.hash.replace('#', '');
-      const trackedPages: Page[] = ['terms', 'privacy'];
+      const trackedPages: Page[] = ['terms', 'privacy', 'billing', 'contact'];
       if (trackedPages.includes(hash as Page)) {
         setCurrentPage(hash as Page);
-      } else {
+      } else if (!anchorHashes.includes(hash)) {
         setCurrentPage('home');
       }
     };
@@ -104,13 +103,19 @@ export default function App() {
 
     // Initial routing setup (Enables back button to go home even on direct subpage land/reload)
     const initialHash = window.location.hash.replace('#', '');
-    const trackedPages: Page[] = ['terms', 'privacy'];
+    const trackedPages: Page[] = ['terms', 'privacy', 'billing', 'contact'];
     if (trackedPages.includes(initialHash as Page)) {
       window.history.replaceState({ page: 'home' }, '', '#');
       window.history.pushState({ page: initialHash }, '', '#' + initialHash);
       setCurrentPage(initialHash as Page);
     } else {
       setCurrentPage('home');
+      if (anchorHashes.includes(initialHash)) {
+        setTimeout(() => {
+          const el = document.getElementById(initialHash);
+          if (el) el.scrollIntoView({ behavior: 'smooth' });
+        }, 500);
+      }
     }
 
     return () => window.removeEventListener('hashchange', handleHashChange);
@@ -118,13 +123,13 @@ export default function App() {
 
   useEffect(() => {
     const currentHash = window.location.hash.replace('#', '');
-    const trackedPages: Page[] = ['terms', 'privacy'];
+    const trackedPages: Page[] = ['terms', 'privacy', 'billing', 'contact'];
     if (trackedPages.includes(currentPage)) {
       if (currentHash !== currentPage) {
         window.location.hash = currentPage;
       }
     } else {
-      if (currentHash !== '') {
+      if (currentHash !== '' && !anchorHashes.includes(currentHash)) {
         window.history.replaceState(null, '', window.location.pathname + window.location.search);
       }
     }
@@ -169,6 +174,10 @@ export default function App() {
 
   // Scroll to top of the page when the page changes
   useEffect(() => {
+    const currentHash = window.location.hash.replace('#', '');
+    if (anchorHashes.includes(currentHash) && currentPage === 'home') {
+      return; // Do not scroll to top if we are just navigating to an anchor on home page
+    }
     const timer = setTimeout(() => {
       window.scrollTo({ top: 0, behavior: 'instant' as any });
       document.documentElement.scrollTop = 0;
@@ -366,22 +375,6 @@ export default function App() {
     switch (currentPage) {
       case 'home':
         return <HomePage setCurrentPage={setCurrentPage} />;
-      case 'plans':
-        return (
-          <PlansPage
-            handleSelectPlan={handleSelectPlan}
-            isAnnual={isAnnual}
-            isFreeTrialDrawerOpen={isFreeTrialDrawerOpen}
-            setIsFreeTrialDrawerOpen={setIsFreeTrialDrawerOpen}
-            setCurrentPage={setCurrentPage}
-          />
-        );
-      case 'products':
-        return <ProductsPage />;
-      case 'about':
-        return <AboutPage setCurrentPage={setCurrentPage} />;
-      case 'contact':
-        return <ContactPage />;
       case 'billing':
         return (
           <BillingPage
@@ -402,6 +395,8 @@ export default function App() {
         return <TermsPage />;
       case 'privacy':
         return <PrivacyPage />;
+      case 'contact':
+        return <ContactPage />;
       default:
         return <HomePage setCurrentPage={setCurrentPage} />;
     }

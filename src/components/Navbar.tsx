@@ -12,82 +12,102 @@ export default function Navbar({
   currentPage,
   setCurrentPage,
   isNavScrolled,
-  logoTheme,
   isMobileMenuOpen,
   setIsMobileMenuOpen,
 }: NavbarProps) {
+  
+  const handleNavClick = (e: any, hash: string) => {
+    e.preventDefault();
+    if (currentPage !== 'home') {
+      setCurrentPage('home');
+      setTimeout(() => {
+        window.history.pushState(null, '', hash);
+        const el = document.getElementById(hash.replace('#', ''));
+        if (el) el.scrollIntoView({ behavior: 'smooth' });
+      }, 100);
+    } else {
+      window.history.pushState(null, '', hash);
+      const el = document.getElementById(hash.replace('#', ''));
+      if (el) el.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
+
   return (
     <header className={`navbar ${isNavScrolled ? 'nav-scrolled' : ''}`}>
-      <div className="w-full flex items-center justify-between relative">
+      <div className="w-full max-w-7xl mx-auto flex items-center justify-between relative px-2">
         {/* Logo Frame */}
-        <div className="flex items-center cursor-pointer" onClick={() => setCurrentPage('home')}>
-          <div className="logo-container relative">
-            <img
-              src="/authentiq_logo.png"
-              alt="Authentiq Logo"
-              className="logo"
-            />
-          </div>
-        </div>
+        <a href="#home" className="flex items-center cursor-pointer gap-2.5" onClick={(e) => handleNavClick(e, '#home')}>
+          <img src="/authentiq_logo.png" alt="Authentiq Logo" className="w-[119px] h-[119px] object-contain" />
+        </a>
 
         {/* Centered Navigation Menu Array - Desktop Only */}
-        <nav className="hidden md:flex items-center justify-center gap-8 lg:gap-10 absolute left-1/2 -translate-x-1/2">
-          <button
-            onClick={() => setCurrentPage('home')}
-            className={`text-sm lg:text-base font-medium transition-all duration-200 cursor-pointer ${currentPage === 'home' ? 'active-nav underline decoration-2 underline-offset-8' : ''}`}
+        <nav className="hidden md:flex items-center justify-center gap-7 absolute left-1/2 -translate-x-1/2">
+          <a
+            href="#home"
+            onClick={(e) => handleNavClick(e, '#home')}
+            className="text-[15px] font-semibold text-[#38434f] hover:text-[#16B981] transition-colors"
           >
             Home
-          </button>
-
-          <button
-            onClick={() => setCurrentPage('plans')}
-            className={`text-sm lg:text-base font-medium transition-all duration-200 cursor-pointer ${currentPage === 'plans' ? 'active-nav underline decoration-2 underline-offset-8' : ''}`}
+          </a>
+          <a
+            href="#how"
+            onClick={(e) => handleNavClick(e, '#how')}
+            className="text-[15px] font-semibold text-[#38434f] hover:text-[#16B981] transition-colors"
           >
-            Plans
-          </button>
-
-          <button
-            onClick={() => setCurrentPage('products')}
-            className={`text-sm lg:text-base font-medium transition-all duration-200 cursor-pointer ${currentPage === 'products' ? 'active-nav underline decoration-2 underline-offset-8' : ''}`}
+            How it works
+          </a>
+          <a
+            href="#features"
+            onClick={(e) => handleNavClick(e, '#features')}
+            className="text-[15px] font-semibold text-[#38434f] hover:text-[#16B981] transition-colors"
           >
-            Services
-          </button>
-
-          <button
-            onClick={() => setCurrentPage('about')}
-            className={`text-sm lg:text-base font-medium transition-all duration-200 cursor-pointer ${currentPage === 'about' ? 'active-nav underline decoration-2 underline-offset-8' : ''}`}
+            Features
+          </a>
+          <a
+            href="#pricing"
+            onClick={(e) => handleNavClick(e, '#pricing')}
+            className="text-[15px] font-semibold text-[#38434f] hover:text-[#16B981] transition-colors"
           >
-            About us
-          </button>
-
-          <button
-            onClick={() => setCurrentPage('contact')}
-            className={`text-sm lg:text-base font-medium transition-all duration-200 cursor-pointer ${currentPage === 'contact' ? 'active-nav underline decoration-2 underline-offset-8' : ''}`}
+            Pricing
+          </a>
+          <a
+            href="#faq"
+            onClick={(e) => handleNavClick(e, '#faq')}
+            className="text-[15px] font-semibold text-[#38434f] hover:text-[#16B981] transition-colors"
           >
-            Contact us
-          </button>
+            FAQ
+          </a>
+          <a
+            href="#contact"
+            onClick={(e) => { e.preventDefault(); setCurrentPage('contact'); }}
+            className="text-[15px] font-semibold text-[#38434f] hover:text-[#16B981] transition-colors"
+          >
+            Contact
+          </a>
         </nav>
+
+        {/* Right side CTA - Desktop Only */}
+        <div className="hidden md:flex items-center gap-4">
+          <button
+            onClick={() => setCurrentPage('billing')}
+            className="bg-[#16B981] text-white font-bold text-[15px] px-5 py-2.5 rounded-[10px] shadow-[0_6px_16px_rgba(22,185,129,0.28)] hover:scale-105 transition-transform"
+          >
+            Start Free Trial
+          </button>
+        </div>
 
         {/* Hamburger Menu Button - Mobile Only */}
         <button
           onClick={() => setIsMobileMenuOpen(true)}
-          className="md:hidden p-2 rounded-lg hover:bg-slate-100 transition-colors cursor-pointer"
+          className="md:hidden p-2 rounded-lg text-[#0F2A43] hover:bg-slate-100 transition-colors cursor-pointer"
           aria-label="Open menu"
         >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-            strokeWidth={2}
-            stroke="currentColor"
-            className="w-6 h-6 text-slate-700"
-          >
-            <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round">
+            <line x1="4" y1="7" x2="20" y2="7"></line>
+            <line x1="4" y1="12" x2="20" y2="12"></line>
+            <line x1="4" y1="17" x2="20" y2="17"></line>
           </svg>
         </button>
-
-        {/* Spacer to balance flex layout visually on larger viewports */}
-        <div className="w-[140px] sm:w-[160px] md:w-[180px] hidden md:block pointer-events-none" />
       </div>
     </header>
   );
