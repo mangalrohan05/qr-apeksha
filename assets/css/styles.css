@@ -1,10 +1,15 @@
-@import "tailwindcss";
+@import url('https://fonts.googleapis.com/css2?family=Sora:wght@500;600;700;800&family=Manrope:wght@400;500;600;700&display=swap');
 
-@theme {
-  --font-sans: 'Manrope', system-ui, -apple-system, sans-serif;
-  --font-display: 'Sora', system-ui, -apple-system, sans-serif;
+/* Font application */
+body {
+  font-family: 'Manrope', system-ui, -apple-system, sans-serif;
 }
 
+.font-display {
+  font-family: 'Sora', system-ui, -apple-system, sans-serif;
+}
+
+/* Animations */
 @keyframes marquee {
   0% {
     transform: translateX(0);
@@ -26,11 +31,13 @@
   from { opacity: 0; transform: translateY(22px); }
   to { opacity: 1; transform: none; }
 }
+
 @keyframes aq-scan {
   0% { top: 14%; }
   50% { top: 78%; }
   100% { top: 14%; }
 }
+
 @keyframes aq-pulse {
   0%, 100% { opacity: .5; transform: scale(1); }
   50% { opacity: 1; transform: scale(1.06); }
@@ -42,11 +49,13 @@
     stroke-dashoffset: -100;
   }
 }
+
 @keyframes dash-reverse {
   to {
     stroke-dashoffset: 100;
   }
 }
+
 @keyframes float-airplane {
   0% {
     transform: translate(0, 0) rotate(15deg);
@@ -58,6 +67,7 @@
     transform: translate(0, 0) rotate(15deg);
   }
 }
+
 @keyframes float-ship {
   0% {
     transform: translate(0, 0) scale(1);
@@ -69,6 +79,7 @@
     transform: translate(0, 0) scale(1);
   }
 }
+
 @keyframes bounce-slow {
   0%, 100% {
     transform: translateY(0);
@@ -77,6 +88,7 @@
     transform: translateY(-15px);
   }
 }
+
 @keyframes pulse-slow {
   0%, 100% {
     opacity: 0.3;
@@ -89,18 +101,23 @@
 .animate-dash {
   animation: dash 5s linear infinite;
 }
+
 .animate-dash-reverse {
   animation: dash-reverse 7s linear infinite;
 }
+
 .animate-float-airplane {
   animation: float-airplane 12s ease-in-out infinite;
 }
+
 .animate-float-ship {
   animation: float-ship 15s ease-in-out infinite;
 }
+
 .animate-bounce-slow {
   animation: bounce-slow 6s ease-in-out infinite;
 }
+
 .animate-pulse-slow {
   animation: pulse-slow 3s ease-in-out infinite;
 }
@@ -116,6 +133,7 @@
     transform: translateX(0);
   }
 }
+
 @keyframes slideInRight {
   from {
     opacity: 0;
@@ -130,6 +148,7 @@
 .animate-slide-in-left {
   animation: slideInLeft 1s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
+
 .animate-slide-in-right {
   animation: slideInRight 1s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
@@ -176,6 +195,9 @@
 .navbar.nav-scrolled {
   height: 4rem;
   padding: 0 1rem;
+  background: rgba(255, 255, 255, 0.9);
+  border-bottom: 1px solid rgba(226, 232, 240, 0.95);
+  box-shadow: 0 4px 20px -2px rgba(15, 42, 67, 0.05);
 }
 
 @media (min-width: 640px) {
@@ -204,18 +226,19 @@
 }
 
 /* Dark links for readability */
-.navbar button {
-  color: #003057 !important;
+.navbar a {
+  color: #38434f;
   text-decoration: none;
-  font-weight: 500;
-  transition: opacity 0.2s ease;
+  font-weight: 600;
+  transition: color 0.2s ease;
 }
-.navbar button:hover {
-  color: #00b074 !important;
-  opacity: 0.85;
+
+.navbar a:hover {
+  color: #16B981;
 }
-.navbar button.active-nav {
-  color: #00b074 !important;
+
+.navbar a.active-nav {
+  color: #16B981;
 }
 
 /* Wave animations */
@@ -227,9 +250,11 @@
     transform: translateY(-15px) scaleY(1.03);
   }
 }
+
 .animate-wave-slow {
   animation: waveSway 15s ease-in-out infinite;
 }
+
 .animate-wave-fast {
   animation: waveSway 10s ease-in-out infinite alternate;
 }
@@ -242,23 +267,13 @@
   color: #a0aec0;
   font-size: 0.9rem;
 }
+
 .status-dot {
   width: 8px;
   height: 8px;
   background: #48bb78;
   border-radius: 50%;
   box-shadow: 0 0 8px #48bb78;
-}
-
-/* Define theme variables */
-:root {
-  --nav-logo: url('/authentiq_logo.png');
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --nav-logo: url('/authentiq_logo.png');
-  }
 }
 
 .logo-container {
@@ -299,6 +314,7 @@
     background-position: 100% 50%;
   }
 }
+
 .animate-text-shine {
   animation: text-shine 3s ease-in-out infinite alternate;
   background-size: 200% auto;
@@ -331,5 +347,25 @@
   background-color: rgba(255, 255, 255, 0.55);
 }
 
+/* Scroll reveal triggers */
+[data-reveal] {
+  opacity: 0;
+  transform: translateY(22px);
+  will-change: opacity, transform;
+}
 
+[data-reveal].revealed {
+  transition: opacity .6s cubic-bezier(.2,.7,.3,1), transform .6s cubic-bezier(.2,.7,.3,1);
+  opacity: 1;
+  transform: none;
+}
 
+/* Custom Fade in utility */
+.animate-fadeIn {
+  animation: fadeIn 0.4s ease-out forwards;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
