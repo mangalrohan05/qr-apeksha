@@ -34,7 +34,7 @@ $homePrefix = $isHome ? '' : 'index.php';
 
     <!-- Right side CTA - Desktop Only -->
     <div class="hidden md:flex items-center gap-4">
-      <a href="billing.php" class="bg-[#16B981] text-white font-bold text-[15px] px-5 py-2.5 rounded-[10px] shadow-[0_6px_16px_rgba(22,185,129,0.28)] hover:scale-105 transition-transform text-center inline-block">
+      <a href="billing.php" class="bg-[#16B981] text-white font-bold text-[15px] px-5 py-2.5 rounded-[10px] shadow-[0_6px_16px_rgba(22,185,129,0.28)] hover:bg-[#13a371] hover:scale-105 hover:!text-white transition-all duration-200 text-center inline-block" style="color: white !important;">
         Start Free Trial
       </a>
     </div>

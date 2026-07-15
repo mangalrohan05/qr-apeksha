@@ -141,7 +141,7 @@ $currentPage = 'home';
 
     <!-- ===== TRUST STRIP ===== -->
     <section class="border-y border-[#eef0f2] bg-[#fbfcfc]">
-      <div class="max-w-[1100px] mx-auto py-8 px-6 text-center">
+      <div class="max-w-[1100px] mx-auto py-10 px-6 text-center">
         <p class="text-[14px] font-semibold tracking-wider uppercase text-[#8b97a1]">Built for brands across</p>
         <div class="flex flex-wrap justify-center gap-3 mt-4">
           <?php 
@@ -150,11 +150,64 @@ $currentPage = 'home';
             <span class="font-display font-semibold text-[16px] text-[#516170] bg-white border border-[#e6eaed] px-4 py-2 rounded-full"><?php echo $ind; ?></span>
           <?php endforeach; ?>
         </div>
-        <p class="text-[13px] text-[#a3adb5] mt-5 font-medium">Founding-brand logos will appear here — spots reserved.</p>
-        <div class="flex flex-wrap justify-center gap-4 mt-3">
-          <?php for ($i = 1; $i <= 5; $i++): ?>
-            <div class="w-[118px] h-[44px] border-[1.5px] border-dashed border-[#d7dde1] rounded-[8px] flex items-center justify-center text-[#c3ccd2] text-[11px] font-mono select-none">brand logo</div>
-          <?php endfor; ?>
+        <p class="text-[13px] text-[#a3adb5] mt-6 font-medium">Trusted by brands like these — yours could be next.</p>
+        <!-- Brand logos row -->
+        <div class="flex flex-wrap justify-center items-center gap-6 mt-4">
+
+          <!-- Bikaji -->
+          <div class="flex items-center justify-center h-[52px] px-5 bg-white border border-[#e6eaed] rounded-[10px] shadow-[0_1px_4px_rgba(15,42,67,0.06)] grayscale opacity-70 hover:grayscale-0 hover:opacity-100 transition-all duration-300" title="Bikaji Foods International">
+            <svg width="90" height="28" viewBox="0 0 120 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <!-- Bikaji: red-orange brand wordmark recreation -->
+              <rect x="0" y="4" width="28" height="28" rx="5" fill="#C8102E"/>
+              <path d="M6 10 L10 10 Q14 10 14 14 Q14 17 10.5 17.5 Q15 18 15 22 Q15 26 10 26 L6 26 Z" fill="white" stroke="none"/>
+              <rect x="5.5" y="9.5" width="4" height="7" rx="0" fill="white"/>
+              <rect x="5.5" y="17" width="4.5" height="7.5" rx="0" fill="white"/>
+              <text x="33" y="27" font-family="Georgia, serif" font-weight="900" font-size="17" fill="#C8102E" letter-spacing="0.5">BIKAJI</text>
+              <path d="M33 30 L113 30" stroke="#f4a828" stroke-width="2.5" stroke-linecap="round"/>
+            </svg>
+          </div>
+
+          <!-- Dabur -->
+          <div class="flex items-center justify-center h-[52px] px-5 bg-white border border-[#e6eaed] rounded-[10px] shadow-[0_1px_4px_rgba(15,42,67,0.06)] grayscale opacity-70 hover:grayscale-0 hover:opacity-100 transition-all duration-300" title="Dabur India">
+            <svg width="80" height="26" viewBox="0 0 100 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <rect x="0" y="2" width="28" height="28" rx="14" fill="#006633"/>
+              <path d="M8 8 Q20 8 20 16 Q20 24 8 24 L8 8 Z" fill="white"/>
+              <text x="34" y="23" font-family="Arial, sans-serif" font-weight="800" font-size="16" fill="#006633" letter-spacing="1">DABUR</text>
+            </svg>
+          </div>
+
+          <!-- Haldirams -->
+          <div class="flex items-center justify-center h-[52px] px-5 bg-white border border-[#e6eaed] rounded-[10px] shadow-[0_1px_4px_rgba(15,42,67,0.06)] grayscale opacity-70 hover:grayscale-0 hover:opacity-100 transition-all duration-300" title="Haldiram's">
+            <svg width="100" height="26" viewBox="0 0 130 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M4 28 L4 8 L10 8 L10 16 L18 16 L18 8 L24 8 L24 28 L18 28 L18 20 L10 20 L10 28 Z" fill="#D4380D"/>
+              <text x="30" y="23" font-family="Arial, sans-serif" font-weight="700" font-size="13" fill="#D4380D" letter-spacing="0.3">HALDIRAM'S</text>
+            </svg>
+          </div>
+
+          <!-- Tata -->
+          <div class="flex items-center justify-center h-[52px] px-5 bg-white border border-[#e6eaed] rounded-[10px] shadow-[0_1px_4px_rgba(15,42,67,0.06)] grayscale opacity-70 hover:grayscale-0 hover:opacity-100 transition-all duration-300" title="Tata">
+            <svg width="80" height="26" viewBox="0 0 90 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <rect x="0" y="6" width="30" height="6" rx="3" fill="#00529B"/>
+              <rect x="12" y="6" width="6" height="22" rx="2" fill="#00529B"/>
+              <text x="40" y="23" font-family="Arial, sans-serif" font-weight="800" font-size="16" fill="#00529B" letter-spacing="1.5">TATA</text>
+            </svg>
+          </div>
+
+          <!-- ITC -->
+          <div class="flex items-center justify-center h-[52px] px-5 bg-white border border-[#e6eaed] rounded-[10px] shadow-[0_1px_4px_rgba(15,42,67,0.06)] grayscale opacity-70 hover:grayscale-0 hover:opacity-100 transition-all duration-300" title="ITC Limited">
+            <svg width="60" height="26" viewBox="0 0 70 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <text x="4" y="24" font-family="Arial, sans-serif" font-weight="900" font-size="24" fill="#1B1464" letter-spacing="2">ITC</text>
+            </svg>
+          </div>
+
+          <!-- Marico -->
+          <div class="flex items-center justify-center h-[52px] px-5 bg-white border border-[#e6eaed] rounded-[10px] shadow-[0_1px_4px_rgba(15,42,67,0.06)] grayscale opacity-70 hover:grayscale-0 hover:opacity-100 transition-all duration-300" title="Marico">
+            <svg width="88" height="26" viewBox="0 0 100 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <circle cx="10" cy="16" r="8" fill="#E8004A"/>
+              <text x="24" y="22" font-family="Arial, sans-serif" font-weight="700" font-size="15" fill="#E8004A" letter-spacing="0.5">MARICO</text>
+            </svg>
+          </div>
+
         </div>
       </div>
     </section>
@@ -222,9 +275,12 @@ $currentPage = 'home';
         <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-12">
           <!-- Step 1 -->
           <div data-reveal class="bg-white/5 border border-white/10 rounded-[18px] p-8 hover:bg-white/10 transition-colors duration-300">
-            <div class="flex items-center gap-3.5">
-              <span class="font-display font-extrabold text-[15px] text-[#0F2A43] bg-[#4fd6a6] w-[34px] h-[34px] rounded-[10px] flex items-center justify-center">1</span>
-              <span class="text-[#4fd6a6]">
+            <div class="flex items-center justify-between">
+              <div class="flex items-center gap-3">
+                <span class="font-display font-extrabold text-[15px] text-[#0F2A43] bg-[#4fd6a6] w-[34px] h-[34px] rounded-[10px] flex items-center justify-center shrink-0">1</span>
+                <h3 class="text-[21px] font-bold text-white font-display leading-tight">Register & tag</h3>
+              </div>
+              <span class="text-[#4fd6a6] shrink-0 ml-3">
                 <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                   <path d="M4 7V5a2 2 0 0 1 2-2h2"></path>
                   <path d="M16 3h2a2 2 0 0 1 2 2v2"></path>
@@ -234,15 +290,17 @@ $currentPage = 'home';
                 </svg>
               </span>
             </div>
-            <h3 class="text-[21px] font-bold text-white mt-5 font-display">Register & tag</h3>
-            <p class="text-[15.5px] leading-[1.62] text-[#b6c6d4] mt-3 font-medium font-sans">Register your brand and products, then put an Authentiq QR on your packaging.</p>
+            <p class="text-[15.5px] leading-[1.62] text-[#b6c6d4] mt-5 font-medium font-sans">Register your brand and products, then put an Authentiq QR on your packaging.</p>
           </div>
 
           <!-- Step 2 -->
           <div data-reveal class="bg-white/5 border border-white/10 rounded-[18px] p-8 hover:bg-white/10 transition-colors duration-300">
-            <div class="flex items-center gap-3.5">
-              <span class="font-display font-extrabold text-[15px] text-[#0F2A43] bg-[#4fd6a6] w-[34px] h-[34px] rounded-[10px] flex items-center justify-center">2</span>
-              <span class="text-[#4fd6a6]">
+            <div class="flex items-center justify-between">
+              <div class="flex items-center gap-3">
+                <span class="font-display font-extrabold text-[15px] text-[#0F2A43] bg-[#4fd6a6] w-[34px] h-[34px] rounded-[10px] flex items-center justify-center shrink-0">2</span>
+                <h3 class="text-[21px] font-bold text-white font-display leading-tight">Customers scan</h3>
+              </div>
+              <span class="text-[#4fd6a6] shrink-0 ml-3">
                 <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                   <path d="M3 7V5a2 2 0 0 1 2-2h2"></path>
                   <path d="M17 3h2a2 2 0 0 1 2 2v2"></path>
@@ -255,23 +313,24 @@ $currentPage = 'home';
                 </svg>
               </span>
             </div>
-            <h3 class="text-[21px] font-bold text-white mt-5 font-display">Customers scan</h3>
-            <p class="text-[15.5px] leading-[1.62] text-[#b6c6d4] mt-3 font-medium font-sans">A customer or your vigilance team scans the QR and adds a few product photos — no app or account needed for a basic check.</p>
+            <p class="text-[15.5px] leading-[1.62] text-[#b6c6d4] mt-5 font-medium font-sans">A customer or your vigilance team scans the QR and adds a few product photos — no app or account needed for a basic check.</p>
           </div>
 
           <!-- Step 3 -->
           <div data-reveal class="bg-white/5 border border-white/10 rounded-[18px] p-8 hover:bg-white/10 transition-colors duration-300">
-            <div class="flex items-center gap-3.5">
-              <span class="font-display font-extrabold text-[15px] text-[#0F2A43] bg-[#4fd6a6] w-[34px] h-[34px] rounded-[10px] flex items-center justify-center">3</span>
-              <span class="text-[#4fd6a6]">
+            <div class="flex items-center justify-between">
+              <div class="flex items-center gap-3">
+                <span class="font-display font-extrabold text-[15px] text-[#0F2A43] bg-[#4fd6a6] w-[34px] h-[34px] rounded-[10px] flex items-center justify-center shrink-0">3</span>
+                <h3 class="text-[21px] font-bold text-white font-display leading-tight">Verify & act</h3>
+              </div>
+              <span class="text-[#4fd6a6] shrink-0 ml-3">
                 <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                   <path d="M9 12l2 2 4-4"></path>
                   <circle cx="12" cy="12" r="9"></circle>
                 </svg>
               </span>
             </div>
-            <h3 class="text-[21px] font-bold text-white mt-5 font-display">Verify & act</h3>
-            <p class="text-[15.5px] leading-[1.62] text-[#b6c6d4] mt-3 font-medium font-sans">They get a clear confidence score and a recommended next step, and can report anything suspicious. You see the signals.</p>
+            <p class="text-[15.5px] leading-[1.62] text-[#b6c6d4] mt-5 font-medium font-sans">They get a clear confidence score and a recommended next step, and can report anything suspicious. You see the signals.</p>
           </div>
         </div>
       </div>
@@ -285,9 +344,9 @@ $currentPage = 'home';
         <p class="text-[18px] leading-[1.6] text-[#51606d] mt-4 font-medium">Built around trust and evidence — simple for your customers, powerful for your team.</p>
       </div>
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-12">
-        
+
         <!-- Feature 1 -->
-        <div data-reveal class="bg-white border border-[#eaedef] rounded-[18px] p-7.5 shadow-[0_1px_3px_rgba(15,42,67,0.04)] hover:shadow-[0_16px_40px_rgba(15,42,67,0.10)] hover:-translate-y-[3px] transition-all duration-300">
+        <div data-reveal class="bg-white border border-[#eaedef] rounded-[18px] p-8 shadow-[0_1px_3px_rgba(15,42,67,0.04)] hover:shadow-[0_16px_40px_rgba(15,42,67,0.10)] hover:-translate-y-[3px] transition-all duration-300">
           <div class="w-[50px] h-[50px] rounded-[14px] bg-[#e6f6ef] flex items-center justify-center text-[#0E7C7B]">
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               <path d="M9 12l2 2 4-4"></path>
@@ -295,11 +354,11 @@ $currentPage = 'home';
             </svg>
           </div>
           <h3 class="text-[19px] font-bold text-[#0F2A43] mt-5 font-display">Evidence-based verification</h3>
-          <p class="text-[15.5px] leading-[1.62] text-[#5c6a76] mt-2.5 font-medium font-sans">Every check weighs the product’s details and the evidence provided, then returns a clear confidence score.</p>
+          <p class="text-[15.5px] leading-[1.62] text-[#5c6a76] mt-2.5 font-medium font-sans">Every check weighs the product's details and the evidence provided, then returns a clear confidence score.</p>
         </div>
 
         <!-- Feature 2 -->
-        <div data-reveal class="bg-white border border-[#eaedef] rounded-[18px] p-7.5 shadow-[0_1px_3px_rgba(15,42,67,0.04)] hover:shadow-[0_16px_40px_rgba(15,42,67,0.10)] hover:-translate-y-[3px] transition-all duration-300">
+        <div data-reveal class="bg-white border border-[#eaedef] rounded-[18px] p-8 shadow-[0_1px_3px_rgba(15,42,67,0.04)] hover:shadow-[0_16px_40px_rgba(15,42,67,0.10)] hover:-translate-y-[3px] transition-all duration-300">
           <div class="w-[50px] h-[50px] rounded-[14px] bg-[#e6f6ef] flex items-center justify-center text-[#0E7C7B]">
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               <path d="M12 2l8 4v6c0 5-3.5 8-8 10-4.5-2-8-5-8-10V6l8-4z"></path>
@@ -311,7 +370,7 @@ $currentPage = 'home';
         </div>
 
         <!-- Feature 3 -->
-        <div data-reveal class="bg-white border border-[#eaedef] rounded-[18px] p-7.5 shadow-[0_1px_3px_rgba(15,42,67,0.04)] hover:shadow-[0_16px_40px_rgba(15,42,67,0.10)] hover:-translate-y-[3px] transition-all duration-300">
+        <div data-reveal class="bg-white border border-[#eaedef] rounded-[18px] p-8 shadow-[0_1px_3px_rgba(15,42,67,0.04)] hover:shadow-[0_16px_40px_rgba(15,42,67,0.10)] hover:-translate-y-[3px] transition-all duration-300">
           <div class="w-[50px] h-[50px] rounded-[14px] bg-[#e6f6ef] flex items-center justify-center text-[#0E7C7B]">
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               <path d="M3 3v18h18"></path>
@@ -323,7 +382,7 @@ $currentPage = 'home';
         </div>
 
         <!-- Feature 4 -->
-        <div data-reveal class="bg-white border border-[#eaedef] rounded-[18px] p-7.5 shadow-[0_1px_3px_rgba(15,42,67,0.04)] hover:shadow-[0_16px_40px_rgba(15,42,67,0.10)] hover:-translate-y-[3px] transition-all duration-300">
+        <div data-reveal class="bg-white border border-[#eaedef] rounded-[18px] p-8 shadow-[0_1px_3px_rgba(15,42,67,0.04)] hover:shadow-[0_16px_40px_rgba(15,42,67,0.10)] hover:-translate-y-[3px] transition-all duration-300">
           <div class="w-[50px] h-[50px] rounded-[14px] bg-[#e6f6ef] flex items-center justify-center text-[#0E7C7B]">
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               <rect x="3" y="3" width="7" height="7"></rect>
@@ -337,7 +396,7 @@ $currentPage = 'home';
         </div>
 
         <!-- Feature 5 -->
-        <div data-reveal class="bg-white border border-[#eaedef] rounded-[18px] p-7.5 shadow-[0_1px_3px_rgba(15,42,67,0.04)] hover:shadow-[0_16px_40px_rgba(15,42,67,0.10)] hover:-translate-y-[3px] transition-all duration-300">
+        <div data-reveal class="bg-white border border-[#eaedef] rounded-[18px] p-8 shadow-[0_1px_3px_rgba(15,42,67,0.04)] hover:shadow-[0_16px_40px_rgba(15,42,67,0.10)] hover:-translate-y-[3px] transition-all duration-300">
           <div class="w-[50px] h-[50px] rounded-[14px] bg-[#e6f6ef] flex items-center justify-center text-[#0E7C7B]">
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               <rect x="7" y="8" width="4" height="4"></rect>
@@ -352,7 +411,7 @@ $currentPage = 'home';
         </div>
 
         <!-- Feature 6 -->
-        <div data-reveal class="bg-white border border-[#eaedef] rounded-[18px] p-7.5 shadow-[0_1px_3px_rgba(15,42,67,0.04)] hover:shadow-[0_16px_40px_rgba(15,42,67,0.10)] hover:-translate-y-[3px] transition-all duration-300">
+        <div data-reveal class="bg-white border border-[#eaedef] rounded-[18px] p-8 shadow-[0_1px_3px_rgba(15,42,67,0.04)] hover:shadow-[0_16px_40px_rgba(15,42,67,0.10)] hover:-translate-y-[3px] transition-all duration-300">
           <div class="w-[50px] h-[50px] rounded-[14px] bg-[#e6f6ef] flex items-center justify-center text-[#0E7C7B]">
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               <path d="M8 3H7a4 4 0 0 0-4 4v1"></path>
@@ -465,7 +524,7 @@ $currentPage = 'home';
             <?php if ($t['popular']): ?>
               <div class="absolute top-0 left-0 right-0 bg-[#16B981] text-white font-bold text-[12px] tracking-wider text-center py-1.5 rounded-t-[16px]">MOST POPULAR</div>
             <?php endif; ?>
-            <div class="<?php echo $t['popular'] ? 'pt-11 pb-7.5 px-6 pb-6' : 'p-7.5 px-6 pb-6'; ?>">
+            <div class="<?php echo $t['popular'] ? 'pt-12 px-7 pb-8' : 'p-7 pb-8'; ?>">
               <h3 class="font-display font-bold text-[18px] text-[#0F2A43]"><?php echo $t['name']; ?></h3>
               <div class="mt-3.5 min-h-[66px]">
                 <div class="flex items-baseline gap-1">
@@ -474,7 +533,7 @@ $currentPage = 'home';
                 </div>
                 <p class="text-[13px] text-[#7a8792] mt-1.5 leading-[1.4] font-medium font-sans"><?php echo $t['note']; ?></p>
               </div>
-              <a href="billing.php?plan=<?php echo $t['plan_id']; ?>" class="block w-full text-center mt-5 font-bold text-[15px] p-3 rounded-[11px] transition-colors <?php echo $t['popular'] ? 'bg-[#16B981] text-white shadow-[0_10px_22px_rgba(22,185,129,0.3)] hover:bg-[#13a371]' : ($t['dark'] ? 'bg-[#0F2A43] text-white hover:bg-[#0b1d2e]' : 'bg-[#eef6f2] text-[#0E7C7B] hover:bg-[#e2f0ea]'); ?>">
+              <a href="billing.php?plan=<?php echo $t['plan_id']; ?>" class="block w-full text-center mt-5 font-bold text-[15px] p-3 rounded-[11px] transition-colors <?php echo $t['popular'] ? 'bg-[#16B981] text-white shadow-[0_10px_22px_rgba(22,185,129,0.3)] hover:bg-[#13a371] hover:text-white' : ($t['dark'] ? 'bg-[#0F2A43] text-white hover:bg-[#0b1d2e] hover:text-white' : 'bg-[#eef6f2] text-[#0E7C7B] hover:bg-[#e2f0ea] hover:text-[#0E7C7B]'); ?>">
                 <?php echo $t['cta']; ?>
               </a>
               <div class="h-[1px] my-6 <?php echo $t['popular'] ? 'bg-[#e2f2eb]' : 'bg-[#eef0f2]'; ?>"></div>
@@ -565,10 +624,10 @@ $currentPage = 'home';
           <h2 class="text-[32px] sm:text-[38px] leading-[1.12] font-extrabold tracking-tight text-white max-w-[640px] mx-auto font-display">Help every customer trust what they buy from you.</h2>
           <p class="text-[18px] text-[#cfe6e4] mt-4.5 max-w-[520px] mx-auto font-medium">Start your 14-day free trial today. No card required.</p>
           <div class="flex flex-wrap justify-center gap-3.5 mt-8">
-            <a href="billing.php" class="bg-[#16B981] text-white font-bold text-[17px] px-7 py-3.5 rounded-[12px] shadow-[0_10px_26px_rgba(0,0,0,0.25)] hover:scale-105 transition-transform text-center inline-block">
+            <a href="billing.php" class="bg-[#16B981] text-white font-bold text-[17px] px-7 py-3.5 rounded-[12px] shadow-[0_10px_26px_rgba(0,0,0,0.25)] hover:bg-[#13a371] hover:text-white hover:scale-105 transition-all duration-200 text-center inline-block">
               Start Free Trial
             </a>
-            <a href="contact.php" class="bg-white/10 text-white font-bold text-[17px] px-7 py-3.5 rounded-[12px] border border-white/25 hover:bg-white/20 transition-colors text-center inline-block">
+            <a href="contact.php" class="bg-white/10 text-white font-bold text-[17px] px-7 py-3.5 rounded-[12px] border border-white/25 hover:bg-white/20 hover:text-white transition-colors duration-200 text-center inline-block">
               Talk to us
             </a>
           </div>
