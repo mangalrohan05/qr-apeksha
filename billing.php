@@ -91,7 +91,7 @@ $totalAmount = $selectedPlan['basePrice'] + $calculatedTax;
               <h2 class="text-3xl font-light text-[#003057] mt-3">Account Registration</h2>
               <p class="text-xs text-slate-500 mt-1 font-normal">Create your initial vendor shell to proceed to payment.</p>
             </div>
-            <div id="step-badge" class="bg-[#003057] text-white px-4.5 py-1.5 rounded-full text-xs font-semibold tracking-wider">
+            <div id="step-badge" class="bg-[#003057] text-white px-6 py-2.5 rounded-full text-xs font-semibold tracking-wider">
               Step 1 of 2
             </div>
           </div>
